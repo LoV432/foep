@@ -28,7 +28,8 @@ export default function RegistrationForm() {
 		defaultValues: {
 			name: '',
 			email: '',
-			password: ''
+			password: '',
+			confirmPassword: ''
 		}
 	});
 
@@ -89,6 +90,19 @@ export default function RegistrationForm() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Password</FormLabel>
+							<FormControl>
+								<Input type="password" placeholder="••••••••" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="confirmPassword"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Confirm Password</FormLabel>
 							<FormControl>
 								<Input type="password" placeholder="••••••••" {...field} />
 							</FormControl>
