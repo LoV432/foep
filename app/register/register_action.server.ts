@@ -4,8 +4,9 @@ import { z, ZodError } from 'zod';
 import { registerFormSchema } from './FormSchema.z';
 import bcrypt from 'bcrypt';
 import { db } from '@/db/db';
-import { Users } from '@/db/schema';
+import { Users, VerificationCodes } from '@/db/schema';
 import { DatabaseError } from 'pg';
+import { randomBytes } from 'crypto';
 
 export default async function registerAction({
 	fields
@@ -16,14 +17,30 @@ export default async function registerAction({
 		const validatedFields = registerFormSchema.parse(fields);
 		const hashedPassword = await bcrypt.hash(validatedFields.password, 10);
 
-		const newUser = await db
-			.insert(Users)
-			.values({
-				email: validatedFields.email,
-				password: hashedPassword,
-				name: validatedFields.name
-			})
-			.returning({ id: Users.user_id });
+		const userTransaction = await db.transaction(async (tx) => {
+			const newUser = await db
+				.insert(Users)
+				.values({
+					email: validatedFields.email,
+					password: hashedPassword,
+					name: validatedFields.name
+				})
+				.returning({ id: Users.user_id });
+
+			const emailVerificationCde = randomBytes(32).toString('hex');
+			const emailCode = await db
+				.insert(VerificationCodes)
+				.values({
+					user_id: newUser[0].id,
+					code: emailVerificationCde
+				})
+				.returning({ VerificationCode: VerificationCodes.code });
+
+			return {
+				userId: newUser[0].id,
+				verificationCode: emailCode[0].VerificationCode
+			};
+		});
 
 		return {
 			success: true,
@@ -36,10 +53,12 @@ export default async function registerAction({
 			// When they are clearly try to bypass the form checks?
 			console.log(error.issues);
 		} else if (error instanceof DatabaseError) {
-			return {
-				success: false,
-				message: 'User already exists. Please login instead.'
-			};
+			if (error.code === '23505') {
+				return {
+					success: false,
+					message: 'User already exists. Please login instead.'
+				};
+			}
 		} else {
 			console.log(error);
 		}
