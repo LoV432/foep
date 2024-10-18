@@ -9,8 +9,8 @@ import { Resend } from 'resend';
 import { ResendVerificationSchema } from './ResendVerification.z';
 import { ZodError } from 'zod';
 
-if (!process.env.RESEND_API_KEY) {
-	throw new Error('RESEND_API_KEY is not set');
+if (!process.env.RESEND_API_KEY || !process.env.EMAIL_DOMAIN) {
+	throw new Error('RESEND_API_KEY and EMAIL_DOMAIN are not set');
 }
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -38,7 +38,7 @@ export async function resendVerificationEmail(email: string) {
 		});
 
 		const { data, error } = await resend.emails.send({
-			from: 'FOEP <onboarding@resend.dev>',
+			from: `FOEP <foep@${process.env.EMAIL_DOMAIN}>`,
 			to: [user[0].email],
 			subject: 'Verify your email',
 			react: VerificationEmail({
@@ -49,6 +49,7 @@ export async function resendVerificationEmail(email: string) {
 		});
 
 		if (error) {
+			console.log('Error in resendVerificationEmail:', error);
 			throw new Error('Error sending email. Please try again.');
 		}
 

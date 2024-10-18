@@ -10,8 +10,8 @@ import { randomBytes } from 'crypto';
 import { Resend } from 'resend';
 import { VerificationEmail } from './VerificationEmail';
 
-if (!process.env.RESEND_API_KEY) {
-	throw new Error('Please add RESEND_API_KEY env');
+if (!process.env.RESEND_API_KEY || !process.env.EMAIL_DOMAIN) {
+	throw new Error('Please add RESEND_API_KEY and EMAIL_DOMAIN env');
 }
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -52,7 +52,7 @@ export default async function registerAction({
 		resend.emails.send({
 			// We aren't going to wait for the email to be sent
 			// We will allow the user to resend the email in the event of failure
-			from: 'FOEP <onboarding@resend.dev>',
+			from: `FOEP <foep@${process.env.EMAIL_DOMAIN}>`,
 			to: [validatedFields.email],
 			subject: 'Verify your email',
 			react: VerificationEmail({
