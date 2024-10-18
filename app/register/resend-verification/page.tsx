@@ -102,7 +102,7 @@ export default function ResendVerification() {
 				<div className="pb-4">
 					{formResponse && (
 						<p
-							className={`text-center font-bold ${
+							className={`text-center ${
 								formResponse.success ? 'text-primary' : 'text-destructive'
 							}`}
 						>

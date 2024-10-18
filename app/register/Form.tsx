@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/form';
 import { registerFormSchema } from './FormSchema.z';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function RegistrationForm() {
 	const [formResponse, setFormResponse] = useState<{
@@ -117,15 +118,18 @@ export default function RegistrationForm() {
 				>
 					{isLoading ? 'Registering...' : 'Register'}
 				</Button>
-				{formResponse ? (
+				{formResponse && (
 					<div
-						className={`${formResponse.success ? 'text-primary' : 'text-destructive'} text-sm font-bold`}
+						className={`${formResponse.success ? 'text-primary' : 'text-destructive'} text-sm`}
 					>
 						{formResponse.message}
-					</div>
-				) : (
-					<div className="text-sm font-bold opacity-0">
-						This is just here to stop layout shift :p
+						{formResponse.success && (
+							<div className="text-foreground/60 underline underline-offset-2 hover:text-foreground">
+								<Link href="/register/resend-verification">
+									Resend verification email
+								</Link>
+							</div>
+						)}
 					</div>
 				)}
 			</form>
