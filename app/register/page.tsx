@@ -1,8 +1,6 @@
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import RegistrationForm from './Form';
 
 export default function RegistrationPage() {
 	return (
@@ -23,64 +21,7 @@ export default function RegistrationPage() {
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<form className="space-y-4" action="#" method="POST">
-							<div className="space-y-2">
-								<Label
-									htmlFor="full-name"
-									className="text-sm font-medium text-foreground"
-								>
-									Full Name
-								</Label>
-								<Input
-									id="full-name"
-									name="full-name"
-									type="text"
-									required
-									className="w-full"
-									placeholder="Chloe Walker"
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label
-									htmlFor="email-address"
-									className="text-sm font-medium text-foreground"
-								>
-									Email address
-								</Label>
-								<Input
-									id="email-address"
-									name="email"
-									type="email"
-									autoComplete="email"
-									required
-									className="w-full"
-									placeholder="chloe@example.com"
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label
-									htmlFor="password"
-									className="text-sm font-medium text-foreground"
-								>
-									Password
-								</Label>
-								<Input
-									id="password"
-									name="password"
-									type="password"
-									autoComplete="new-password"
-									required
-									className="w-full"
-									placeholder="••••••••"
-								/>
-							</div>
-							<Button
-								type="submit"
-								className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-							>
-								Sign up
-							</Button>
-						</form>
+						<RegistrationForm />
 					</CardContent>
 				</Card>
 			</div>
