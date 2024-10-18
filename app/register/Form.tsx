@@ -64,7 +64,7 @@ export default function RegistrationForm() {
 					name="name"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Username</FormLabel>
+							<FormLabel>Full Name</FormLabel>
 							<FormControl>
 								<Input placeholder="Chloe Walker" {...field} />
 							</FormControl>
