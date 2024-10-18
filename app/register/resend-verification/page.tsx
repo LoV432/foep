@@ -21,8 +21,10 @@ import {
 
 export default function ResendVerification() {
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const [success, setSuccess] = useState<string | null>(null);
+	const [formResponse, setFormResponse] = useState<{
+		success: boolean;
+		message: string;
+	} | null>(null);
 	const form = useForm<z.infer<typeof ResendVerificationSchema>>({
 		resolver: zodResolver(ResendVerificationSchema),
 		defaultValues: {
@@ -30,22 +32,22 @@ export default function ResendVerification() {
 		}
 	});
 	const onSubmit = async (values: z.infer<typeof ResendVerificationSchema>) => {
-		if (success !== null) {
+		if (formResponse?.success) {
+			// If the form response is successful, do not send another email
+			// This is to prevent spamming the user with emails
+			// Its obviously not a perfect solution, but it will do for now
 			return;
 		}
 		setIsLoading(true);
 		try {
 			const result = await resendVerificationEmail(values.email);
-			if (result.success) {
-				setError(null);
-				setSuccess(result.message);
-			} else {
-				setSuccess(null);
-				setError(result.message);
-			}
+			setFormResponse(result);
 			form.reset();
 		} catch (error) {
-			setError('An error occurred while sending the verification email');
+			setFormResponse({
+				success: false,
+				message: 'An error occurred while sending the verification email'
+			});
 		} finally {
 			setIsLoading(false);
 		}
@@ -89,7 +91,7 @@ export default function ResendVerification() {
 							<Button
 								type="submit"
 								className="w-full"
-								disabled={isLoading || success !== null}
+								disabled={isLoading || formResponse?.success}
 							>
 								{isLoading ? 'Sending...' : 'Resend Verification Email'}
 							</Button>
@@ -98,11 +100,14 @@ export default function ResendVerification() {
 				</CardContent>
 
 				<div className="pb-4">
-					{error && (
-						<p className="text-center font-bold text-destructive">{error}</p>
-					)}
-					{success && (
-						<p className="text-center font-bold text-primary">{success}</p>
+					{formResponse && (
+						<p
+							className={`text-center font-bold ${
+								formResponse.success ? 'text-primary' : 'text-destructive'
+							}`}
+						>
+							{formResponse.message}
+						</p>
 					)}
 				</div>
 			</Card>
