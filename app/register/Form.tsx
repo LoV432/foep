@@ -111,11 +111,7 @@ export default function RegistrationForm() {
 						</FormItem>
 					)}
 				/>
-				<Button
-					type="submit"
-					disabled={isLoading}
-					className="transition-all active:scale-95"
-				>
+				<Button type="submit" disabled={isLoading}>
 					{isLoading ? 'Registering...' : 'Register'}
 				</Button>
 				{formResponse && (
