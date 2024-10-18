@@ -94,7 +94,9 @@ function FailedVerification() {
 						asChild
 						className="w-full bg-destructive hover:bg-destructive/90"
 					>
-						<Link href="/resend-verification">Resend Verification Email</Link>
+						<Link href="/register/resend-verification">
+							Resend Verification Email
+						</Link>
 					</Button>
 				</CardFooter>
 			</Card>
