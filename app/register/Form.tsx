@@ -22,6 +22,7 @@ export default function RegistrationForm() {
 		success: boolean;
 		message: string;
 	} | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 	const form = useForm<z.infer<typeof registerFormSchema>>({
 		resolver: zodResolver(registerFormSchema),
 		defaultValues: {
@@ -34,6 +35,7 @@ export default function RegistrationForm() {
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
 		try {
 			setFormResponse(null);
+			setIsLoading(true);
 			const result = await registerAction({ fields: values });
 			setFormResponse(result);
 			if (result.success) {
@@ -44,6 +46,8 @@ export default function RegistrationForm() {
 				success: false,
 				message: 'Something went wrong. Please try again'
 			});
+		} finally {
+			setIsLoading(false);
 		}
 	}
 	return (
@@ -92,12 +96,22 @@ export default function RegistrationForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Submit</Button>
-				{formResponse && (
+				<Button
+					type="submit"
+					disabled={isLoading}
+					className="transition-all active:scale-95"
+				>
+					{isLoading ? 'Registering...' : 'Register'}
+				</Button>
+				{formResponse ? (
 					<div
 						className={`${formResponse.success ? 'text-primary' : 'text-destructive'} text-sm font-bold`}
 					>
 						{formResponse.message}
+					</div>
+				) : (
+					<div className="text-sm font-bold opacity-0">
+						This is just here to stop layout shift :p
 					</div>
 				)}
 			</form>
