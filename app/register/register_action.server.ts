@@ -7,6 +7,13 @@ import { db } from '@/db/db';
 import { Users, VerificationCodes } from '@/db/schema';
 import { DatabaseError } from 'pg';
 import { randomBytes } from 'crypto';
+import { Resend } from 'resend';
+import { VerificationEmail } from './VerificationEmail';
+
+if (!process.env.RESEND_API_KEY) {
+	throw new Error('Please add RESEND_API_KEY env');
+}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function registerAction({
 	fields
@@ -40,6 +47,19 @@ export default async function registerAction({
 				userId: newUser[0].id,
 				verificationCode: emailCode[0].VerificationCode
 			};
+		});
+
+		resend.emails.send({
+			// We aren't going to wait for the email to be sent
+			// We will allow the user to resend the email in the event of failure
+			from: 'FOEP <onboarding@resend.dev>',
+			to: [validatedFields.email],
+			subject: 'Verify your email',
+			react: VerificationEmail({
+				name: validatedFields.name,
+				email: validatedFields.email,
+				code: userTransaction.verificationCode
+			})
 		});
 
 		return {
