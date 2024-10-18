@@ -2,6 +2,10 @@
 
 import { z, ZodError } from 'zod';
 import { registerFormSchema } from './FormSchema.z';
+import bcrypt from 'bcrypt';
+import { db } from '@/db/db';
+import { Users } from '@/db/schema';
+import { DatabaseError } from 'pg';
 
 export default async function registerAction({
 	fields
@@ -10,6 +14,17 @@ export default async function registerAction({
 }) {
 	try {
 		const validatedFields = registerFormSchema.parse(fields);
+		const hashedPassword = await bcrypt.hash(validatedFields.password, 10);
+
+		const newUser = await db
+			.insert(Users)
+			.values({
+				email: validatedFields.email,
+				password: hashedPassword,
+				name: validatedFields.name
+			})
+			.returning({ id: Users.user_id });
+
 		return {
 			success: true,
 			message:
@@ -17,7 +32,14 @@ export default async function registerAction({
 		};
 	} catch (error) {
 		if (error instanceof ZodError) {
+			// Technically i can send specific errors from here but should user be told what failed
+			// When they are clearly try to bypass the form checks?
 			console.log(error.issues);
+		} else if (error instanceof DatabaseError) {
+			return {
+				success: false,
+				message: 'User already exists. Please login instead.'
+			};
 		} else {
 			console.log(error);
 		}

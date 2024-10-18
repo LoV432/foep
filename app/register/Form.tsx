@@ -36,7 +36,9 @@ export default function RegistrationForm() {
 			setFormResponse(null);
 			const result = await registerAction({ fields: values });
 			setFormResponse(result);
-			form.reset();
+			if (result.success) {
+				form.reset();
+			}
 		} catch {
 			setFormResponse({
 				success: false,
@@ -84,7 +86,7 @@ export default function RegistrationForm() {
 						<FormItem>
 							<FormLabel>Password</FormLabel>
 							<FormControl>
-								<Input placeholder="••••••••" {...field} />
+								<Input type="password" placeholder="••••••••" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -93,7 +95,7 @@ export default function RegistrationForm() {
 				<Button type="submit">Submit</Button>
 				{formResponse && (
 					<div
-						className={`${formResponse.success ? 'text-primary' : 'text-destructive'} text-sm`}
+						className={`${formResponse.success ? 'text-primary' : 'text-destructive'} text-sm font-bold`}
 					>
 						{formResponse.message}
 					</div>
