@@ -42,7 +42,7 @@ export default async function registerAction({
 			// INSERT INTO Users (email, password, name) VALUES ($1, $2, $3) RETURNING user_id, [validatedFields.email, hashedPassword, validatedFields.name]
 
 			const emailVerificationCde = randomBytes(32).toString('hex');
-			const emailCode = await db
+			const emailCode = await tx
 				.insert(VerificationCodes)
 				.values({
 					user_id: newUser[0].id,
