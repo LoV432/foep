@@ -24,8 +24,14 @@ export default async function registerAction({
 		const validatedFields = registerFormSchema.parse(fields);
 		const hashedPassword = await bcrypt.hash(validatedFields.password, 10);
 
+		// I am using a transaction to ensure that the user and verification code are created in the same action
+		// Incase the user is created but the verification code fails to be created
+		// Technically this isn't really an issue since user can resend the verification email
+		// But eh, why not i guess
+
+		// pg.query('BEGIN')
 		const userTransaction = await db.transaction(async (tx) => {
-			const newUser = await db
+			const newUser = await tx
 				.insert(Users)
 				.values({
 					email: validatedFields.email,
@@ -33,6 +39,7 @@ export default async function registerAction({
 					name: validatedFields.name
 				})
 				.returning({ id: Users.user_id });
+			// INSERT INTO Users (email, password, name) VALUES ($1, $2, $3) RETURNING user_id, [validatedFields.email, hashedPassword, validatedFields.name]
 
 			const emailVerificationCde = randomBytes(32).toString('hex');
 			const emailCode = await db
@@ -42,12 +49,14 @@ export default async function registerAction({
 					code: emailVerificationCde
 				})
 				.returning({ VerificationCode: VerificationCodes.code });
+			// INSERT INTO VerificationCodes (user_id, code) VALUES ($1, $2) RETURNING code, [newUser[0].id, emailVerificationCde]
 
 			return {
 				userId: newUser[0].id,
 				verificationCode: emailCode[0].VerificationCode
 			};
 		});
+		// pg.query('COMMIT')
 
 		resend.emails.send({
 			// We aren't going to wait for the email to be sent
@@ -68,6 +77,7 @@ export default async function registerAction({
 				'Account created successfully. Please check your email for verification.'
 		};
 	} catch (error) {
+		// pg.query('ROLLBACK')
 		if (error instanceof ZodError) {
 			// Technically i can send specific errors from here but should user be told what failed
 			// When they are clearly try to bypass the form checks?

@@ -22,6 +22,7 @@ export async function resendVerificationEmail(email: string) {
 			.from(Users)
 			.where(eq(Users.email, parsedEmail))
 			.limit(1);
+		// SELECT * FROM Users WHERE email = $1 LIMIT 1, [parsedEmail]
 
 		if (user.length === 0) {
 			throw new Error('User not found');
@@ -36,6 +37,7 @@ export async function resendVerificationEmail(email: string) {
 			code: verificationCode,
 			user_id: user[0].user_id
 		});
+		// INSERT INTO VerificationCodes (code, user_id) VALUES ($1, $2), [verificationCode, user[0].user_id]
 
 		const { data, error } = await resend.emails.send({
 			from: `FOEP <foep@${process.env.EMAIL_DOMAIN}>`,
