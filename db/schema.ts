@@ -49,3 +49,26 @@ export const VerificationCodes = pgTable('VerificationCodes', {
 // 			REFERENCES "Users"("user_id")
 // 				ON DELETE CASCADE
 // );
+
+export const ResetPasswordCodes = pgTable('ResetPasswordCodes', {
+	id: serial('id').primaryKey(),
+	user_id: integer('user_id')
+		.references(() => Users.user_id, { onDelete: 'cascade' })
+		.notNull(),
+	code: varchar('code').notNull(),
+	used: boolean('used').notNull().default(false),
+	created_at: timestamp('created_at', { withTimezone: true })
+		.notNull()
+		.defaultNow()
+});
+// CREATE TABLE IF NOT EXISTS "ResetPasswordCodes" (
+// 	"id" serial PRIMARY KEY NOT NULL,
+// 	"user_id" integer NOT NULL,
+// 	"code" varchar NOT NULL,
+// 	"used" boolean DEFAULT false NOT NULL,
+// 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
+// 	CONSTRAINT "ResetPasswordCodes_user_id_Users_user_id_fk"
+// 		FOREIGN KEY ("user_id")
+// 			REFERENCES "Users"("user_id")
+// 				ON DELETE CASCADE
+// );
