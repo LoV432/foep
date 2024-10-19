@@ -39,7 +39,7 @@ export async function resendVerificationEmail(email: string) {
 		});
 		// INSERT INTO VerificationCodes (code, user_id) VALUES ($1, $2), [verificationCode, user[0].user_id]
 
-		const { data, error } = await resend.emails.send({
+		const { error } = await resend.emails.send({
 			from: `FOEP <foep@${process.env.EMAIL_DOMAIN}>`,
 			to: [user[0].email],
 			subject: 'Verify your email',

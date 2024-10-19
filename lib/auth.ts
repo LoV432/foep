@@ -94,7 +94,7 @@ export async function getSession() {
 			success: true as const,
 			data: verifiedToken
 		};
-	} catch (e) {
+	} catch {
 		// console.log(e);
 		return {
 			success: false as const

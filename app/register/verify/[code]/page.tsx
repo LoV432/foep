@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: { code: string } }) {
 		if (Date.now() - checkCode[0].created_at.getTime() > ms('10m')) {
 			return <FailedVerification />;
 		}
-		const updateUser = await db
+		await db
 			.update(Users)
 			.set({
 				email_verified: true
@@ -85,8 +85,8 @@ function FailedVerification() {
 				</CardHeader>
 				<CardContent className="text-center">
 					<p className="mb-4 text-muted-foreground">
-						We're sorry, but we couldn't verify your email address. This could
-						be due to an expired or invalid verification link.
+						We&apos;re sorry, but we couldn&apos;t verify your email address.
+						This could be due to an expired or invalid verification link.
 					</p>
 				</CardContent>
 				<CardFooter className="flex flex-col gap-4">

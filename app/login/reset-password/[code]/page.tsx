@@ -90,8 +90,8 @@ function FailedVerification() {
 				</CardHeader>
 				<CardContent className="text-center">
 					<p className="mb-4 text-muted-foreground">
-						We're sorry, but we couldn't reset your password. This could be due
-						to an expired or invalid reset password link.
+						We&apos;re sorry, but we couldn&apos;t reset your password. This
+						could be due to an expired or invalid reset password link.
 					</p>
 				</CardContent>
 				<CardFooter className="flex flex-col gap-4">

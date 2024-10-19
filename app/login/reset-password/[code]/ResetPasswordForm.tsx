@@ -41,7 +41,7 @@ export function ResetPasswordForm({ code }: { code: string }) {
 			});
 			setFormResponse(response);
 			form.reset();
-		} catch (error) {
+		} catch {
 			setFormResponse({
 				success: false,
 				message: 'Something went wrong, please try again'

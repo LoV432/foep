@@ -37,7 +37,7 @@ export async function refershSession(request: NextRequest) {
 	let parsed;
 	try {
 		parsed = await decrypt(session);
-	} catch (e) {
+	} catch {
 		return;
 	}
 	parsed.exp = new Date(Date.now() + ms(SESSION_TIMEOUT)).getTime();

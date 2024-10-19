@@ -43,7 +43,7 @@ export default function ResendVerification() {
 			const result = await sendResetPasswordEmail(values.email);
 			setFormResponse(result);
 			form.reset();
-		} catch (error) {
+		} catch {
 			setFormResponse({
 				success: false,
 				message: 'An error occurred while sending the reset password email'

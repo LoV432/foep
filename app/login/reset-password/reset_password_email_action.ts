@@ -39,7 +39,7 @@ export async function sendResetPasswordEmail(email: string) {
 		});
 		// INSERT INTO ResetPasswordCodes (code, user_id) VALUES ($1, $2), [resetPasswordCode, user[0].user_id]
 
-		const { data, error } = await resend.emails.send({
+		const { error } = await resend.emails.send({
 			from: `FOEP <foep@${process.env.EMAIL_DOMAIN}>`,
 			to: [user[0].email],
 			subject: 'Reset your password',
