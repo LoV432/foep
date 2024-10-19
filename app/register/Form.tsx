@@ -111,9 +111,17 @@ export default function RegistrationForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" disabled={isLoading}>
+				<Button type="submit" disabled={isLoading} className="w-full">
 					{isLoading ? 'Registering...' : 'Register'}
 				</Button>
+				<div className="flex justify-end">
+					<Link
+						href="/login"
+						className="text-sm text-black/70 underline hover:text-black"
+					>
+						Already have an account?
+					</Link>
+				</div>
 				{formResponse && (
 					<div
 						className={`${formResponse.success ? 'text-primary' : 'text-destructive'} text-sm`}
