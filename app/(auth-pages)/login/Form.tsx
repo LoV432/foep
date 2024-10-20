@@ -36,7 +36,7 @@ export default function LoginForm() {
 		try {
 			setFormResponse(null);
 			setIsLoading(true);
-			const result = await login({ values, redirectTo: '/' });
+			const result = await login({ values, redirectTo: '/dashboard' });
 			if (result && !result.success) {
 				setFormResponse(result);
 			}
