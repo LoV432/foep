@@ -1,16 +1,18 @@
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import RegistrationForm from './Form';
+import Logo from '@/components/Logo';
 
 export default function RegistrationPage() {
 	return (
 		<div className="relative flex min-h-screen overflow-hidden">
-			<div className="z-10 flex w-full flex-col items-center bg-primary p-6 md:flex-row md:justify-center lg:w-[30%]">
-				<div className="p-6 text-center lg:hidden">
-					<h1 className="text-4xl font-bold text-white">
-						Fictional Online Education Platform
-					</h1>
-					<p className="mt-2 text-xl text-white">
+			<div className="z-10 flex w-full flex-col items-center bg-primary p-6 pt-2 lg:w-[30%] lg:justify-center">
+				<div className="pb-6 text-center">
+					<div className="flex items-center justify-center gap-2 p-4">
+						<Logo width={40} height={40} />
+						<h1 className="text-3xl font-semibold text-white">FOEP</h1>
+					</div>
+					<p className="mt-2 text-xl text-white lg:hidden">
 						Expand your knowledge and skills from anywhere in the world
 					</p>
 				</div>
