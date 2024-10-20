@@ -7,7 +7,7 @@ export default function RegistrationPage() {
 	return (
 		<div className="relative flex min-h-screen overflow-hidden">
 			<div className="z-10 flex w-full flex-col items-center bg-primary p-6 pt-2 lg:w-[30%] lg:justify-center">
-				<div className="pb-6 text-center">
+				<div className="flex flex-col items-center p-6 text-center">
 					<Logo width={40} height={40} />
 					<p className="mt-2 text-xl text-white lg:hidden">
 						Expand your knowledge and skills from anywhere in the world
