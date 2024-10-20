@@ -6,9 +6,8 @@ import Link from 'next/link';
 export default async function Header() {
 	const session = await getSession();
 	return (
-		<header className="flex items-center gap-2 bg-primary p-4">
-			<Logo width={40} height={40} />
-			<h1 className="text-3xl font-semibold text-white">FOEP</h1>
+		<header className="flex items-center bg-primary p-4">
+			<Logo />
 			{session.success ? (
 				<Button
 					asChild
