@@ -2,11 +2,28 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { getSession } from '@/lib/auth';
 
-export default function HomePage() {
+export default async function HomePage() {
+	const session = await getSession();
 	return (
 		<div className="min-h-screen bg-background">
-			<section className="bg-gradient-to-b from-primary/10 to-background px-4 py-20 md:px-6 lg:px-8">
+			<section className="bg-gradient-to-b from-primary/10 to-background px-4 py-5 md:px-6 lg:px-8">
+				<div className="flex items-center justify-between pb-3">
+					{session.success ? (
+						<Button asChild>
+							<Link href="/dashboard" className="ml-auto">
+								Dashboard
+							</Link>
+						</Button>
+					) : (
+						<Button asChild>
+							<Link href="/login" className="ml-auto">
+								Login
+							</Link>
+						</Button>
+					)}
+				</div>
 				<div className="container mx-auto max-w-6xl">
 					<div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
 						<div className="space-y-6">
