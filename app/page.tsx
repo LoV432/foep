@@ -47,15 +47,13 @@ export default async function HomePage() {
 							<Image
 								src="/home-page.svg"
 								alt="Online learning illustration"
-								width={700}
-								height={700}
+								fill
 								className="hidden rounded-lg md:block"
 							/>
 							<Image
 								src="/home-page-mobile.svg"
 								alt="Online learning illustration"
-								width={500}
-								height={500}
+								fill
 								className="block rounded-lg md:hidden"
 							/>
 						</div>
