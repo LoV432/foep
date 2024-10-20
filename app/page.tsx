@@ -2,28 +2,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { getSession } from '@/lib/auth';
+import Header from '@/components/Header';
 
 export default async function HomePage() {
-	const session = await getSession();
 	return (
 		<div className="min-h-screen bg-background">
+			<Header />
 			<section className="bg-gradient-to-b from-primary/10 to-background px-4 py-5 md:px-6 lg:px-8">
-				<div className="flex items-center justify-between pb-3">
-					{session.success ? (
-						<Button asChild>
-							<Link href="/dashboard" className="ml-auto">
-								Dashboard
-							</Link>
-						</Button>
-					) : (
-						<Button asChild>
-							<Link href="/login" className="ml-auto">
-								Login
-							</Link>
-						</Button>
-					)}
-				</div>
 				<div className="container mx-auto max-w-6xl">
 					<div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
 						<div className="space-y-6">
@@ -40,7 +25,7 @@ export default async function HomePage() {
 								size="lg"
 								className="bg-primary text-primary-foreground hover:bg-primary/90"
 							>
-								<Link href="#">Explore Courses</Link>
+								<Link href="/all-courses">Explore Courses</Link>
 							</Button>
 						</div>
 						<div className="relative h-[400px] overflow-hidden rounded-lg shadow-xl">
@@ -98,7 +83,7 @@ export default async function HomePage() {
 								variant="secondary"
 								className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
 							>
-								<Link href="#">View All Courses</Link>
+								<Link href="/all-courses">View All Courses</Link>
 							</Button>
 						</CardContent>
 					</Card>
