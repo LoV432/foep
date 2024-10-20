@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import ms from 'ms';
-import { loginFormSchema } from '@/app/login/FormSchema.z';
+import { loginFormSchema } from '@/app/(auth-pages)/login/FormSchema.z';
 import { z } from 'zod';
 import { db } from '@/db/db';
 import { Users } from '@/db/schema';
