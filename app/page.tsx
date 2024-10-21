@@ -30,12 +30,14 @@ export default async function HomePage() {
 						</div>
 						<div className="relative h-[400px] overflow-hidden rounded-lg shadow-xl">
 							<Image
+								loading="eager"
 								src="/home-page.svg"
 								alt="Online learning illustration"
 								fill
 								className="hidden rounded-lg md:block"
 							/>
 							<Image
+								loading="eager"
 								src="/home-page-mobile.svg"
 								alt="Online learning illustration"
 								fill

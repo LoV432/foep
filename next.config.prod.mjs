@@ -2,7 +2,11 @@
 const nextConfig = {
 	output: 'standalone',
 	images: {
-		domains: ['picsum.photos']
+		remotePatterns: [
+			{
+				hostname: 'picsum.photos'
+			}
+		]
 	}
 };
 

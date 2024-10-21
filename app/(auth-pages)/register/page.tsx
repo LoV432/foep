@@ -28,7 +28,8 @@ export default function RegistrationPage() {
 				<div className="flex h-full flex-col items-center justify-center p-8">
 					<div className="max-w-2xl space-y-8 text-center">
 						<Image
-							src="/register.jpg"
+							loading="eager"
+							src="/register.webp"
 							alt="Online Education"
 							width={800}
 							height={400}
