@@ -4,7 +4,8 @@ import {
 	serial,
 	boolean,
 	integer,
-	timestamp
+	timestamp,
+	real
 } from 'drizzle-orm/pg-core';
 
 // DB Schema. I am using drizzle just to make everything a bit more type-safe.
@@ -72,3 +73,41 @@ export const ResetPasswordCodes = pgTable('ResetPasswordCodes', {
 // 			REFERENCES "Users"("user_id")
 // 				ON DELETE CASCADE
 // );
+
+// ====== Course Tables ======
+export const CoursesCategories = pgTable('CoursesCategories', {
+	category_id: serial('category_id').primaryKey(),
+	name: varchar('name').notNull().unique()
+});
+
+export const CoursesReviews = pgTable('CoursesReviews', {
+	review_id: serial('review_id').primaryKey(),
+	course_id: integer('course_id')
+		.references(() => Courses.course_id)
+		.notNull(),
+	user_id: integer('user_id')
+		.references(() => Users.user_id)
+		.notNull(),
+	rating: integer('rating').notNull(),
+	comment: varchar('comment')
+});
+
+export const Courses = pgTable('Courses', {
+	course_id: serial('course_id').primaryKey(),
+	author_id: integer('author_id')
+		.references(() => Users.user_id)
+		.notNull(),
+	name: varchar('name').notNull().unique(), // I will probably use this as the slug too
+	category_id: integer('category_id') // TODO: Allow multiple categories
+		.references(() => CoursesCategories.category_id)
+		.notNull(),
+	description: varchar('description').notNull(),
+	image_url: varchar('image_url').notNull(), // TODO: All media will have separate table and this will be a reference to that media
+	price: real('price'),
+	created_at: timestamp('created_at', { withTimezone: true })
+		.notNull()
+		.defaultNow(),
+	last_updated: timestamp('last_updated', { withTimezone: true })
+		.notNull()
+		.defaultNow()
+});
