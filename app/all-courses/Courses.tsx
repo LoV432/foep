@@ -3,9 +3,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Info, Star } from 'lucide-react';
 import { getCourses } from './get_courses';
 import Image from 'next/image';
+import { filtersSchema } from './Filters.z';
+import { z } from 'zod';
 
-export default async function Courses() {
-	const courses = await getCourses();
+export default async function Courses({ filters }: { filters: string }) {
+	let parsedFilters: z.infer<typeof filtersSchema>;
+	try {
+		parsedFilters = filtersSchema.parse(JSON.parse(filters));
+	} catch (error) {
+		parsedFilters = filtersSchema.parse({});
+	}
+	const courses = await getCourses(parsedFilters);
 	return (
 		<main className="w-full md:w-3/4">
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

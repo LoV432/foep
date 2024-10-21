@@ -5,7 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider, SliderWithRange } from '@/components/ui/slider';
 import { CoursesCategories } from '@/db/schema';
-import { use, useState } from 'react';
+import { use, useReducer, useState } from 'react';
+import { filtersSchema } from './Filters.z';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { z } from 'zod';
 
 export default function FiltersSidebar({
 	categoriesPromise
@@ -13,11 +16,51 @@ export default function FiltersSidebar({
 	categoriesPromise: Promise<(typeof CoursesCategories.$inferSelect)[]>;
 }) {
 	const categories = use(categoriesPromise);
-	const [search, setSearch] = useState('');
-	const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-	const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
-	const [minRating, setMinRating] = useState<number>(0);
-	const [sortByPrice, setSortByPrice] = useState<'asc' | 'desc'>('desc');
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	let parsedFilters: z.infer<typeof filtersSchema>;
+	try {
+		parsedFilters = filtersSchema.parse(
+			JSON.parse(searchParams.get('filters') || '{}')
+		);
+	} catch (error) {
+		parsedFilters = filtersSchema.parse({});
+	}
+
+	function updateFilters(
+		state: z.infer<typeof filtersSchema>,
+		action: {
+			[key in keyof z.infer<typeof filtersSchema>]?: z.infer<
+				typeof filtersSchema
+			>[key];
+		}
+	) {
+		return filtersSchema.parse({ ...state, ...action });
+	}
+	const [filtersState, dispatchFilters] = useReducer(
+		updateFilters,
+		parsedFilters
+	);
+	const [isLoading, setIsLoading] = useState(false);
+
+	function applyFilter() {
+		try {
+			const filters = filtersSchema.parse(filtersState);
+			dispatchFilters(filters);
+			setIsLoading(true);
+			router.push(`/all-courses?filters=${JSON.stringify(filters)}`);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setIsLoading(false);
+		}
+	}
+
+	function clearFilters() {
+		dispatchFilters(filtersSchema.parse({}));
+		router.push('/all-courses');
+	}
+
 	return (
 		<aside className="h-fit w-full space-y-6 rounded-lg border border-border p-6 md:w-1/4">
 			<div>
@@ -27,8 +70,8 @@ export default function FiltersSidebar({
 				<Input
 					id="search"
 					placeholder="Search..."
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
+					value={filtersState.search}
+					onChange={(e) => dispatchFilters({ search: e.target.value })}
 				/>
 			</div>
 			<div>
@@ -41,15 +84,17 @@ export default function FiltersSidebar({
 						<Checkbox
 							className="rounded-[4px]"
 							id={category.name}
-							checked={selectedCategories.includes(category.category_id)}
+							checked={filtersState.selectedCategories.includes(
+								category.category_id
+							)}
 							onCheckedChange={(checked) =>
-								setSelectedCategories(
-									checked
-										? [...selectedCategories, category.category_id]
-										: selectedCategories.filter(
+								dispatchFilters({
+									selectedCategories: checked
+										? [...filtersState.selectedCategories, category.category_id]
+										: filtersState.selectedCategories.filter(
 												(c) => c !== category.category_id
 											)
-								)
+								})
 							}
 						/>
 						<Label htmlFor={category.name}>{category.name}</Label>
@@ -62,12 +107,14 @@ export default function FiltersSidebar({
 					min={0}
 					max={200}
 					step={1}
-					value={priceRange}
-					onValueChange={(value) => setPriceRange(value as [number, number])}
+					value={filtersState.priceRange}
+					onValueChange={(value) =>
+						dispatchFilters({ priceRange: value as [number, number] })
+					}
 				/>
 				<div className="mt-2 flex justify-between">
-					<span>${priceRange[0]}</span>
-					<span>${priceRange[1]}</span>
+					<span>${filtersState.priceRange[0]}</span>
+					<span>${filtersState.priceRange[1]}</span>
 				</div>
 			</div>
 			<div>
@@ -75,20 +122,34 @@ export default function FiltersSidebar({
 				<Slider
 					min={0}
 					max={5}
-					step={0.5}
-					value={[minRating]}
-					onValueChange={(value) => setMinRating(value[0])}
+					step={1}
+					value={[filtersState.minRating]}
+					onValueChange={(value) => dispatchFilters({ minRating: value[0] })}
 				/>
-				<div className="mt-2">{minRating} stars and up</div>
+				<div className="mt-2">{filtersState.minRating} stars and up</div>
 			</div>
 			<div>
 				<h2 className="mb-2 text-lg font-semibold">Sort by Price</h2>
 				<Button
 					variant="outline"
 					className="w-full justify-between"
-					onClick={() => setSortByPrice(sortByPrice === 'asc' ? 'desc' : 'asc')}
+					onClick={() =>
+						dispatchFilters({
+							sortByPrice: filtersState.sortByPrice === 'asc' ? 'desc' : 'asc'
+						})
+					}
 				>
-					{sortByPrice === 'asc' ? 'Price: Low to High' : 'Price: High to Low'}
+					{filtersState.sortByPrice === 'asc'
+						? 'Price: Low to High'
+						: 'Price: High to Low'}
+				</Button>
+			</div>
+			<div className="flex gap-2">
+				<Button onClick={applyFilter} disabled={isLoading}>
+					{isLoading ? 'Applying...' : 'Apply Filters'}
+				</Button>
+				<Button variant="destructive" onClick={clearFilters}>
+					Clear Filters
 				</Button>
 			</div>
 		</aside>
