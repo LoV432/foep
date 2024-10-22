@@ -96,6 +96,18 @@ export const CoursesReviews = pgTable('CoursesReviews', {
 	comment: varchar('comment')
 });
 
+export const Media = pgTable('Media', {
+	media_id: serial('media_id').primaryKey(),
+	user_id: integer('user_id')
+		.references(() => Users.user_id)
+		.notNull(),
+	url: varchar('url').notNull(),
+	type: varchar('type').notNull(),
+	created_at: timestamp('created_at', { withTimezone: true })
+		.notNull()
+		.defaultNow()
+});
+
 export const Courses = pgTable('Courses', {
 	course_id: serial('course_id').primaryKey(),
 	author_id: integer('author_id')
