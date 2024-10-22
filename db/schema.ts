@@ -17,6 +17,9 @@ export const Users = pgTable('Users', {
 	email: varchar('email').notNull().unique(),
 	password: varchar('password').notNull(),
 	email_verified: boolean('email_verified').notNull().default(false),
+	role: varchar('role', { enum: ['user', 'admin', 'instructor'] })
+		.notNull()
+		.default('user'),
 	created_at: timestamp('created_at', { withTimezone: true })
 		.notNull()
 		.defaultNow()
@@ -26,6 +29,7 @@ export const Users = pgTable('Users', {
 // 	"name" varchar NOT NULL,
 // 	"email" varchar NOT NULL UNIQUE,
 // 	"password" varchar NOT NULL,
+// 	"role" varchar NOT NULL DEFAULT 'user', // the enum is only enforced in the schema, not in the DB
 // 	"email_verified" boolean DEFAULT false NOT NULL,
 // 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 // );

@@ -14,6 +14,7 @@ import { redirect } from 'next/navigation';
 export type SessionData = {
 	name: string;
 	id: number;
+	role: 'user' | 'admin' | 'instructor';
 };
 
 export type Token = SessionData & { exp: number; iat: number };
@@ -48,7 +49,11 @@ export async function login({
 			throw new Error('Email not verified');
 		}
 
-		const token = await encrypt({ name: user[0].name, id: user[0].user_id });
+		const token = await encrypt({
+			name: user[0].name,
+			id: user[0].user_id,
+			role: user[0].role
+		});
 		const expires = new Date(Date.now() + ms(SESSION_TIMEOUT)).getTime();
 		cookies().set('jwt-token', token, {
 			expires,
