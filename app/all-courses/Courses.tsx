@@ -10,7 +10,7 @@ export default async function Courses({ filters }: { filters: string }) {
 	let parsedFilters: z.infer<typeof filtersSchema>;
 	try {
 		parsedFilters = filtersSchema.parse(JSON.parse(filters));
-	} catch (error) {
+	} catch {
 		parsedFilters = filtersSchema.parse({});
 	}
 	const courses = await getCourses(parsedFilters);

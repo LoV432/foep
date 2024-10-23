@@ -7,6 +7,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { db } from '@/db/db';
 import { Media } from '@/db/schema';
+import { ALLOWED_FILE_TYPES } from '@/lib/allowed-uploads';
 
 if (
 	!process.env.B2_APPLICATION_KEY ||
@@ -19,27 +20,6 @@ if (
 		`B2_APPLICATION_KEY, B2_APPLICATION_KEY_ID, B2_BUCKET_NAME, B2_REGION, and B2_ENDPOINT must be set`
 	);
 }
-
-export const ALLOWED_FILE_TYPES = [
-	// Image extensions
-	'image/jpeg',
-	'image/png',
-	'image/gif',
-	'image/webp',
-	'image/svg+xml',
-	// Video extensions
-	'video/mp4',
-	'video/webm',
-	'video/ogg',
-	'video/mpeg',
-	// Audio extensions
-	'audio/mpeg',
-	'audio/wav',
-	'audio/ogg',
-	'audio/webm',
-	// Document extensions
-	'application/pdf'
-];
 
 const ERROR_MESSAGES_CLIENT: Record<string, string> = {
 	UNAUTHORIZED: 'Unauthorized',

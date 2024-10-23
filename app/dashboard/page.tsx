@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { getSession, destroySession } from '@/lib/auth';
 import Link from 'next/link';
-import { ALLOWED_FILE_TYPES } from '@/app/api/upload/route';
+import { ALLOWED_FILE_TYPES } from '@/lib/allowed-uploads';
 import UploadDialog from './UploadDialog';
 import { db } from '@/db/db';
 import { Media } from '@/db/schema';

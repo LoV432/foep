@@ -23,7 +23,7 @@ export default function FiltersSidebar({
 		parsedFilters = filtersSchema.parse(
 			JSON.parse(searchParams.get('filters') || '{}')
 		);
-	} catch (error) {
+	} catch {
 		parsedFilters = filtersSchema.parse({});
 	}
 
