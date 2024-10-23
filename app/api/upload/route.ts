@@ -8,6 +8,8 @@ import {
 import { db } from '@/db/db';
 import { Media } from '@/db/schema';
 import { ALLOWED_FILE_TYPES } from '@/lib/allowed-uploads';
+import { v4 as uuidv4 } from 'uuid';
+import { kebabCase } from '@/lib/kebab-case';
 
 if (
 	!process.env.B2_APPLICATION_KEY ||
@@ -66,7 +68,10 @@ export async function POST(request: NextRequest) {
 			throw new Error('INVALID_FILE_TYPE');
 		}
 
-		const fileName = `${session.data.id}-${Date.now()}-${file.name}`;
+		const friendlyName = formData.get('friendlyName')?.toString() || file.name;
+		const altText = formData.get('altText')?.toString() || null;
+
+		const fileName = `${uuidv4()}-${kebabCase(file.name)}`;
 
 		const fileBuffer = await file.arrayBuffer();
 
@@ -85,6 +90,8 @@ export async function POST(request: NextRequest) {
 		try {
 			await db.insert(Media).values({
 				user_id: session.data.id,
+				friendly_name: friendlyName,
+				alt_text: altText,
 				url: `https://${process.env.B2_BUCKET_NAME}.${process.env.B2_ENDPOINT}/${fileName}`,
 				type: fileType
 			});

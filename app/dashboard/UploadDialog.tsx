@@ -49,8 +49,8 @@ export default function UploadDialog({
 					</div>
 					{selectedMedia && (
 						<div className="absolute right-0 top-0 flex h-full w-full flex-col gap-4 border-l-2 border-border bg-background md:relative">
-							<h2 className="text-center text-xl font-bold">Details</h2>
-							<div className="mx-auto flex h-full w-fit flex-col gap-4">
+							<h2 className="mx-auto w-[90%] text-xl font-bold">Details</h2>
+							<div className="mx-auto flex h-full w-[90%] flex-col gap-4">
 								<div className="h-32 w-32">
 									<Card className="h-32 w-32">
 										<CardContent className="flex h-full w-full items-center justify-center p-0">
@@ -64,7 +64,13 @@ export default function UploadDialog({
 								</div>
 								<div className="flex flex-col gap-2">
 									<p className="text-sm font-bold">Name</p>
-									<p className="text-sm">{selectedMedia.media_id}</p>
+									<p className="text-wrap text-sm">
+										{selectedMedia.friendly_name}
+									</p>
+								</div>
+								<div className="flex flex-col gap-2">
+									<p className="text-sm font-bold">Alt Text</p>
+									<p className="text-sm">{selectedMedia.alt_text}</p>
 								</div>
 								<div className="flex flex-col gap-2">
 									<p className="text-sm font-bold">Type</p>

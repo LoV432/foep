@@ -101,6 +101,8 @@ export const Media = pgTable('Media', {
 	user_id: integer('user_id')
 		.references(() => Users.user_id)
 		.notNull(),
+	friendly_name: varchar('friendly_name').notNull(),
+	alt_text: varchar('alt_text'),
 	url: varchar('url').notNull(),
 	type: varchar('type').notNull(),
 	created_at: timestamp('created_at', { withTimezone: true })
