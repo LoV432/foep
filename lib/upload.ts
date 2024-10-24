@@ -24,9 +24,9 @@ if (
 
 const ERROR_MESSAGES_CLIENT: Record<string, string> = {
 	UNAUTHORIZED: 'Unauthorized',
-	INVALID_FILE_TYPE: 'Invalid file type',
+	INVALID_FILE_TYPE: 'This file type is not allowed',
 	NO_FILE_UPLOADED: 'No file uploaded',
-	FILE_TOO_LARGE: 'File cannot be larger than 100MB'
+	FILE_TOO_LARGE: 'This file is too large (max 100MB)'
 };
 
 const ERROR_MESSAGES_SERVER: Record<string, string> = {

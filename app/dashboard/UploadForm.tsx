@@ -24,6 +24,16 @@ export default function UploadForm() {
 
 	async function onSubmit(formData: FormData) {
 		try {
+			const file = formData.get('file');
+			if (!file || !(file instanceof File)) {
+				throw new Error('No file uploaded');
+			}
+			if (file.size > 100000000) {
+				throw new Error('This file is too large (max 100MB)');
+			}
+			if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+				throw new Error('This file type is not allowed');
+			}
 			setIsLoading(true);
 			setError(undefined);
 			const uploadResult = await fetch('/api/upload', {
@@ -39,8 +49,12 @@ export default function UploadForm() {
 				setError(errorData.message);
 			}
 		} catch (error) {
-			console.error(error);
-			setError('An error occurred while uploading the file');
+			if (error instanceof Error) {
+				setError(error.message);
+			} else {
+				console.error(error);
+				setError('An error occurred while uploading the file');
+			}
 		} finally {
 			setIsLoading(false);
 		}
