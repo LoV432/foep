@@ -22,7 +22,10 @@ export default function UploadDialog({
 				<Button>Media Library</Button>
 			</DialogTrigger>
 			<DialogContent className="max-w-screen-xl">
-				<Tabs defaultValue="media" className="relative h-[90vh]">
+				<Tabs
+					defaultValue="media"
+					className="relative h-[90vh] overflow-y-auto"
+				>
 					<TabsList className="mb-4 mt-4 w-full sm:w-56">
 						<TabsTrigger className="w-full" value="media">
 							Media

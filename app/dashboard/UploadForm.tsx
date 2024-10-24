@@ -47,7 +47,7 @@ export default function UploadForm() {
 	}
 
 	return (
-		<div className="flex flex-col items-center overflow-y-auto">
+		<div className="flex flex-col items-center">
 			<form
 				method="POST"
 				ref={formRef}
@@ -55,7 +55,7 @@ export default function UploadForm() {
 					e.preventDefault();
 					onSubmit(new FormData(e.currentTarget));
 				}}
-				className="w-full max-w-lg space-y-4 overflow-y-auto"
+				className="w-full max-w-lg space-y-4"
 			>
 				<>
 					<Label htmlFor="file-upload" className="cursor-pointer">
