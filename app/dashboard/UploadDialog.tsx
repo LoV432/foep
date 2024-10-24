@@ -8,6 +8,7 @@ import { useState } from 'react';
 import MediaPreview from './MediaPreview';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UploadForm from './UploadForm';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function UploadDialog({
 	userMedia
@@ -41,26 +42,28 @@ export default function UploadDialog({
 						className="h-[calc(100%-5rem)]"
 					>
 						<div className="grid h-full md:grid-cols-[3fr_1fr]">
-							<div
-								id="media-list"
-								className="flex flex-wrap justify-center gap-4 overflow-scroll md:justify-start"
-							>
-								{userMedia.map((media) => (
-									<Card
-										key={media.media_id}
-										className={`h-24 w-24 overflow-hidden sm:h-32 sm:w-32 ${
-											selectedMedia?.media_id === media.media_id
-												? 'border-2 border-primary'
-												: ''
-										}`}
-										onClick={() => setSelectedMedia(media)}
-									>
-										<CardContent className="flex h-full w-full items-center justify-center p-0">
-											<MediaPreview media={media} width={128} height={128} />
-										</CardContent>
-									</Card>
-								))}
-							</div>
+							<ScrollArea className="h-full w-full">
+								<div
+									id="media-list"
+									className="flex flex-wrap justify-center gap-4 self-baseline md:justify-start"
+								>
+									{userMedia.map((media) => (
+										<Card
+											key={media.media_id}
+											className={`h-24 w-24 overflow-hidden sm:h-32 sm:w-32 ${
+												selectedMedia?.media_id === media.media_id
+													? 'border-2 border-primary'
+													: ''
+											}`}
+											onClick={() => setSelectedMedia(media)}
+										>
+											<CardContent className="flex h-full w-full items-center justify-center p-0">
+												<MediaPreview media={media} width={128} height={128} />
+											</CardContent>
+										</Card>
+									))}
+								</div>
+							</ScrollArea>
 							{selectedMedia && (
 								<div className="absolute right-0 top-0 flex h-full w-full flex-col gap-4 border-border bg-background p-4 md:relative md:border-l-2">
 									<h2 className="text-lg font-bold sm:text-xl">Details</h2>
