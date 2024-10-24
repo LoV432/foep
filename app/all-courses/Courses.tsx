@@ -49,7 +49,7 @@ export default async function Courses({ filters }: { filters: string }) {
 									{course.course.description}
 								</p>
 								<p className="text-sm text-muted-foreground">
-									By {course.course.author_id}
+									By {course.author}
 								</p>
 							</div>
 							<div className="mt-4">

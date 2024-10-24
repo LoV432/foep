@@ -1,5 +1,5 @@
 import { db } from '@/db/db';
-import { Courses, CoursesCategories } from '@/db/schema';
+import { Courses, CoursesCategories, Users } from '@/db/schema';
 import { and, eq, gte, inArray, ilike, lte, sql, asc, desc } from 'drizzle-orm';
 import { filtersSchema } from './Filters.z';
 import { z } from 'zod';
@@ -30,13 +30,15 @@ export async function getCourses(filters: z.infer<typeof filtersSchema>) {
 			course: Courses,
 			category: CoursesCategories,
 			averageRating: sql<number>`${averageRating}`,
-			totalReviews: sql<number>`${totalReviews}`
+			totalReviews: sql<number>`${totalReviews}`,
+			author: Users.name
 		})
 		.from(Courses)
 		.leftJoin(
 			CoursesCategories,
 			eq(Courses.category_id, CoursesCategories.category_id)
 		)
+		.leftJoin(Users, eq(Courses.author_id, Users.user_id))
 		.where(sqlConditions)
 		.orderBy(
 			filters.sortByPrice === 'asc' ? asc(Courses.price) : desc(Courses.price)
