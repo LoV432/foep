@@ -85,20 +85,6 @@ export default function LoginForm() {
 				<Button type="submit" disabled={isLoading} className="w-full">
 					{isLoading ? 'Logging in...' : 'Login'}
 				</Button>
-				<div className="flex flex-col items-end gap-2 sm:flex-row">
-					<Link
-						href="/register"
-						className="text-sm text-black/70 underline hover:text-black sm:mr-auto"
-					>
-						Don&apos;t have an account?
-					</Link>
-					<Link
-						href="/login/reset-password"
-						className="text-sm text-black/70 underline hover:text-black sm:ml-auto"
-					>
-						Forgot your password?
-					</Link>
-				</div>
 				{formResponse && (
 					<div
 						className={`text-sm ${
@@ -120,6 +106,20 @@ export default function LoginForm() {
 						)}
 					</div>
 				)}
+				<div className="flex flex-col items-end gap-2 sm:flex-row">
+					<Link
+						href="/register"
+						className="text-sm text-black/70 underline hover:text-black sm:mr-auto"
+					>
+						Don&apos;t have an account?
+					</Link>
+					<Link
+						href="/login/reset-password"
+						className="text-sm text-black/70 underline hover:text-black sm:ml-auto"
+					>
+						Forgot your password?
+					</Link>
+				</div>
 			</form>
 		</Form>
 	);
