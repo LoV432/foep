@@ -69,7 +69,7 @@ export default function UploadForm() {
 									}}
 									width={192}
 									height={192}
-									className="mx-auto"
+									className="grid place-items-center text-center"
 								/>
 							) : (
 								<>
