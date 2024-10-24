@@ -4,131 +4,116 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-label';
 import { Upload } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ALLOWED_FILE_TYPES } from '@/lib/allowed-uploads';
-import { useForm } from 'react-hook-form';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage
-} from '@/components/ui/form';
-import { uploadFormSchema } from './UploadForm.z';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import Image from 'next/image';
 
 export default function UploadForm() {
 	const [previewUrl, setPreviewUrl] = useState<string>();
-	const form = useForm<z.infer<typeof uploadFormSchema>>({
-		resolver: zodResolver(uploadFormSchema),
-		defaultValues: {
-			file: undefined,
-			alt_text: '',
-			friendly_name: ''
-		}
-	});
-	async function handleFileChange(
-		e: React.ChangeEvent<HTMLInputElement>,
-		onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-	) {
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string>();
+
+	const fileRef = useRef<HTMLInputElement>(null);
+	const formRef = useRef<HTMLFormElement>(null);
+
+	async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
 		if (e.target.files?.[0]) {
 			setPreviewUrl(URL.createObjectURL(e.target.files[0]));
 		}
-		onChange(e);
 	}
 
-	async function onSubmit(values: z.infer<typeof uploadFormSchema>) {
-		console.log(values);
+	async function onSubmit(formData: FormData) {
+		try {
+			setIsLoading(true);
+			setError(undefined);
+			const uploadResult = await fetch('/api/upload', {
+				method: 'POST',
+				body: formData
+			});
+			if (uploadResult.ok) {
+				previewUrl && URL.revokeObjectURL(previewUrl);
+				setPreviewUrl(undefined);
+				formRef.current?.reset();
+			} else {
+				const errorData = (await uploadResult.json()) as { message: string };
+				setError(errorData.message);
+			}
+		} catch (error) {
+			console.error(error);
+			setError('An error occurred while uploading the file');
+		} finally {
+			setIsLoading(false);
+		}
 	}
 
 	return (
-		<div className="flex flex-col items-center">
-			<Form {...form}>
-				<form
-					method="POST"
-					onSubmit={form.handleSubmit(onSubmit)}
-					className="space-y-4"
-				>
-					<FormField
-						control={form.control}
+		<div className="flex flex-col items-center overflow-y-auto">
+			<form
+				method="POST"
+				ref={formRef}
+				onSubmit={(e) => {
+					e.preventDefault();
+					onSubmit(new FormData(e.currentTarget));
+				}}
+				className="w-full max-w-lg space-y-4 overflow-y-auto"
+			>
+				<>
+					<Label htmlFor="file-upload" className="cursor-pointer">
+						<div className="mx-auto flex h-48 w-48 flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300">
+							{previewUrl ? (
+								<Image
+									src={previewUrl}
+									alt="file preview"
+									onError={(e) => {
+										e.currentTarget.alt = `${fileRef.current?.files?.[0]?.name.slice(0, 10)}.... preview unavailable`;
+									}}
+									width={192}
+									height={192}
+									className="mx-auto"
+								/>
+							) : (
+								<>
+									<Upload className="mx-auto h-12 w-12 text-gray-400" />
+									<p className="mt-2 text-sm text-gray-600">
+										Click here to upload media
+									</p>
+								</>
+							)}
+						</div>
+					</Label>
+					<Input
+						id="file-upload"
+						type="file"
+						className="hidden"
+						accept={ALLOWED_FILE_TYPES.join(',')}
+						onChange={(e) => handleFileChange(e)}
+						ref={fileRef}
 						name="file"
-						render={({ field }) => (
-							<FormItem>
-								<FormControl>
-									<>
-										<Label htmlFor="file-upload" className="cursor-pointer">
-											<div className="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
-												{previewUrl ? (
-													<img
-														src={previewUrl}
-														alt="file preview"
-														onError={(e) => {
-															e.currentTarget.alt = 'file preview unavailable';
-														}}
-														className="mx-auto max-h-48 max-w-full"
-													/>
-												) : (
-													<>
-														<Upload className="mx-auto h-12 w-12 text-gray-400" />
-														<p className="mt-2 text-sm text-gray-600">
-															Click here to upload media
-														</p>
-													</>
-												)}
-											</div>
-										</Label>
-										<Input
-											id="file-upload"
-											type="file"
-											className="hidden"
-											accept={ALLOWED_FILE_TYPES.join(',')}
-											{...field}
-											// This feels like an awful hack. Find a better way to do this.
-											onChange={(e) => handleFileChange(e, field.onChange)}
-										/>
-									</>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
 					/>
-					{previewUrl && (
-						<>
-							<FormField
-								control={form.control}
-								name="friendly_name"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>File name</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="alt_text"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Alt text</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<Button type="submit" className="mt-4">
-								Upload
+				</>
+				{previewUrl && (
+					<>
+						<div className="space-y-2 px-2">
+							<Label htmlFor="friendly_name" className="text-sm font-semibold">
+								File name
+							</Label>
+							<Input id="friendly_name" name="friendly_name" type="text" />
+						</div>
+						<div className="space-y-2 px-2">
+							<Label htmlFor="alt_text" className="text-sm font-semibold">
+								Alt text
+							</Label>
+							<Input id="alt_text" name="alt_text" type="text" />
+						</div>
+						<div className="flex justify-end space-y-2 px-2">
+							<Button type="submit" disabled={isLoading}>
+								{isLoading ? 'Uploading...' : 'Upload'}
 							</Button>
-						</>
-					)}
-				</form>
-			</Form>
+						</div>
+					</>
+				)}
+				{error && <p className="text-red-500">{error}</p>}
+			</form>
 		</div>
 	);
 }
