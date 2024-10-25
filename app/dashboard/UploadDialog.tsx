@@ -9,7 +9,7 @@ import MediaPreview from './MediaPreview';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UploadForm from './UploadForm';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
+import DeleteMedia from './DeleteMedia';
 export default function UploadDialog({
 	userMedia,
 	selectedMediaCallback,
@@ -123,6 +123,7 @@ export default function UploadDialog({
 													Select
 												</Button>
 											)}
+											<DeleteMedia mediaId={selectedMedia.media_id} />
 										</div>
 									</div>
 								</div>

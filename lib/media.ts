@@ -9,6 +9,7 @@ import { Media } from '@/db/schema';
 import { ALLOWED_FILE_TYPES } from '@/lib/allowed-uploads';
 import { v4 as uuidv4 } from 'uuid';
 import { kebabCase } from '@/lib/kebab-case';
+import { eq, and } from 'drizzle-orm';
 
 if (
 	!process.env.B2_APPLICATION_KEY ||
@@ -26,7 +27,8 @@ const ERROR_MESSAGES_CLIENT: Record<string, string> = {
 	UNAUTHORIZED: 'Unauthorized',
 	INVALID_FILE_TYPE: 'This file type is not allowed',
 	NO_FILE_UPLOADED: 'No file uploaded',
-	FILE_TOO_LARGE: 'This file is too large (max 100MB)'
+	FILE_TOO_LARGE: 'This file is too large (max 100MB)',
+	MEDIA_NOT_FOUND: 'Media not found'
 };
 
 const ERROR_MESSAGES_SERVER: Record<string, string> = {
@@ -142,6 +144,75 @@ export async function uploadFile(formData: FormData) {
 		return {
 			success: false as const,
 			message: 'Something went wrong while uploading the file'
+		};
+	}
+}
+
+export async function deleteFile(mediaId: number) {
+	try {
+		const session = await getSession();
+		if (
+			!session.success ||
+			(session.data.role !== 'instructor' && session.data.role !== 'admin')
+		) {
+			throw new Error('UNAUTHORIZED');
+		}
+		const [mediaItem] = await db
+			.select()
+			.from(Media)
+			.where(
+				and(eq(Media.media_id, mediaId), eq(Media.user_id, session.data.id))
+			)
+			.limit(1);
+
+		if (!mediaItem) {
+			throw new Error('MEDIA_NOT_FOUND');
+		}
+
+		// TODO: I am assuming there's no folder structure so this should work
+		// This will break if there is a folder structure
+		// I think...
+		const fileName = mediaItem.url.split('/').pop();
+		if (!fileName) {
+			throw new Error('INVALID_FILE_NAME');
+		}
+
+		const deleteCommand = new DeleteObjectCommand({
+			Bucket: process.env.B2_BUCKET_NAME,
+			Key: fileName
+		});
+
+		await b2.send(deleteCommand);
+
+		try {
+			await db.delete(Media).where(eq(Media.media_id, mediaId));
+		} catch (error) {
+			console.log(
+				`Failed to delete ${fileName} metadata from database: ${error}`
+			);
+			throw new Error('FAILED_TO_DELETE_METADATA_FROM_DATABASE');
+		}
+
+		return { success: true as const, message: 'File deleted successfully' };
+	} catch (error) {
+		if (error instanceof Error) {
+			if (ERROR_MESSAGES_CLIENT[error.message]) {
+				return {
+					success: false as const,
+					message: ERROR_MESSAGES_CLIENT[error.message]
+				};
+			}
+			if (ERROR_MESSAGES_SERVER[error.message]) {
+				return {
+					success: false as const,
+					message: 'Something went wrong while deleting the file'
+				};
+			}
+		}
+		console.log(`Something went wrong while deleting the file: ${error}`);
+		return {
+			success: false as const,
+			message: 'Something went wrong while deleting the file'
 		};
 	}
 }

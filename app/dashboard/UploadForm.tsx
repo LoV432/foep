@@ -43,7 +43,7 @@ export default function UploadForm({
 			}
 			setIsLoading(true);
 			setError(undefined);
-			const uploadResult = await fetch('/api/upload', {
+			const uploadResult = await fetch('/api/media', {
 				method: 'POST',
 				body: formData
 			});
