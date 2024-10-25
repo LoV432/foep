@@ -169,7 +169,9 @@ export default function UploadDialog({
 					<TabsContent value="upload">
 						<UploadForm
 							selectedMediaCallback={selectedMediaCallback}
-							closeDialog={() => setOpen(false)}
+							closeDialog={
+								selectedMediaCallback ? () => setOpen(false) : undefined
+							}
 							refetchMedia={refetch}
 						/>
 					</TabsContent>
