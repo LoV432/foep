@@ -1,11 +1,15 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function DeleteMedia({ mediaId }: { mediaId: number }) {
-	const router = useRouter();
+export default function DeleteMedia({
+	mediaId,
+	refetchMedia
+}: {
+	mediaId: number;
+	refetchMedia: () => void;
+}) {
 	const [isLoading, setIsLoading] = useState(false);
 	async function deleteMedia(mediaId: number) {
 		setIsLoading(true);
@@ -14,7 +18,7 @@ export default function DeleteMedia({ mediaId }: { mediaId: number }) {
 				method: 'DELETE'
 			});
 			if (deleteResult.ok) {
-				router.refresh();
+				refetchMedia();
 			} else {
 				console.log(`Failed to delete media: ${deleteResult.statusText}`);
 			}

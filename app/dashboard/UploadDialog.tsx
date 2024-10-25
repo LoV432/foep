@@ -159,7 +159,10 @@ export default function UploadDialog({
 													Select
 												</Button>
 											)}
-											<DeleteMedia mediaId={selectedMedia.media_id} />
+											<DeleteMedia
+												mediaId={selectedMedia.media_id}
+												refetchMedia={refetch}
+											/>
 										</div>
 									</div>
 								</div>
