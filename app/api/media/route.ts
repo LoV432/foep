@@ -1,5 +1,14 @@
-import { uploadFile, deleteFile } from '@/lib/media';
+import { uploadFile, deleteFile, getAllMedia } from '@/lib/media';
 import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET() {
+	const allMedia = await getAllMedia();
+	if (allMedia.success) {
+		return NextResponse.json(allMedia, { status: 200 });
+	} else {
+		return NextResponse.json(allMedia, { status: 400 });
+	}
+}
 
 export async function POST(request: NextRequest) {
 	const uploadResult = await uploadFile(await request.formData());

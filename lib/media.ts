@@ -148,6 +148,26 @@ export async function uploadFile(formData: FormData) {
 	}
 }
 
+export async function getAllMedia() {
+	try {
+		const session = await getSession();
+		if (!session.success) {
+			throw new Error('UNAUTHORIZED');
+		}
+		const media = await db
+			.select()
+			.from(Media)
+			.where(eq(Media.user_id, session.data.id));
+		return { success: true as const, message: media };
+	} catch (error) {
+		console.log(`Something went wrong while getting all media: ${error}`);
+		return {
+			success: false as const,
+			message: 'Something went wrong while getting all media'
+		};
+	}
+}
+
 export async function deleteFile(mediaId: number) {
 	try {
 		const session = await getSession();
