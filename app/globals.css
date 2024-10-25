@@ -58,3 +58,11 @@
 		--chart-5: 340 75% 55%;
 	}
 }
+
+.w-md-editor-toolbar svg {
+	@apply h-5 w-5;
+}
+
+.w-md-editor-toolbar button {
+	@apply h-auto !important;
+}

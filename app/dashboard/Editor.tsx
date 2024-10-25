@@ -1,6 +1,10 @@
 'use client';
 
-import MDEditor, { commands, getCommands } from '@uiw/react-md-editor';
+import MDEditor, {
+	commands,
+	getCommands,
+	getExtraCommands
+} from '@uiw/react-md-editor';
 import { ImageIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import UploadDialog from './UploadDialog';
@@ -17,10 +21,12 @@ export default function App({
 	}, [value]);
 
 	return (
-		<div className="container">
+		<div className="container max-w-[1100px]">
 			<MDEditor
 				value={value}
 				onChange={setValue}
+				height={600}
+				preview="edit"
 				//autoCapitalize="none"
 				// There seems to be a bug with autoCapitalize on firefox.
 				// firefox throws this error:
@@ -50,15 +56,28 @@ export default function App({
 								handle.close();
 							}
 							return (
-								<UploadDialog
-									userMedia={userMedia}
-									selectedMediaCallback={handleSelectedMedia}
-								/>
+								<div className="flex flex-col">
+									<UploadDialog
+										userMedia={userMedia}
+										defaultTab="upload"
+										className="rounded-none border-b border-border bg-transparent hover:bg-zinc-900"
+										selectedMediaCallback={handleSelectedMedia}
+									/>
+									<UploadDialog
+										userMedia={userMedia}
+										defaultTab="media"
+										className="rounded-none bg-transparent hover:bg-zinc-900"
+										selectedMediaCallback={handleSelectedMedia}
+									/>
+								</div>
 							);
 						},
 						buttonProps: { 'aria-label': 'Insert title' }
 					})
 				]}
+				extraCommands={getExtraCommands().filter(
+					(command) => command.name !== 'live'
+				)}
 			/>
 		</div>
 	);
