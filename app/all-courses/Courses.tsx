@@ -1,23 +1,50 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Info, Star } from 'lucide-react';
-import { getCourses } from './get_courses';
 import Image from 'next/image';
-import { filtersSchema } from './Filters.z';
-import { z } from 'zod';
+import { useQuery } from '@tanstack/react-query';
+import { Spinner } from '@/components/ui/spinner';
+import type { GetCoursesResponse } from '../../lib/get_courses';
 
-export default async function Courses({ filters }: { filters: string }) {
-	let parsedFilters: z.infer<typeof filtersSchema>;
-	try {
-		parsedFilters = filtersSchema.parse(JSON.parse(filters));
-	} catch {
-		parsedFilters = filtersSchema.parse({});
+async function fetchCourses(filters: string) {
+	const response = await fetch(
+		`/api/courses?filters=${encodeURIComponent(filters)}`
+	);
+	if (!response.ok) {
+		throw new Error((await response.json()).message);
 	}
-	const courses = await getCourses(parsedFilters);
+	return (await response.json()).data as GetCoursesResponse['data'];
+}
+
+export default function Courses({ filters }: { filters: string }) {
+	const {
+		data: courses,
+		isLoading,
+		error
+	} = useQuery({
+		queryKey: ['courses', filters],
+		queryFn: () => fetchCourses(filters)
+	});
+
+	if (isLoading)
+		return (
+			<main className="my-auto grid w-full place-items-center md:w-3/4">
+				<Spinner className="h-8 w-8 text-primary" />
+			</main>
+		);
+	if (error)
+		return (
+			<main className="my-auto grid w-full place-items-center md:w-3/4">
+				An error occurred: {error.message}
+			</main>
+		);
+
 	return (
 		<main className="w-full md:w-3/4">
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-				{courses.map((course) => (
+				{courses?.map((course) => (
 					<Card
 						key={course.course.course_id}
 						className="group flex flex-col overflow-clip transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"

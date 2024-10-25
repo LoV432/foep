@@ -7,7 +7,7 @@ import { CoursesCategories } from '@/db/schema';
 export default async function CourseListingPage({
 	searchParams
 }: {
-	searchParams: { filters: string };
+	searchParams?: { filters: string };
 }) {
 	const categoriesPromise = db.select().from(CoursesCategories);
 	return (
@@ -17,7 +17,7 @@ export default async function CourseListingPage({
 				<h2 className="mb-4 text-2xl font-semibold">All Courses</h2>
 				<div className="flex flex-col gap-12 md:flex-row">
 					<FiltersSidebar categoriesPromise={categoriesPromise} />
-					<Courses filters={searchParams.filters} />
+					<Courses filters={searchParams?.filters ?? ''} />
 				</div>
 			</div>
 		</div>

@@ -21,7 +21,7 @@ export default function FiltersSidebar({
 	let parsedFilters: z.infer<typeof filtersSchema>;
 	try {
 		parsedFilters = filtersSchema.parse(
-			JSON.parse(searchParams.get('filters') || '{}')
+			JSON.parse(searchParams?.get('filters') || '{}')
 		);
 	} catch {
 		parsedFilters = filtersSchema.parse({});
