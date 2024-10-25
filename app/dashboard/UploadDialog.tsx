@@ -5,25 +5,45 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Media } from '@/db/schema';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import MediaPreview from './MediaPreview';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UploadForm from './UploadForm';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import DeleteMedia from './DeleteMedia';
+import { Spinner } from '@/components/ui/spinner';
+
+async function fetchUserMedia() {
+	const response = await fetch('/api/media');
+	if (!response.ok) {
+		throw new Error('Failed to fetch media');
+	}
+	return (await response.json()).message as (typeof Media.$inferSelect)[];
+}
+
 export default function UploadDialog({
-	userMedia,
 	selectedMediaCallback,
 	defaultTab,
 	className
 }: {
-	userMedia: (typeof Media.$inferSelect)[];
 	selectedMediaCallback?: (media: typeof Media.$inferSelect) => void;
 	defaultTab?: 'media' | 'upload';
 	className?: string;
 }) {
 	const [open, setOpen] = useState(false);
 	const [selectedMedia, setSelectedMedia] =
-		useState<(typeof userMedia)[number]>();
+		useState<typeof Media.$inferSelect>();
+
+	const {
+		data: userMedia,
+		isLoading,
+		error,
+		refetch
+	} = useQuery({
+		queryKey: ['userMedia'],
+		queryFn: fetchUserMedia
+	});
+
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
@@ -56,21 +76,37 @@ export default function UploadDialog({
 									id="media-list"
 									className="flex flex-wrap justify-center gap-4 self-baseline md:justify-start"
 								>
-									{userMedia.map((media) => (
-										<Card
-											key={media.media_id}
-											className={`h-24 w-24 overflow-hidden sm:h-32 sm:w-32 ${
-												selectedMedia?.media_id === media.media_id
-													? 'border-2 border-primary'
-													: ''
-											}`}
-											onClick={() => setSelectedMedia(media)}
-										>
-											<CardContent className="flex h-full w-full items-center justify-center p-0">
-												<MediaPreview media={media} width={128} height={128} />
-											</CardContent>
-										</Card>
-									))}
+									{isLoading && (
+										<div className="absolute inset-0 flex h-full w-full items-center justify-center">
+											<Spinner className="h-8 w-8 text-primary" />
+											<span className="ml-2 text-lg">Loading media...</span>
+										</div>
+									)}
+									{error && (
+										<div className="flex h-full w-full items-center justify-center text-red-500">
+											Error loading media: {error.message}
+										</div>
+									)}
+									{userMedia &&
+										userMedia.map((media) => (
+											<Card
+												key={media.media_id}
+												className={`h-24 w-24 overflow-hidden sm:h-32 sm:w-32 ${
+													selectedMedia?.media_id === media.media_id
+														? 'border-2 border-primary'
+														: ''
+												}`}
+												onClick={() => setSelectedMedia(media)}
+											>
+												<CardContent className="flex h-full w-full items-center justify-center p-0">
+													<MediaPreview
+														media={media}
+														width={128}
+														height={128}
+													/>
+												</CardContent>
+											</Card>
+										))}
 								</div>
 							</ScrollArea>
 							{selectedMedia && (
@@ -134,6 +170,7 @@ export default function UploadDialog({
 						<UploadForm
 							selectedMediaCallback={selectedMediaCallback}
 							closeDialog={() => setOpen(false)}
+							refetchMedia={refetch}
 						/>
 					</TabsContent>
 				</Tabs>

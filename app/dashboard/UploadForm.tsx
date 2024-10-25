@@ -11,10 +11,12 @@ import { Media } from '@/db/schema';
 
 export default function UploadForm({
 	selectedMediaCallback,
-	closeDialog
+	closeDialog,
+	refetchMedia
 }: {
 	selectedMediaCallback?: (media: typeof Media.$inferSelect) => void;
 	closeDialog?: () => void;
+	refetchMedia: () => void;
 }) {
 	const [previewUrl, setPreviewUrl] = useState<string>();
 	const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +57,7 @@ export default function UploadForm({
 				setPreviewUrl(undefined);
 				formRef.current?.reset();
 				closeDialog?.();
+				refetchMedia();
 			} else {
 				const errorData = (await uploadResult.json()) as { message: string };
 				setError(errorData.message);

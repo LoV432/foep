@@ -10,11 +10,7 @@ import { useEffect, useState } from 'react';
 import UploadDialog from './UploadDialog';
 import { Media } from '@/db/schema';
 
-export default function App({
-	userMedia
-}: {
-	userMedia: (typeof Media.$inferSelect)[];
-}) {
+export default function App() {
 	const [value, setValue] = useState<string | undefined>('**Hello world!!!**');
 	useEffect(() => {
 		console.log(value);
@@ -58,13 +54,11 @@ export default function App({
 							return (
 								<div className="flex flex-col">
 									<UploadDialog
-										userMedia={userMedia}
 										defaultTab="upload"
 										className="rounded-none border-b border-border bg-transparent hover:bg-zinc-900"
 										selectedMediaCallback={handleSelectedMedia}
 									/>
 									<UploadDialog
-										userMedia={userMedia}
 										defaultTab="media"
 										className="rounded-none bg-transparent hover:bg-zinc-900"
 										selectedMediaCallback={handleSelectedMedia}
