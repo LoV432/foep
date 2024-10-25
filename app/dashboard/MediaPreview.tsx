@@ -20,8 +20,18 @@ export default function MediaPreview({
 			height={height}
 		/>
 	) : media.type.split('/')[0] === 'video' ? (
-		<VideoIcon className="h-24 w-24" />
+		<div className="flex w-full flex-col items-center">
+			<VideoIcon className="h-24 w-24" />
+			<p className="mx-auto w-full overflow-hidden text-ellipsis whitespace-nowrap px-3 text-sm">
+				{media.friendly_name}
+			</p>
+		</div>
 	) : (
-		<FileIcon className="h-24 w-24" />
+		<div className="flex w-full flex-col items-center">
+			<FileIcon className="h-24 w-24" />
+			<p className="mx-auto w-full overflow-hidden text-ellipsis whitespace-nowrap px-3 text-sm">
+				{media.friendly_name}
+			</p>
+		</div>
 	);
 }
