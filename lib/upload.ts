@@ -90,14 +90,18 @@ export async function uploadFile(formData: FormData) {
 			console.log(`Failed to upload file ${fileName} to B2: ${error}`);
 			throw new Error('FAILED_TO_UPLOAD_TO_B2');
 		}
+		let media;
 		try {
-			await db.insert(Media).values({
-				user_id: session.data.id,
-				friendly_name: friendlyName,
-				alt_text: altText,
-				url: `https://${process.env.B2_BUCKET_NAME}.${process.env.B2_ENDPOINT}/${fileName}`,
-				type: fileType
-			});
+			media = await db
+				.insert(Media)
+				.values({
+					user_id: session.data.id,
+					friendly_name: friendlyName,
+					alt_text: altText,
+					url: `https://${process.env.B2_BUCKET_NAME}.${process.env.B2_ENDPOINT}/${fileName}`,
+					type: fileType
+				})
+				.returning();
 		} catch (error) {
 			try {
 				const command = new DeleteObjectCommand({
@@ -118,7 +122,7 @@ export async function uploadFile(formData: FormData) {
 			throw new Error('FAILED_TO_SAVE_METADATA_TO_DATABASE');
 		}
 
-		return { success: true as const };
+		return { success: true as const, message: media[0] };
 	} catch (error) {
 		if (error instanceof Error) {
 			if (ERROR_MESSAGES_CLIENT[error.message]) {

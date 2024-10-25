@@ -130,7 +130,10 @@ export default function UploadDialog({
 						</div>
 					</TabsContent>
 					<TabsContent value="upload">
-						<UploadForm />
+						<UploadForm
+							selectedMediaCallback={selectedMediaCallback}
+							closeDialog={() => setOpen(false)}
+						/>
 					</TabsContent>
 				</Tabs>
 			</DialogContent>

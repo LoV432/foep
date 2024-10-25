@@ -7,8 +7,15 @@ import { Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { ALLOWED_FILE_TYPES } from '@/lib/allowed-uploads';
 import Image from 'next/image';
+import { Media } from '@/db/schema';
 
-export default function UploadForm() {
+export default function UploadForm({
+	selectedMediaCallback,
+	closeDialog
+}: {
+	selectedMediaCallback?: (media: typeof Media.$inferSelect) => void;
+	closeDialog?: () => void;
+}) {
 	const [previewUrl, setPreviewUrl] = useState<string>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string>();
@@ -41,9 +48,13 @@ export default function UploadForm() {
 				body: formData
 			});
 			if (uploadResult.ok) {
+				const media = (await uploadResult.json())
+					.message as typeof Media.$inferSelect;
+				selectedMediaCallback?.(media);
 				previewUrl && URL.revokeObjectURL(previewUrl);
 				setPreviewUrl(undefined);
 				formRef.current?.reset();
+				closeDialog?.();
 			} else {
 				const errorData = (await uploadResult.json()) as { message: string };
 				setError(errorData.message);
