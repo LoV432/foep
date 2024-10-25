@@ -4,12 +4,11 @@ export const ALLOWED_FILE_TYPES = [
 	'image/png',
 	'image/gif',
 	'image/webp',
-	'image/svg+xml',
+	'image/avif',
 	// Video extensions
 	'video/mp4',
-	'video/webm',
-	'video/ogg',
 	'video/mpeg',
+	'video/webm',
 	// Audio extensions
 	'audio/mpeg',
 	'audio/wav',
