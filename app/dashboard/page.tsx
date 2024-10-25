@@ -6,6 +6,7 @@ import UploadDialog from './UploadDialog';
 import { db } from '@/db/db';
 import { Media } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import Editor from './Editor';
 
 export default async function DashboardPage() {
 	const session = await getSession();
@@ -32,7 +33,12 @@ export default async function DashboardPage() {
 				<input type="file" name="file" accept={ALLOWED_FILE_TYPES.join(',')} />
 				<Button type="submit">Upload</Button>
 			</form>
-			<UploadDialog userMedia={userMedia} />
+			<UploadDialog
+				userMedia={userMedia}
+				defaultTab="media"
+				className="bg-red-500"
+			/>
+			<Editor userMedia={userMedia} />
 			<pre className="text-xl">{JSON.stringify(session, null, 2)}</pre>
 		</div>
 	);

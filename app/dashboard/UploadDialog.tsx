@@ -11,20 +11,29 @@ import UploadForm from './UploadForm';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function UploadDialog({
-	userMedia
+	userMedia,
+	selectedMediaCallback,
+	defaultTab,
+	className
 }: {
 	userMedia: (typeof Media.$inferSelect)[];
+	selectedMediaCallback?: (media: typeof Media.$inferSelect) => void;
+	defaultTab?: 'media' | 'upload';
+	className?: string;
 }) {
+	const [open, setOpen] = useState(false);
 	const [selectedMedia, setSelectedMedia] =
 		useState<(typeof userMedia)[number]>();
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>Media Library</Button>
+				<Button className={className}>
+					{defaultTab === 'upload' ? 'Upload' : 'Media Library'}
+				</Button>
 			</DialogTrigger>
 			<DialogContent className="max-w-screen-xl">
 				<Tabs
-					defaultValue="media"
+					defaultValue={defaultTab ?? 'media'}
 					className="relative h-[90dvh] overflow-y-auto"
 				>
 					<TabsList className="mb-4 mt-4 w-full sm:w-56">
@@ -104,7 +113,16 @@ export default function UploadDialog({
 											>
 												Cancel
 											</Button>
-											<Button>Select</Button>
+											{selectedMediaCallback && (
+												<Button
+													onClick={() => {
+														selectedMediaCallback(selectedMedia);
+														setOpen(false);
+													}}
+												>
+													Select
+												</Button>
+											)}
 										</div>
 									</div>
 								</div>
