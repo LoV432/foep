@@ -11,12 +11,12 @@ export async function getCourses(filters: z.infer<typeof filtersSchema>) {
 		const averageRating = db.execute(
 			sql<{
 				average_rating: number;
-			}>`SELECT ROUND(AVG(rating), 0)::integer AS average_rating FROM "CoursesReviews" WHERE course_id = "Courses".course_id`
+			}>`SELECT coalesce(ROUND(AVG(rating), 0)::integer, 0) AS average_rating FROM "CoursesReviews" WHERE course_id = "Courses".course_id`
 		);
 		const totalReviews = db.execute(
 			sql<{
 				total_reviews: number;
-			}>`SELECT COUNT(*)::integer AS total_reviews FROM "CoursesReviews" WHERE course_id = "Courses".course_id`
+			}>`SELECT coalesce(COUNT(*), 0)::integer AS total_reviews FROM "CoursesReviews" WHERE course_id = "Courses".course_id`
 		);
 		const sqlConditions = and(
 			filters.selectedCategories.length > 0
