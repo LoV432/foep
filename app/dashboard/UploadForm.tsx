@@ -53,7 +53,9 @@ export default function UploadForm({
 				const media = (await uploadResult.json())
 					.message as typeof Media.$inferSelect;
 				selectedMediaCallback?.(media);
-				previewUrl && URL.revokeObjectURL(previewUrl);
+				if (previewUrl) {
+					URL.revokeObjectURL(previewUrl);
+				}
 				setPreviewUrl(undefined);
 				formRef.current?.reset();
 				closeDialog?.();
