@@ -1,11 +1,10 @@
-'use client';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider, SliderWithRange } from '@/components/ui/slider';
 import { CoursesCategories } from '@/db/schema';
-import { useState, use } from 'react';
+import { use } from 'react';
 import { UpdateFiltersAction } from './Main';
 import { filtersSchema } from './Filters.z';
 import { z } from 'zod';
@@ -13,30 +12,33 @@ import { z } from 'zod';
 export default function FiltersSidebar({
 	categoriesPromise,
 	dispatchFilters,
-	filtersState
+	filtersState,
+	setQueryFilters
 }: {
 	categoriesPromise: Promise<(typeof CoursesCategories.$inferSelect)[]>;
 	dispatchFilters: React.Dispatch<UpdateFiltersAction>;
 	filtersState: z.infer<typeof filtersSchema>;
+	setQueryFilters: React.Dispatch<
+		React.SetStateAction<z.infer<typeof filtersSchema>>
+	>;
 }) {
 	const categories = use(categoriesPromise);
-
-	const [isLoading, setIsLoading] = useState(false);
 
 	function applyFilter() {
 		try {
 			const filters = filtersSchema.parse(filtersState);
+			filters.page = 1;
 			dispatchFilters(filters);
-			setIsLoading(true);
+			setQueryFilters(filters);
 		} catch (error) {
 			console.error(error);
-		} finally {
-			setIsLoading(false);
 		}
 	}
 
 	function clearFilters() {
-		dispatchFilters(filtersSchema.parse({}));
+		const filters = filtersSchema.parse({ page: 1 });
+		dispatchFilters(filters);
+		setQueryFilters(filters);
 	}
 
 	return (
@@ -123,9 +125,7 @@ export default function FiltersSidebar({
 				</Button>
 			</div>
 			<div className="flex gap-2">
-				<Button onClick={applyFilter} disabled={isLoading}>
-					{isLoading ? 'Applying...' : 'Apply Filters'}
-				</Button>
+				<Button onClick={applyFilter}>Apply Filters</Button>
 				<Button variant="destructive" onClick={clearFilters}>
 					Clear Filters
 				</Button>
