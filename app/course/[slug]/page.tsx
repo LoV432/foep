@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { getCourse } from '@/lib/get_course';
 import Header from '@/components/Header';
 import Image from 'next/image';
+import rehypeRaw from 'rehype-raw';
 
 export default async function CoursePage({
 	params
@@ -37,7 +38,7 @@ export default async function CoursePage({
 								height={500}
 							/>
 							<div className="prose max-w-none">
-								<ReactMarkdown>
+								<ReactMarkdown rehypePlugins={[rehypeRaw]}>
 									{data.course.long_description?.replaceAll('\\n', '\n')}
 								</ReactMarkdown>
 							</div>
