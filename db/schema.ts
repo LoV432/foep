@@ -115,12 +115,16 @@ export const Courses = pgTable('Courses', {
 	author_id: integer('author_id')
 		.references(() => Users.user_id)
 		.notNull(),
-	name: varchar('name').notNull().unique(), // I will probably use this as the slug too
+	name: varchar('name').notNull(),
+	slug: varchar('slug').notNull().unique(),
 	category_id: integer('category_id') // TODO: Allow multiple categories
 		.references(() => CoursesCategories.category_id)
 		.notNull(),
-	description: varchar('description').notNull(),
-	image_url: varchar('image_url').notNull(), // TODO: All media will have separate table and this will be a reference to that media
+	short_description: varchar('short_description').notNull(),
+	long_description: varchar('long_description'),
+	media_id: integer('media_id')
+		.references(() => Media.media_id)
+		.notNull(),
 	price: real('price'),
 	created_at: timestamp('created_at', { withTimezone: true })
 		.notNull()

@@ -57,7 +57,7 @@ export default function Courses({
 					>
 						<div className="relative">
 							<Image
-								src={course.course.image_url}
+								src={course.media_url ?? ''}
 								alt={course.course.name}
 								width={300}
 								height={200}
@@ -79,7 +79,7 @@ export default function Courses({
 									{course.course.name}
 								</h2>
 								<p className="mb-2 text-muted-foreground">
-									{course.course.description}
+									{course.course.short_description}
 								</p>
 								<p className="text-sm text-muted-foreground">
 									By {course.author}
