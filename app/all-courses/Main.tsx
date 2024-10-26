@@ -49,6 +49,12 @@ export default function Main({
 			`/all-courses?filters=${JSON.stringify(debouncedFiltersState)}`
 		);
 	}, [debouncedFiltersState]);
+
+	const handlePageChange = useCallback((newPage: number) => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+		dispatchFilters({ page: newPage });
+	}, []);
+
 	return (
 		<>
 			<FiltersSidebar
@@ -56,7 +62,10 @@ export default function Main({
 				categoriesPromise={categoriesPromise}
 				dispatchFilters={dispatchFilters}
 			/>
-			<Courses filters={debouncedFiltersState} />
+			<Courses
+				filters={debouncedFiltersState}
+				onPageChange={handlePageChange}
+			/>
 		</>
 	);
 }

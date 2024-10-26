@@ -28,6 +28,13 @@ export async function getCourses(filters: z.infer<typeof filtersSchema>) {
 			gte(averageRating, filters.minRating)
 		);
 
+		const totalCountQuery = await db
+			.select({ count: sql<number>`count(*)` })
+			.from(Courses)
+			.where(sqlConditions);
+
+		const totalCount = totalCountQuery[0].count;
+
 		const courses = await db
 			.select({
 				course: Courses,
@@ -47,8 +54,19 @@ export async function getCourses(filters: z.infer<typeof filtersSchema>) {
 			.where(sqlConditions)
 			.orderBy(
 				filters.sortByPrice === 'asc' ? asc(Courses.price) : desc(Courses.price)
-			);
-		return { success: true as const, data: courses };
+			)
+			.limit(filters.pageSize)
+			.offset((filters.page - 1) * filters.pageSize);
+
+		return {
+			success: true as const,
+			data: courses,
+			pagination: {
+				currentPage: filters.page,
+				totalPages: Math.ceil(totalCount / filters.pageSize),
+				totalCount
+			}
+		};
 	} catch (error) {
 		console.error(error);
 		return {

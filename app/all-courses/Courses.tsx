@@ -17,16 +17,18 @@ async function fetchCourses(filters: z.infer<typeof filtersSchema>) {
 	if (!response.ok) {
 		throw new Error((await response.json()).message);
 	}
-	return (await response.json()).data as GetCoursesResponse['data'];
+	return (await response.json()) as GetCoursesResponse;
 }
 
 export default function Courses({
-	filters
+	filters,
+	onPageChange
 }: {
 	filters: z.infer<typeof filtersSchema>;
+	onPageChange: (page: number) => void;
 }) {
 	const {
-		data: courses,
+		data: coursesData,
 		isLoading,
 		error
 	} = useQuery({
@@ -46,6 +48,9 @@ export default function Courses({
 				An error occurred: {error.message}
 			</main>
 		);
+
+	const courses = coursesData?.data;
+	const pagination = coursesData?.pagination;
 
 	return (
 		<main className="w-full md:w-3/4">
@@ -111,6 +116,25 @@ export default function Courses({
 					</Card>
 				))}
 			</div>
+			{pagination && (
+				<div className="mt-8 flex justify-center">
+					<Button
+						onClick={() => onPageChange(pagination.currentPage - 1)}
+						disabled={pagination.currentPage === 1}
+					>
+						Previous
+					</Button>
+					<span className="mx-4 my-auto">
+						Page {pagination.currentPage} of {pagination.totalPages}
+					</span>
+					<Button
+						onClick={() => onPageChange(pagination.currentPage + 1)}
+						disabled={pagination.currentPage === pagination.totalPages}
+					>
+						Next
+					</Button>
+				</div>
+			)}
 		</main>
 	);
 }
