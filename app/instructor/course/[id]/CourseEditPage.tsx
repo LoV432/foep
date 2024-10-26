@@ -49,11 +49,11 @@ export default function CourseEditPage({
 		defaultValues: {
 			courseId: course.course_id,
 			name: course.name,
-			price: course.price?.toString() ?? '',
+			price: course.price.toString(),
 			shortDescription: course.short_description,
 			category: course.category_id.toString(),
-			imageUrl: course.image_url ?? '',
-			largeDescription: course.long_description ?? '',
+			imageUrl: course.image_url,
+			largeDescription: course.long_description,
 			isDraft: course.is_draft
 		}
 	});

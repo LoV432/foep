@@ -65,7 +65,7 @@ export default function Courses({
 					>
 						<div className="relative">
 							<Image
-								src={data.course.image_url ?? ''}
+								src={data.course.image_url}
 								alt={data.course.name}
 								width={300}
 								height={200}

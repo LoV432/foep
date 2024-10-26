@@ -31,7 +31,7 @@ export default async function CoursePage({
 								<p className="mt-1 text-sm text-gray-500">by {data.author}</p>
 							</div>
 							<Image
-								src={data.image_url ?? ''}
+								src={data.image_url}
 								alt={data.course.name}
 								className="max-h-[300px] w-full object-cover"
 								width={500}
@@ -39,7 +39,7 @@ export default async function CoursePage({
 							/>
 							<div className="prose max-w-none">
 								<ReactMarkdown rehypePlugins={[rehypeRaw]}>
-									{data.course.long_description?.replaceAll('\\n', '\n')}
+									{data.course.long_description.replaceAll('\\n', '\n')}
 								</ReactMarkdown>
 							</div>
 							<div className="flex space-x-4 text-sm text-gray-500">
