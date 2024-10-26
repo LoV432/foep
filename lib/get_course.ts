@@ -24,7 +24,7 @@ export async function getCourse(slug: string) {
 				averageRating: sql<number>`${averageRating}`,
 				totalReviews: sql<number>`${totalReviews}`,
 				author: Users.name,
-				media_url: Media.url
+				image_url: Courses.image_url
 			})
 			.from(Courses)
 			.leftJoin(
@@ -32,7 +32,6 @@ export async function getCourse(slug: string) {
 				eq(Courses.category_id, CoursesCategories.category_id)
 			)
 			.leftJoin(Users, eq(Courses.author_id, Users.user_id))
-			.leftJoin(Media, eq(Courses.media_id, Media.media_id))
 			.where(eq(Courses.slug, slug));
 		return {
 			success: true as const,

@@ -42,13 +42,13 @@ export async function getCourses(filters: z.infer<typeof filtersSchema>) {
 					slug: Courses.slug,
 					name: Courses.name,
 					short_description: Courses.short_description,
-					price: Courses.price
+					price: Courses.price,
+					image_url: Courses.image_url
 				},
 				category: CoursesCategories,
 				averageRating: sql<number>`${averageRating}`,
 				totalReviews: sql<number>`${totalReviews}`,
-				author: Users.name,
-				media_url: Media.url
+				author: Users.name
 			})
 			.from(Courses)
 			.leftJoin(
@@ -56,7 +56,6 @@ export async function getCourses(filters: z.infer<typeof filtersSchema>) {
 				eq(Courses.category_id, CoursesCategories.category_id)
 			)
 			.leftJoin(Users, eq(Courses.author_id, Users.user_id))
-			.leftJoin(Media, eq(Courses.media_id, Media.media_id))
 			.where(sqlConditions)
 			.orderBy(
 				filters.sortByPrice === 'asc' ? asc(Courses.price) : desc(Courses.price)

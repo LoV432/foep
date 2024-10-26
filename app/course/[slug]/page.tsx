@@ -30,7 +30,7 @@ export default async function CoursePage({
 								<p className="mt-1 text-sm text-gray-500">by {data.author}</p>
 							</div>
 							<Image
-								src={data.media_url ?? ''}
+								src={data.image_url ?? ''}
 								alt={data.course.name}
 								className="max-h-[300px] w-full object-cover"
 								width={500}

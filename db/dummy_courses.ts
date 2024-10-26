@@ -46,25 +46,9 @@ async function createInstructors() {
 	await db.insert(schema.Users).values(instructors);
 }
 
-async function createMedia() {
-	const instructors = await db.select().from(schema.Users);
-	const media = instructors.flatMap((user) =>
-		Array.from({ length: faker.number.int({ min: 3, max: 8 }) }, () => ({
-			user_id: user.user_id,
-			type: faker.helpers.arrayElement(['image/jpeg']),
-			url: faker.image.urlPicsumPhotos(),
-			friendly_name: faker.lorem.words({ min: 3, max: 6 }),
-			alt_text: faker.lorem.sentence()
-		}))
-	);
-
-	await db.insert(schema.Media).values(media);
-}
-
 async function createCourses() {
 	const categories = await db.select().from(schema.CoursesCategories);
 	const instructors = await db.select().from(schema.Users);
-	const media = await db.select().from(schema.Media);
 
 	const courses = Array.from({ length: 50 }, () => {
 		const category = faker.helpers.arrayElement(categories);
@@ -75,7 +59,7 @@ async function createCourses() {
 			long_description: faker.lorem.paragraph(),
 			author_id: instructor.user_id,
 			price: parseFloat(faker.commerce.price({ min: 9.99, max: 199.99 })),
-			media_id: faker.helpers.arrayElement(media).media_id,
+			image_url: faker.image.urlPicsumPhotos(),
 			category_id: category.category_id,
 			slug: faker.helpers
 				.slugify(faker.lorem.words({ min: 3, max: 6 }))
@@ -111,13 +95,11 @@ async function createReviews() {
 async function main() {
 	await db.delete(schema.Courses).execute();
 	await db.delete(schema.CoursesReviews).execute();
-	await db.delete(schema.Media).execute();
 	await db.delete(schema.CoursesCategories).execute();
 	await db.delete(schema.Users).execute();
 
 	await createCategories();
 	await createInstructors();
-	await createMedia();
 	await createCourses();
 	await createReviews();
 

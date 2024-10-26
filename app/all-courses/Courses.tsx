@@ -58,15 +58,15 @@ export default function Courses({
 					</div>
 				))}
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-				{courses?.map((course) => (
+				{courses?.map((data) => (
 					<Card
-						key={course.course.course_id}
+						key={data.course.course_id}
 						className="group relative flex flex-col overflow-clip transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
 					>
 						<div className="relative">
 							<Image
-								src={course.media_url ?? ''}
-								alt={course.course.name}
+								src={data.course.image_url ?? ''}
+								alt={data.course.name}
 								width={300}
 								height={200}
 								className="h-48 w-full object-cover"
@@ -84,33 +84,33 @@ export default function Courses({
 						<CardContent className="flex flex-grow flex-col justify-between p-4">
 							<div>
 								<h2 className="mb-2 text-xl font-semibold">
-									{course.course.name}
+									{data.course.name}
 								</h2>
 								<p className="mb-2 text-muted-foreground">
-									{course.course.short_description}
+									{data.course.short_description}
 								</p>
 								<p className="text-sm text-muted-foreground">
-									By {course.author}
+									By {data.author}
 								</p>
 							</div>
 							<div className="mt-4">
 								<div className="flex items-center justify-between">
 									<span className="text-lg font-bold">
-										${course.course.price?.toFixed(2)}
+										${data.course.price?.toFixed(2)}
 									</span>
 									<div className="flex items-center">
 										{[...Array(5)].map((_, i) => (
 											<Star
 												key={i}
 												className={`h-5 w-5 ${
-													i < course.averageRating
+													i < data.averageRating
 														? 'fill-current text-yellow-400'
 														: 'text-gray-300'
 												}`}
 											/>
 										))}
 										<span className="ml-1 text-sm text-muted-foreground">
-											({course.totalReviews})
+											({data.totalReviews})
 										</span>
 									</div>
 								</div>
@@ -118,8 +118,8 @@ export default function Courses({
 						</CardContent>
 						<Link
 							className="absolute inset-0"
-							href={`/course/${course.course.slug}`}
-							key={course.course.course_id}
+							href={`/course/${data.course.slug}`}
+							key={data.course.course_id}
 						/>
 					</Card>
 				))}

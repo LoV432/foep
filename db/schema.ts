@@ -122,10 +122,9 @@ export const Courses = pgTable('Courses', {
 		.notNull(),
 	short_description: varchar('short_description').notNull(),
 	long_description: varchar('long_description'),
-	media_id: integer('media_id')
-		.references(() => Media.media_id)
-		.notNull(),
+	image_url: varchar('image_url'),
 	price: real('price'),
+	is_draft: boolean('is_draft').notNull().default(false),
 	created_at: timestamp('created_at', { withTimezone: true })
 		.notNull()
 		.defaultNow(),
