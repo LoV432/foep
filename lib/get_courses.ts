@@ -11,12 +11,12 @@ export async function getCourses(filters: z.infer<typeof filtersSchema>) {
 		const averageRating = db.execute(
 			sql<{
 				average_rating: number;
-			}>`SELECT ROUND(AVG(rating), 0) AS average_rating FROM "CoursesReviews" WHERE course_id = "Courses".course_id`
+			}>`SELECT ROUND(AVG(rating), 0)::integer AS average_rating FROM "CoursesReviews" WHERE course_id = "Courses".course_id`
 		);
 		const totalReviews = db.execute(
 			sql<{
 				total_reviews: number;
-			}>`SELECT COUNT(*) AS total_reviews FROM "CoursesReviews" WHERE course_id = "Courses".course_id`
+			}>`SELECT COUNT(*)::integer AS total_reviews FROM "CoursesReviews" WHERE course_id = "Courses".course_id`
 		);
 		const sqlConditions = and(
 			filters.selectedCategories.length > 0
@@ -37,7 +37,13 @@ export async function getCourses(filters: z.infer<typeof filtersSchema>) {
 
 		const courses = await db
 			.select({
-				course: Courses,
+				course: {
+					course_id: Courses.course_id,
+					slug: Courses.slug,
+					name: Courses.name,
+					short_description: Courses.short_description,
+					price: Courses.price
+				},
 				category: CoursesCategories,
 				averageRating: sql<number>`${averageRating}`,
 				totalReviews: sql<number>`${totalReviews}`,

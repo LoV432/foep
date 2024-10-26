@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Info, Star } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '@/components/ui/spinner';
 import type { GetCoursesResponse } from '../../lib/get_courses';
@@ -60,7 +61,7 @@ export default function Courses({
 				{courses?.map((course) => (
 					<Card
 						key={course.course.course_id}
-						className="group flex flex-col overflow-clip transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+						className="group relative flex flex-col overflow-clip transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
 					>
 						<div className="relative">
 							<Image
@@ -115,6 +116,11 @@ export default function Courses({
 								</div>
 							</div>
 						</CardContent>
+						<Link
+							className="absolute inset-0"
+							href={`/course/${course.course.slug}`}
+							key={course.course.course_id}
+						/>
 					</Card>
 				))}
 			</div>
