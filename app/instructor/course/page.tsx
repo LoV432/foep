@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Save } from 'lucide-react';
+import { Loader2, Save } from 'lucide-react';
 import UploadDialog from '../../dashboard/UploadDialog';
 import Image from 'next/image';
 import { getCategories } from './get_categories';
@@ -34,12 +34,15 @@ import Editor from '../../dashboard/Editor';
 import { addCourseSchema } from './AddCourse.z';
 type FormData = z.infer<typeof addCourseSchema>;
 import { createCourse } from './create_course';
+import { useRouter } from 'next/navigation';
 
 export default function CourseCreationPage() {
 	const [categories, setCategories] = useState<
 		(typeof CoursesCategories.$inferSelect)[]
 	>([]);
-
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const router = useRouter();
 	const form = useForm<FormData>({
 		resolver: zodResolver(addCourseSchema),
 		defaultValues: {
@@ -54,8 +57,19 @@ export default function CourseCreationPage() {
 	});
 
 	async function onSubmit(data: FormData) {
-		const course = await createCourse(data);
-		console.log('Course created', course);
+		setIsLoading(true);
+		try {
+			const course = await createCourse(data);
+			if (course.success) {
+				router.push(`/instructor/course/${course.course[0].course_id}`);
+			} else {
+				setError('Failed to create course. Please try again.');
+				setIsLoading(false);
+			}
+		} catch (error) {
+			setError('Failed to create course. Please try again.');
+			setIsLoading(false);
+		}
 	}
 
 	useEffect(() => {
@@ -69,9 +83,16 @@ export default function CourseCreationPage() {
 			<header className="sticky top-0 z-10 border-b border-gray-200 bg-white">
 				<div className="container mx-auto flex items-center justify-between px-4 py-4">
 					<h1 className="text-2xl font-bold">Create New Course</h1>
-					<Button onClick={form.handleSubmit(onSubmit)}>
-						<Save className="mr-2 h-4 w-4" /> Publish
-					</Button>
+					<div>
+						<Button disabled={isLoading} onClick={form.handleSubmit(onSubmit)}>
+							{isLoading ? (
+								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+							) : (
+								<Save className="mr-2 h-4 w-4" />
+							)}
+							Publish
+						</Button>
+					</div>
 				</div>
 			</header>
 
@@ -82,6 +103,8 @@ export default function CourseCreationPage() {
 							<Card>
 								<CardContent className="p-6">
 									<div className="space-y-6">
+										{error && <div className="text-red-500">{error}</div>}
+
 										<FormField
 											control={form.control}
 											name="name"

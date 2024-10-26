@@ -35,13 +35,13 @@ export async function createCourse(data: z.infer<typeof addCourseSchema>) {
 			.returning();
 
 		return {
-			success: true,
+			success: true as const,
 			course
 		};
 	} catch (error) {
 		console.error(error);
 		return {
-			success: false,
+			success: false as const,
 			message: 'Failed to create course'
 		};
 	}
