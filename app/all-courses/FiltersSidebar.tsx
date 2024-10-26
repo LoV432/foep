@@ -5,42 +5,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider, SliderWithRange } from '@/components/ui/slider';
 import { CoursesCategories } from '@/db/schema';
-import { use, useReducer, useState } from 'react';
+import { useState, use } from 'react';
+import { UpdateFiltersAction } from './Main';
 import { filtersSchema } from './Filters.z';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { z } from 'zod';
 
 export default function FiltersSidebar({
-	categoriesPromise
+	categoriesPromise,
+	dispatchFilters,
+	filtersState
 }: {
 	categoriesPromise: Promise<(typeof CoursesCategories.$inferSelect)[]>;
+	dispatchFilters: React.Dispatch<UpdateFiltersAction>;
+	filtersState: z.infer<typeof filtersSchema>;
 }) {
 	const categories = use(categoriesPromise);
-	const router = useRouter();
-	const searchParams = useSearchParams();
-	let parsedFilters: z.infer<typeof filtersSchema>;
-	try {
-		parsedFilters = filtersSchema.parse(
-			JSON.parse(searchParams?.get('filters') || '{}')
-		);
-	} catch {
-		parsedFilters = filtersSchema.parse({});
-	}
 
-	function updateFilters(
-		state: z.infer<typeof filtersSchema>,
-		action: {
-			[key in keyof z.infer<typeof filtersSchema>]?: z.infer<
-				typeof filtersSchema
-			>[key];
-		}
-	) {
-		return filtersSchema.parse({ ...state, ...action });
-	}
-	const [filtersState, dispatchFilters] = useReducer(
-		updateFilters,
-		parsedFilters
-	);
 	const [isLoading, setIsLoading] = useState(false);
 
 	function applyFilter() {
@@ -48,7 +28,6 @@ export default function FiltersSidebar({
 			const filters = filtersSchema.parse(filtersState);
 			dispatchFilters(filters);
 			setIsLoading(true);
-			router.push(`/all-courses?filters=${JSON.stringify(filters)}`);
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -58,7 +37,6 @@ export default function FiltersSidebar({
 
 	function clearFilters() {
 		dispatchFilters(filtersSchema.parse({}));
-		router.push('/all-courses');
 	}
 
 	return (

@@ -7,10 +7,12 @@ import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '@/components/ui/spinner';
 import type { GetCoursesResponse } from '../../lib/get_courses';
+import { filtersSchema } from './Filters.z';
+import { z } from 'zod';
 
-async function fetchCourses(filters: string) {
+async function fetchCourses(filters: z.infer<typeof filtersSchema>) {
 	const response = await fetch(
-		`/api/courses?filters=${encodeURIComponent(filters)}`
+		`/api/courses?filters=${encodeURIComponent(JSON.stringify(filters))}`
 	);
 	if (!response.ok) {
 		throw new Error((await response.json()).message);
@@ -18,7 +20,11 @@ async function fetchCourses(filters: string) {
 	return (await response.json()).data as GetCoursesResponse['data'];
 }
 
-export default function Courses({ filters }: { filters: string }) {
+export default function Courses({
+	filters
+}: {
+	filters: z.infer<typeof filtersSchema>;
+}) {
 	const {
 		data: courses,
 		isLoading,
