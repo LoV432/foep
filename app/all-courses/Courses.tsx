@@ -30,18 +30,14 @@ export default function Courses({
 	const {
 		data: coursesData,
 		isLoading,
+		isPlaceholderData,
 		error
 	} = useQuery({
 		queryKey: ['courses', filters],
-		queryFn: () => fetchCourses(filters)
+		queryFn: () => fetchCourses(filters),
+		placeholderData: (previousData) => previousData
 	});
 
-	if (isLoading)
-		return (
-			<main className="my-auto grid w-full place-items-center md:w-3/4">
-				<Spinner className="h-8 w-8 text-primary" />
-			</main>
-		);
 	if (error)
 		return (
 			<main className="my-auto grid w-full place-items-center md:w-3/4">
@@ -54,6 +50,12 @@ export default function Courses({
 
 	return (
 		<main className="w-full md:w-3/4">
+			{isLoading ||
+				(isPlaceholderData && (
+					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+						<Spinner className="h-12 w-12 text-primary" />
+					</div>
+				))}
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{courses?.map((course) => (
 					<Card
