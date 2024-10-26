@@ -17,9 +17,9 @@ export default function Editor({
 	value: string | undefined;
 	onChange: (value: string | undefined) => void;
 }) {
-	useEffect(() => {
-		console.log(value);
-	}, [value]);
+	// useEffect(() => {
+	// 	console.log(value);
+	// }, [value]);
 
 	return (
 		<div className="container max-w-[1100px]">
