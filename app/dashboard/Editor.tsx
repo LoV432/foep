@@ -6,12 +6,17 @@ import MDEditor, {
 	getExtraCommands
 } from '@uiw/react-md-editor';
 import { ImageIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import UploadDialog from './UploadDialog';
 import { Media } from '@/db/schema';
 
-export default function App() {
-	const [value, setValue] = useState<string | undefined>('**Hello world!!!**');
+export default function Editor({
+	value,
+	onChange
+}: {
+	value: string | undefined;
+	onChange: (value: string | undefined) => void;
+}) {
 	useEffect(() => {
 		console.log(value);
 	}, [value]);
@@ -20,7 +25,7 @@ export default function App() {
 		<div className="container max-w-[1100px]">
 			<MDEditor
 				value={value}
-				onChange={setValue}
+				onChange={onChange}
 				height={600}
 				preview="edit"
 				//autoCapitalize="none"

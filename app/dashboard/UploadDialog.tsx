@@ -24,11 +24,13 @@ async function fetchUserMedia() {
 export default function UploadDialog({
 	selectedMediaCallback,
 	defaultTab,
-	className
+	className,
+	placeholder
 }: {
 	selectedMediaCallback?: (media: typeof Media.$inferSelect) => void;
 	defaultTab?: 'media' | 'upload';
 	className?: string;
+	placeholder?: string;
 }) {
 	const [open, setOpen] = useState(false);
 	const [selectedMedia, setSelectedMedia] =
@@ -48,7 +50,8 @@ export default function UploadDialog({
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button className={className}>
-					{defaultTab === 'upload' ? 'Upload' : 'Media Library'}
+					{placeholder ??
+						(defaultTab === 'upload' ? 'Upload' : 'Media Library')}
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="max-w-screen-xl">
