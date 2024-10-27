@@ -150,7 +150,7 @@ function NavMenuItem({
 		<NavigationMenuItem {...{ onClick }} className="w-full">
 			<Link href={link} legacyBehavior passHref>
 				<NavigationMenuLink
-					className={`${navigationMenuTriggerStyle()} !w-full !justify-start rounded-none text-2xl font-semibold ${currentPath.split('/')[2] === link.split('/')[2] ? 'bg-primary/10 text-primary' : 'text-black'}`}
+					className={`${navigationMenuTriggerStyle()} !w-full !justify-start rounded-none text-2xl font-semibold focus:bg-accent focus:text-primary ${currentPath.split('/')[2] === link.split('/')[2] ? 'bg-primary/10 text-primary' : 'text-black'}`}
 				>
 					{name}
 				</NavigationMenuLink>
