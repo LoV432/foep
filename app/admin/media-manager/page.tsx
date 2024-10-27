@@ -125,6 +125,7 @@ export default async function Component({
 								</TableCell>
 								<TableCell>
 									<DeleteButton
+										key={media.media_id}
 										mediaId={media.media_id}
 										friendlyName={media.friendly_name}
 									/>
