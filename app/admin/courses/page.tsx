@@ -14,10 +14,14 @@ import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { db } from '@/db/db';
 import { Courses } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { desc, eq, count } from 'drizzle-orm';
 import Link from 'next/link';
 
-export default async function Component() {
+export default async function Component({
+	searchParams
+}: {
+	searchParams: { page?: string };
+}) {
 	const session = await getSession();
 	if (!session.success) {
 		redirect('/login');
@@ -25,7 +29,12 @@ export default async function Component() {
 	if (session.data.role !== 'admin' && session.data.role !== 'instructor') {
 		redirect('/');
 	}
-	const courses = await db
+
+	const page = parseInt(searchParams.page || '1', 10);
+	const pageSize = 20;
+	const offset = (page - 1) * pageSize;
+
+	const coursesQuery = db
 		.select({
 			course_id: Courses.course_id,
 			name: Courses.name,
@@ -39,7 +48,26 @@ export default async function Component() {
 			session.data.role === 'admin'
 				? undefined
 				: eq(Courses.author_id, session.data.id)
+		)
+		.orderBy(desc(Courses.course_id))
+		.limit(pageSize)
+		.offset(offset);
+
+	const totalCountQuery = db
+		.select({ value: count() })
+		.from(Courses)
+		.where(
+			session.data.role === 'admin'
+				? undefined
+				: eq(Courses.author_id, session.data.id)
 		);
+
+	const [courses, [{ value: totalCount }]] = await Promise.all([
+		coursesQuery,
+		totalCountQuery
+	]);
+
+	const totalPages = Math.ceil(totalCount / pageSize);
 
 	return (
 		<div className="container mx-auto p-4">
@@ -106,6 +134,30 @@ export default async function Component() {
 						))}
 					</TableBody>
 				</Table>
+			</div>
+			<div className="mt-4 flex items-center justify-center">
+				<div className="flex space-x-4">
+					<Button disabled={page === 1} className="w-20 p-0">
+						<Link
+							className="flex h-full w-full items-center justify-center"
+							href={`?page=${page - 1}`}
+						>
+							Previous
+						</Link>
+					</Button>
+					<div className="my-auto text-sm text-gray-700">
+						Showing {offset + 1} to {Math.min(offset + pageSize, totalCount)} of{' '}
+						{totalCount} courses
+					</div>
+					<Button disabled={page === totalPages} className="w-20 p-0">
+						<Link
+							className="flex h-full w-full items-center justify-center"
+							href={`?page=${page + 1}`}
+						>
+							Next
+						</Link>
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
