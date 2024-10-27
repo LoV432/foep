@@ -35,6 +35,7 @@ import { addCourseSchema } from './AddCourse.z';
 type FormData = z.infer<typeof addCourseSchema>;
 import { createCourse } from './create_course';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function CourseCreationPage() {
 	const [categories, setCategories] = useState<
@@ -56,12 +57,16 @@ export default function CourseCreationPage() {
 		}
 	});
 
-	async function onSubmit(data: FormData) {
+	async function onSubmit(data: FormData, isPublishAndExit: boolean) {
 		setIsLoading(true);
 		try {
 			const course = await createCourse(data);
 			if (course.success) {
-				router.push(`/admin/courses/edit/${course.course[0].course_id}`);
+				if (isPublishAndExit) {
+					router.push(`/admin/courses`);
+				} else {
+					router.push(`/admin/courses/edit/${course.course[0].course_id}`);
+				}
 			} else {
 				setError('Failed to create course. Please try again.');
 				setIsLoading(false);
@@ -79,26 +84,14 @@ export default function CourseCreationPage() {
 	}, []);
 
 	return (
-		<div className="min-h-screen bg-gray-100">
-			<header className="top-0 z-10 border-b border-gray-200 bg-white min-[1126px]:sticky">
-				<div className="container mx-auto flex items-center justify-between px-4 py-4">
-					<h1 className="text-2xl font-bold">Create New Course</h1>
-					<div>
-						<Button disabled={isLoading} onClick={form.handleSubmit(onSubmit)}>
-							{isLoading ? (
-								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-							) : (
-								<Save className="mr-2 h-4 w-4" />
-							)}
-							Publish
-						</Button>
-					</div>
-				</div>
-			</header>
+		<div className="bg-gray-100">
+			<div className="container mx-auto flex items-center p-4">
+				<h1 className="text-2xl font-bold">Create New Course</h1>
+			</div>
 
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-					<main className="container mx-auto flex flex-col gap-8 px-4 py-8 lg:flex-row">
+				<form className="space-y-8">
+					<main className="container mx-auto flex flex-col gap-8 p-4 lg:flex-row">
 						<div className="lg:w-2/3">
 							<Card>
 								<CardContent className="p-6">
@@ -270,6 +263,39 @@ export default function CourseCreationPage() {
 											</FormItem>
 										)}
 									/>
+									<div className="flex gap-2">
+										<Button
+											type="button"
+											disabled={isLoading}
+											onClick={form.handleSubmit((data) =>
+												onSubmit(data, false)
+											)}
+										>
+											{isLoading ? (
+												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+											) : (
+												<Save className="mr-2 h-4 w-4" />
+											)}
+											Publish
+										</Button>
+										<Button
+											type="button"
+											disabled={isLoading}
+											onClick={form.handleSubmit((data) =>
+												onSubmit(data, true)
+											)}
+										>
+											{isLoading ? (
+												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+											) : (
+												<Save className="mr-2 h-4 w-4" />
+											)}
+											Publish & Exit
+										</Button>
+										<Button variant="outline" asChild>
+											<Link href="/admin/courses">Cancel</Link>
+										</Button>
+									</div>
 								</CardContent>
 							</Card>
 						</aside>
