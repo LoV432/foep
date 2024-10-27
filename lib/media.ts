@@ -160,7 +160,6 @@ export async function getAllMedia() {
 			.where(eq(Media.user_id, session.data.id));
 		return { success: true as const, message: media };
 	} catch (error) {
-		console.log(`Something went wrong while getting all media: ${error}`);
 		return {
 			success: false as const,
 			message: 'Something went wrong while getting all media'
@@ -181,7 +180,12 @@ export async function deleteFile(mediaId: number) {
 			.select()
 			.from(Media)
 			.where(
-				and(eq(Media.media_id, mediaId), eq(Media.user_id, session.data.id))
+				and(
+					eq(Media.media_id, mediaId),
+					session.data.role === 'admin'
+						? undefined
+						: eq(Media.user_id, session.data.id)
+				)
 			)
 			.limit(1);
 
