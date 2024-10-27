@@ -111,7 +111,7 @@ export default async function Component({
 										</div>
 									)}
 								</TableCell>
-								<TableCell className="font-medium">
+								<TableCell className="text-wrap break-all font-medium">
 									{media.friendly_name}
 								</TableCell>
 								<TableCell className="hidden md:table-cell">
