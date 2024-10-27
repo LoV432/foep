@@ -61,7 +61,7 @@ export default function CourseCreationPage() {
 		try {
 			const course = await createCourse(data);
 			if (course.success) {
-				router.push(`/instructor/course/${course.course[0].course_id}`);
+				router.push(`/admin/courses/edit/${course.course[0].course_id}`);
 			} else {
 				setError('Failed to create course. Please try again.');
 				setIsLoading(false);
