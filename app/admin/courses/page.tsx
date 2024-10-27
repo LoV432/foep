@@ -19,11 +19,11 @@ import Link from 'next/link';
 
 export default async function Component() {
 	const session = await getSession();
-	if (
-		!session.success ||
-		(session.data.role !== 'admin' && session.data.role !== 'instructor')
-	) {
+	if (!session.success) {
 		redirect('/login');
+	}
+	if (session.data.role !== 'admin' && session.data.role !== 'instructor') {
+		redirect('/');
 	}
 	const courses = await db
 		.select({
@@ -35,7 +35,11 @@ export default async function Component() {
 			is_draft: Courses.is_draft
 		})
 		.from(Courses)
-		.where(eq(Courses.author_id, session.data.id));
+		.where(
+			session.data.role === 'admin'
+				? undefined
+				: eq(Courses.author_id, session.data.id)
+		);
 
 	return (
 		<div className="container mx-auto p-4">

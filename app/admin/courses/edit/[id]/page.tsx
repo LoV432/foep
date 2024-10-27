@@ -10,15 +10,15 @@ export default async function CoursePage({
 }: {
 	params: { id: string };
 }) {
-	if (isNaN(parseInt(params.id))) {
-		return redirect('/instructor/course');
-	}
 	const session = await getSession();
 	if (!session.success) {
 		return redirect('/login');
 	}
 	if (session.data.role !== 'instructor' && session.data.role !== 'admin') {
 		return redirect('/');
+	}
+	if (isNaN(parseInt(params.id))) {
+		return redirect('/admin/courses');
 	}
 
 	const course = (
@@ -27,7 +27,9 @@ export default async function CoursePage({
 			.from(Courses)
 			.where(
 				and(
-					eq(Courses.author_id, session.data.id),
+					session.data.role === 'admin'
+						? undefined
+						: eq(Courses.author_id, session.data.id),
 					eq(Courses.course_id, parseInt(params.id))
 				)
 			)

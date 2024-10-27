@@ -32,7 +32,9 @@ export async function editCourse(data: z.infer<typeof editCourseSchema>) {
 			.where(
 				and(
 					eq(Courses.course_id, parsedData.courseId),
-					eq(Courses.author_id, session.data.id)
+					session.data.role === 'admin'
+						? undefined
+						: eq(Courses.author_id, session.data.id)
 				)
 			)
 			.returning();
