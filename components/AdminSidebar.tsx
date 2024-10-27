@@ -43,7 +43,7 @@ export default function AdminSidebar() {
 				/>
 			</NavigationMenu>
 
-			<NavigationMenu className="w-full max-w-full justify-start gap-3 py-1 pl-4 pt-4 text-left min-[1126px]:hidden">
+			<NavigationMenu className="w-full max-w-full justify-start gap-3 py-2 pl-4 min-[1126px]:hidden">
 				<Sheet open={isOpen} onOpenChange={setIsOpen}>
 					<SheetTrigger aria-label="Open menu">
 						<svg
@@ -110,7 +110,7 @@ export default function AdminSidebar() {
 								onClick={() => setIsOpen(false)}
 							/>
 							<NavMenuItem
-								link="/admin/course"
+								link="/admin/courses"
 								currentPath={currentPath}
 								name="Course"
 								onClick={() => setIsOpen(false)}
