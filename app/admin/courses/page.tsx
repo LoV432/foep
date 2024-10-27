@@ -74,7 +74,7 @@ export default async function Component({
 			<div className="mb-7 flex items-center justify-between">
 				<h1 className="text-2xl font-bold">Course List</h1>
 				<Button>
-					<Link href="/admin/course">Add Course</Link>
+					<Link href="/admin/courses/add">Add Course</Link>
 				</Button>
 			</div>
 			<div className="overflow-x-auto">
