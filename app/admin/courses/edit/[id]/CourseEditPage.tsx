@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Save } from 'lucide-react';
+import { Loader2, Save } from 'lucide-react';
 import UploadDialog from '@/components/UploadDialog/UploadDialog';
 import Image from 'next/image';
 import { getCategories } from '../../get_categories';
@@ -34,6 +34,8 @@ import Editor from '@/components/Editor';
 import { editCourseSchema } from './EditCourse.z';
 type FormData = z.infer<typeof editCourseSchema>;
 import { editCourse } from './edit_course';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function CourseEditPage({
 	course
@@ -43,6 +45,10 @@ export default function CourseEditPage({
 	const [categories, setCategories] = useState<
 		(typeof CoursesCategories.$inferSelect)[]
 	>([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [isError, setIsError] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
+	const router = useRouter();
 
 	const form = useForm<FormData>({
 		resolver: zodResolver(editCourseSchema),
@@ -58,9 +64,19 @@ export default function CourseEditPage({
 		}
 	});
 
-	async function onSubmit(data: FormData) {
-		const course = await editCourse(data);
-		console.log('Course edited', course);
+	async function onSubmit(data: FormData, isSaveAndExit: boolean) {
+		try {
+			setIsLoading(true);
+			const course = await editCourse(data);
+			if (isSaveAndExit && course.success) {
+				router.push(`/admin/courses`);
+			}
+			setIsSuccess(true);
+		} catch (error) {
+			setIsError(true);
+		} finally {
+			setIsLoading(false);
+		}
 	}
 
 	useEffect(() => {
@@ -71,18 +87,13 @@ export default function CourseEditPage({
 
 	return (
 		<div className="min-h-screen bg-gray-100">
-			<div className="top-0 z-10 border-b border-gray-200 bg-white min-[1126px]:sticky">
-				<div className="container mx-auto flex items-center justify-between px-4 py-4">
-					<h1 className="text-2xl font-bold">Edit Course</h1>
-					<Button onClick={form.handleSubmit(onSubmit)}>
-						<Save className="mr-2 h-4 w-4" /> Save
-					</Button>
-				</div>
+			<div className="container mx-auto flex items-center p-4">
+				<h1 className="text-2xl font-bold">Edit Course</h1>
 			</div>
 
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-					<main className="container mx-auto flex flex-col gap-8 px-4 py-8 lg:flex-row">
+				<form className="space-y-8">
+					<main className="container mx-auto flex flex-col gap-8 p-4 lg:flex-row">
 						<div className="lg:w-2/3">
 							<FormField
 								control={form.control}
@@ -100,6 +111,14 @@ export default function CourseEditPage({
 							<Card>
 								<CardContent className="p-6">
 									<div className="space-y-6">
+										{isError && (
+											<div className="text-red-500">
+												Something went wrong while updating the course
+											</div>
+										)}
+										{isSuccess && (
+											<div className="text-primary">Course updated</div>
+										)}
 										<FormField
 											control={form.control}
 											name="name"
@@ -265,6 +284,39 @@ export default function CourseEditPage({
 											</FormItem>
 										)}
 									/>
+									<div className="flex gap-2">
+										<Button
+											type="button"
+											disabled={isLoading}
+											onClick={form.handleSubmit((data) =>
+												onSubmit(data, false)
+											)}
+										>
+											{isLoading ? (
+												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+											) : (
+												<Save className="mr-2 h-4 w-4" />
+											)}
+											Save
+										</Button>
+										<Button
+											type="button"
+											disabled={isLoading}
+											onClick={form.handleSubmit((data) =>
+												onSubmit(data, true)
+											)}
+										>
+											{isLoading ? (
+												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+											) : (
+												<Save className="mr-2 h-4 w-4" />
+											)}
+											Save & Exit
+										</Button>
+										<Button variant="outline" asChild>
+											<Link href="/admin/courses">Cancel</Link>
+										</Button>
+									</div>
 								</CardContent>
 							</Card>
 						</aside>
