@@ -36,6 +36,7 @@ type FormData = z.infer<typeof editCourseSchema>;
 import { editCourse } from './edit_course';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import DeleteButton from './DeleteButton';
 
 export default function CourseEditPage({
 	course
@@ -284,7 +285,7 @@ export default function CourseEditPage({
 											</FormItem>
 										)}
 									/>
-									<div className="flex gap-2">
+									<div className="flex flex-wrap gap-2">
 										<Button
 											type="button"
 											disabled={isLoading}
@@ -316,6 +317,7 @@ export default function CourseEditPage({
 										<Button variant="outline" asChild>
 											<Link href="/admin/courses">Cancel</Link>
 										</Button>
+										<DeleteButton courseId={course.course_id} />
 									</div>
 								</CardContent>
 							</Card>

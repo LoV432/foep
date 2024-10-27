@@ -87,10 +87,10 @@ export const CoursesCategories = pgTable('CoursesCategories', {
 export const CoursesReviews = pgTable('CoursesReviews', {
 	review_id: serial('review_id').primaryKey(),
 	course_id: integer('course_id')
-		.references(() => Courses.course_id)
+		.references(() => Courses.course_id, { onDelete: 'cascade' })
 		.notNull(),
 	user_id: integer('user_id')
-		.references(() => Users.user_id)
+		.references(() => Users.user_id, { onDelete: 'cascade' })
 		.notNull(),
 	rating: integer('rating').notNull(),
 	comment: varchar('comment')
