@@ -74,7 +74,7 @@ export default async function Component({
 			<div className="container mx-auto mb-7 flex items-center justify-between">
 				<h1 className="text-2xl font-bold">Media List</h1>
 				<Button>
-					<Link href="/admin/media/upload">Upload Media</Link>
+					<Link href="/admin/media-manager/upload">Upload Media</Link>
 				</Button>
 			</div>
 			<div className="container mx-auto overflow-x-auto rounded-lg bg-white">
