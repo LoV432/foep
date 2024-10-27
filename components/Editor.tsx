@@ -6,8 +6,7 @@ import MDEditor, {
 	getExtraCommands
 } from '@uiw/react-md-editor';
 import { ImageIcon } from 'lucide-react';
-import { useEffect } from 'react';
-import UploadDialog from './UploadDialog';
+import UploadDialog from './UploadDialog/UploadDialog';
 import { Media } from '@/db/schema';
 
 export default function Editor({
@@ -17,10 +16,6 @@ export default function Editor({
 	value: string | undefined;
 	onChange: (value: string | undefined) => void;
 }) {
-	// useEffect(() => {
-	// 	console.log(value);
-	// }, [value]);
-
 	return (
 		<div className="container max-w-[1100px]">
 			<MDEditor

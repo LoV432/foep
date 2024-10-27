@@ -17,9 +17,9 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Loader2, Save } from 'lucide-react';
-import UploadDialog from '../../dashboard/UploadDialog';
+import UploadDialog from '@/components/UploadDialog/UploadDialog';
 import Image from 'next/image';
-import { getCategories } from './get_categories';
+import { getCategories } from '../get_categories';
 import { CoursesCategories } from '@/db/schema';
 import {
 	Form,
@@ -30,7 +30,7 @@ import {
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form';
-import Editor from '../../dashboard/Editor';
+import Editor from '@/components/Editor';
 import { addCourseSchema } from './AddCourse.z';
 type FormData = z.infer<typeof addCourseSchema>;
 import { createCourse } from './create_course';

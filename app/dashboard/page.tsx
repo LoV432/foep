@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button';
 import { getSession, destroySession } from '@/lib/auth';
 import Link from 'next/link';
 import { ALLOWED_FILE_TYPES } from '@/lib/allowed-uploads';
-import UploadDialog from './UploadDialog';
-import Editor from './Editor';
+import UploadDialog from '@/components/UploadDialog/UploadDialog';
+import Editor from '@/components/Editor';
 
 export default async function DashboardPage() {
 	const session = await getSession();
@@ -24,7 +24,7 @@ export default async function DashboardPage() {
 				<Button type="submit">Upload</Button>
 			</form>
 			<UploadDialog defaultTab="media" className="bg-red-500" />
-			<Editor />
+			<Editor value="" onChange={() => {}} />
 			<pre className="text-xl">{JSON.stringify(session, null, 2)}</pre>
 		</div>
 	);

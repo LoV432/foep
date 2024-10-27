@@ -25,23 +25,19 @@ export default function AdminSidebar() {
 	return (
 		<aside className="sticky top-0 z-20 h-fit bg-white">
 			<NavigationMenu className="hidden w-full max-w-full list-none flex-col pt-2 min-[1126px]:flex">
+				<NavMenuItem link="/admin" currentPath={currentPath} name="Dashboard" />
 				<NavMenuItem
-					link="/instructor"
-					currentPath={currentPath}
-					name="Dashboard"
-				/>
-				<NavMenuItem
-					link="/instructor/courses"
+					link="/admin/courses"
 					currentPath={currentPath}
 					name="Courses"
 				/>
 				<NavMenuItem
-					link="/instructor/media-manager"
+					link="/admin/media-manager"
 					currentPath={currentPath}
 					name="Media Manager"
 				/>
 				<NavMenuItem
-					link="/instructor/profile"
+					link="/admin/profile"
 					currentPath={currentPath}
 					name="Profile"
 				/>
@@ -108,25 +104,25 @@ export default function AdminSidebar() {
 						</DialogTitle>
 						<NavigationMenuList className="float-left flex-col gap-5 space-x-0">
 							<NavMenuItem
-								link="/instructor"
+								link="/admin"
 								currentPath={currentPath}
 								name="Dashboard"
 								onClick={() => setIsOpen(false)}
 							/>
 							<NavMenuItem
-								link="/instructor/course"
+								link="/admin/course"
 								currentPath={currentPath}
 								name="Course"
 								onClick={() => setIsOpen(false)}
 							/>
 							<NavMenuItem
-								link="/instructor/media-manager"
+								link="/admin/media-manager"
 								currentPath={currentPath}
 								name="Media Manager"
 								onClick={() => setIsOpen(false)}
 							/>
 							<NavMenuItem
-								link="/instructor/profile"
+								link="/admin/profile"
 								currentPath={currentPath}
 								name="Profile"
 								onClick={() => setIsOpen(false)}
