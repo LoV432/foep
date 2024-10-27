@@ -70,14 +70,14 @@ export default async function Component({
 	const totalPages = Math.ceil(totalCount / pageSize);
 
 	return (
-		<div className="container mx-auto p-4">
-			<div className="mb-7 flex items-center justify-between">
+		<div className="w-full bg-gray-200 p-4">
+			<div className="container mx-auto mb-7 flex items-center justify-between">
 				<h1 className="text-2xl font-bold">Course List</h1>
 				<Button>
 					<Link href="/admin/courses/add">Add Course</Link>
 				</Button>
 			</div>
-			<div className="overflow-x-auto">
+			<div className="container mx-auto overflow-x-auto rounded-lg bg-white">
 				<Table>
 					<TableHeader>
 						<TableRow>
