@@ -6,6 +6,7 @@ import Courses from './Courses';
 import { CoursesCategories } from '@/db/schema';
 import { z } from 'zod';
 import { filtersSchema } from './Filters.z';
+import { useRouter } from 'next/navigation';
 
 export type UpdateFiltersAction = {
 	[key in keyof z.infer<typeof filtersSchema>]?: z.infer<
@@ -20,6 +21,7 @@ export default function Main({
 	categoriesPromise: Promise<(typeof CoursesCategories.$inferSelect)[]>;
 	parsedFilters: z.infer<typeof filtersSchema>;
 }) {
+	const router = useRouter();
 	function updateFilters(
 		state: z.infer<typeof filtersSchema>,
 		action: UpdateFiltersAction
@@ -36,11 +38,16 @@ export default function Main({
 	const [queryFilters, setQueryFilters] = useState(filtersState);
 
 	useEffect(() => {
-		window.history.replaceState(
-			{},
-			'',
-			`/all-courses?filters=${JSON.stringify(queryFilters)}`
-		);
+		router.replace(`/all-courses?filters=${JSON.stringify(queryFilters)}`);
+		// This breaks the back button :/
+		// I would have preferred to use this as it
+		// doesn't require a re-render of the page but i haven't found a way to
+		// make it work with the back button yet.
+		// window.history.replaceState(
+		// 	{},
+		// 	'',
+		// 	`/all-courses?filters=${JSON.stringify(queryFilters)}`
+		// );
 	}, [queryFilters]);
 
 	const handlePageChange = useCallback(
