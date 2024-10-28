@@ -3,7 +3,7 @@ import { Courses } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import CourseEditPage from './CourseEditPage';
+import CourseEditSection from './CourseEditSection';
 
 export default async function CoursePage({
 	params
@@ -39,5 +39,12 @@ export default async function CoursePage({
 		return redirect('/instructor/course');
 	}
 
-	return <CourseEditPage course={course} />;
+	return (
+		<div className="min-h-screen bg-gray-100">
+			<div className="container mx-auto flex items-center p-4">
+				<h1 className="text-2xl font-bold">Edit Course</h1>
+			</div>
+			<CourseEditSection course={course} />
+		</div>
+	);
 }
