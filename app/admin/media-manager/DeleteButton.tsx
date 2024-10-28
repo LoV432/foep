@@ -1,10 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { deleteMedia } from './DeleteAction';
-import { useState } from 'react';
+import { deleteMediaAction } from './delete_media_action';
 import { useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 export default function DeleteButton({
 	mediaId,
@@ -13,21 +14,29 @@ export default function DeleteButton({
 	mediaId: number;
 	friendlyName: string;
 }) {
-	const [isDeleting, setIsDeleting] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
+	const { toast } = useToast();
+	const [isDeleting, setIsDeleting] = useState(false);
 	async function handleDelete() {
+		setIsDeleting(true);
 		try {
-			setIsDeleting(true);
-			const deleteResult = await deleteMedia(mediaId);
-			if (deleteResult.success) {
-				router.refresh();
-			} else {
+			const deleteResult = await deleteMediaAction(mediaId);
+			if (!deleteResult.success) {
 				throw new Error(deleteResult.message);
 			}
+			toast({
+				title: 'Success',
+				description: 'Media deleted successfully'
+			});
+			router.refresh();
 		} catch (error) {
 			console.error(error);
-			setError('Failed to delete media');
+			toast({
+				title: 'Error',
+				description: 'Failed to delete media',
+				variant: 'destructive'
+			});
+		} finally {
 			setIsDeleting(false);
 		}
 	}

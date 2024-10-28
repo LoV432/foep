@@ -32,11 +32,11 @@ import {
 } from '@/components/ui/form';
 import Editor from '@/components/Editor';
 import { editCourseSchema } from './EditCourse.z';
-type FormData = z.infer<typeof editCourseSchema>;
-import { editCourse } from './edit_course';
+import { editCourseAction } from './edit_course_action';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import DeleteButton from './DeleteButton';
+import { useToast } from '@/hooks/use-toast';
 
 export default function CourseEditPage({
 	course
@@ -46,12 +46,9 @@ export default function CourseEditPage({
 	const [categories, setCategories] = useState<
 		(typeof CoursesCategories.$inferSelect)[]
 	>([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const [isError, setIsError] = useState(false);
-	const [isSuccess, setIsSuccess] = useState(false);
 	const router = useRouter();
-
-	const form = useForm<FormData>({
+	const { toast } = useToast();
+	const form = useForm<z.infer<typeof editCourseSchema>>({
 		resolver: zodResolver(editCourseSchema),
 		defaultValues: {
 			courseId: course.course_id,
@@ -65,18 +62,28 @@ export default function CourseEditPage({
 		}
 	});
 
-	async function onSubmit(data: FormData, isSaveAndExit: boolean) {
+	async function onSubmit(
+		data: z.infer<typeof editCourseSchema>,
+		isSaveAndExit: boolean
+	) {
 		try {
-			setIsLoading(true);
-			const course = await editCourse(data);
-			if (isSaveAndExit && course.success) {
+			const course = await editCourseAction(data);
+			if (!course.success) {
+				throw new Error(course.message);
+			}
+			if (isSaveAndExit) {
 				router.push(`/admin/courses`);
 			}
-			setIsSuccess(true);
+			toast({
+				title: 'Success',
+				description: 'Course updated successfully'
+			});
 		} catch (error) {
-			setIsError(true);
-		} finally {
-			setIsLoading(false);
+			toast({
+				title: 'Error',
+				description: 'Failed to update course',
+				variant: 'destructive'
+			});
 		}
 	}
 
@@ -112,14 +119,6 @@ export default function CourseEditPage({
 							<Card>
 								<CardContent className="p-6">
 									<div className="space-y-6">
-										{isError && (
-											<div className="text-red-500">
-												Something went wrong while updating the course
-											</div>
-										)}
-										{isSuccess && (
-											<div className="text-primary">Course updated</div>
-										)}
 										<FormField
 											control={form.control}
 											name="name"
@@ -288,12 +287,12 @@ export default function CourseEditPage({
 									<div className="flex flex-wrap gap-2">
 										<Button
 											type="button"
-											disabled={isLoading}
+											disabled={form.formState.isSubmitting}
 											onClick={form.handleSubmit((data) =>
 												onSubmit(data, false)
 											)}
 										>
-											{isLoading ? (
+											{form.formState.isSubmitting ? (
 												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 											) : (
 												<Save className="mr-2 h-4 w-4" />
@@ -302,12 +301,12 @@ export default function CourseEditPage({
 										</Button>
 										<Button
 											type="button"
-											disabled={isLoading}
+											disabled={form.formState.isSubmitting}
 											onClick={form.handleSubmit((data) =>
 												onSubmit(data, true)
 											)}
 										>
-											{isLoading ? (
+											{form.formState.isSubmitting ? (
 												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 											) : (
 												<Save className="mr-2 h-4 w-4" />

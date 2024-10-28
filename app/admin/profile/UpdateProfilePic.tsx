@@ -1,7 +1,7 @@
 'use client';
 
 import UploadDialog from '@/components/UploadDialog/UploadDialog';
-import { updateProfilePicAction } from './update-profile-actions';
+import { updateProfilePicAction } from './update_profile_actions';
 import { Media } from '@/db/schema';
 import { useToast } from '@/hooks/use-toast';
 

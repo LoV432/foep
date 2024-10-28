@@ -25,9 +25,9 @@ export async function deleteCourseAction(courseId: number) {
 						: eq(Courses.author_id, session.data.id)
 				)
 			);
-		return { success: true, message: 'Course deleted successfully' };
+		return { success: true as const, message: 'Course deleted successfully' };
 	} catch (error) {
 		console.error(error);
-		return { success: false, message: 'Failed to delete course' };
+		return { success: false as const, message: 'Failed to delete course' };
 	}
 }

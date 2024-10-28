@@ -33,17 +33,17 @@ import {
 import Editor from '@/components/Editor';
 import { addCourseSchema } from './AddCourse.z';
 type FormData = z.infer<typeof addCourseSchema>;
-import { createCourse } from './create_course';
+import { createCourseAction } from './create_course_action';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useToast } from '@/hooks/use-toast';
 
 export default function CourseCreationPage() {
 	const [categories, setCategories] = useState<
 		(typeof CoursesCategories.$inferSelect)[]
 	>([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
+	const { toast } = useToast();
 	const form = useForm<FormData>({
 		resolver: zodResolver(addCourseSchema),
 		defaultValues: {
@@ -58,22 +58,26 @@ export default function CourseCreationPage() {
 	});
 
 	async function onSubmit(data: FormData, isPublishAndExit: boolean) {
-		setIsLoading(true);
 		try {
-			const course = await createCourse(data);
-			if (course.success) {
-				if (isPublishAndExit) {
-					router.push(`/admin/courses`);
-				} else {
-					router.push(`/admin/courses/edit/${course.course[0].course_id}`);
-				}
-			} else {
-				setError('Failed to create course. Please try again.');
-				setIsLoading(false);
+			const course = await createCourseAction(data);
+			if (!course.success) {
+				throw new Error(course.message);
 			}
+			if (isPublishAndExit) {
+				router.push(`/admin/courses`);
+			} else {
+				router.push(`/admin/courses/edit/${course.course[0].course_id}`);
+			}
+			toast({
+				title: 'Success',
+				description: 'Course created successfully'
+			});
 		} catch (error) {
-			setError('Failed to create course. Please try again.');
-			setIsLoading(false);
+			toast({
+				title: 'Error',
+				description: 'Failed to create course',
+				variant: 'destructive'
+			});
 		}
 	}
 
@@ -96,8 +100,6 @@ export default function CourseCreationPage() {
 							<Card>
 								<CardContent className="p-6">
 									<div className="space-y-6">
-										{error && <div className="text-red-500">{error}</div>}
-
 										<FormField
 											control={form.control}
 											name="name"
@@ -266,12 +268,12 @@ export default function CourseCreationPage() {
 									<div className="flex gap-2">
 										<Button
 											type="button"
-											disabled={isLoading}
+											disabled={form.formState.isSubmitting}
 											onClick={form.handleSubmit((data) =>
 												onSubmit(data, false)
 											)}
 										>
-											{isLoading ? (
+											{form.formState.isSubmitting ? (
 												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 											) : (
 												<Save className="mr-2 h-4 w-4" />
@@ -280,12 +282,12 @@ export default function CourseCreationPage() {
 										</Button>
 										<Button
 											type="button"
-											disabled={isLoading}
+											disabled={form.formState.isSubmitting}
 											onClick={form.handleSubmit((data) =>
 												onSubmit(data, true)
 											)}
 										>
-											{isLoading ? (
+											{form.formState.isSubmitting ? (
 												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 											) : (
 												<Save className="mr-2 h-4 w-4" />

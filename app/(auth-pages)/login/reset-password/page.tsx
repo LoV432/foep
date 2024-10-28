@@ -6,7 +6,7 @@ import { ResetPasswordEmailSchema } from './ResetPasswordEmail.z';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
-import { sendResetPasswordEmail } from './reset_password_email_action';
+import { sendResetPasswordEmailAction } from './reset_password_email_action';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -40,7 +40,7 @@ export default function ResendVerification() {
 		}
 		setIsLoading(true);
 		try {
-			const result = await sendResetPasswordEmail(values.email);
+			const result = await sendResetPasswordEmailAction(values.email);
 			setFormResponse(result);
 			form.reset();
 		} catch {

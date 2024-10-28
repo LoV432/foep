@@ -2,24 +2,34 @@
 
 import { Button } from '@/components/ui/button';
 import { Loader2, Trash2 } from 'lucide-react';
-import { deleteCourseAction } from './delete_course';
+import { deleteCourseAction } from './delete_course_action';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 
 export default function DeleteButton({ courseId }: { courseId: number }) {
-	const [isDeleting, setIsDeleting] = useState(false);
+	const { toast } = useToast();
 	const router = useRouter();
+	const [isDeleting, setIsDeleting] = useState(false);
 	async function handleDelete() {
+		setIsDeleting(true);
 		try {
-			setIsDeleting(true);
 			const deleteResult = await deleteCourseAction(courseId);
-			if (deleteResult.success) {
-				router.push('/admin/courses');
-			} else {
+			if (!deleteResult.success) {
 				throw new Error(deleteResult.message);
 			}
+			router.push('/admin/courses');
+			toast({
+				title: 'Success',
+				description: 'Course deleted successfully'
+			});
 		} catch (error) {
 			console.error(error);
+			toast({
+				title: 'Error',
+				description: 'Failed to delete course'
+			});
+		} finally {
 			setIsDeleting(false);
 		}
 	}

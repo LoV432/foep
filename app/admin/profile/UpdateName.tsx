@@ -11,7 +11,7 @@ import {
 	FormMessage
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { updateProfileNameAction } from './update-profile-actions';
+import { updateProfileNameAction } from './update_profile_actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { updateProfileNameSchema } from './UpdateSchemas.z';

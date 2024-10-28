@@ -14,7 +14,7 @@ if (!process.env.RESEND_API_KEY || !process.env.EMAIL_DOMAIN) {
 }
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function resendVerificationEmail(email: string) {
+export async function resendVerificationEmailAction(email: string) {
 	try {
 		const { email: parsedEmail } = ResendVerificationSchema.parse({ email });
 		const user = await db

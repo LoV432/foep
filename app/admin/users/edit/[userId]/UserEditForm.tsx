@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { Users } from '@/db/schema';
 import { userEditSchema } from './EditUserSchema.z';
-import { editUserAction } from './edit-user-action';
+import { editUserAction } from './edit_user_action';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -49,7 +49,7 @@ export function UserEditForm({ user }: { user: typeof Users.$inferSelect }) {
 		try {
 			const result = await editUserAction(user.user_id, data);
 			if (!result.success) {
-				throw new Error(result.error);
+				throw new Error(result.message);
 			}
 			toast({
 				title: 'User updated successfully',

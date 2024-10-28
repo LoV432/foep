@@ -6,7 +6,7 @@ import { ResendVerificationSchema } from './ResendVerification.z';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
-import { resendVerificationEmail } from './resend_email_action';
+import { resendVerificationEmailAction } from './resend_email_action';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -40,7 +40,7 @@ export default function ResendVerification() {
 		}
 		setIsLoading(true);
 		try {
-			const result = await resendVerificationEmail(values.email);
+			const result = await resendVerificationEmailAction(values.email);
 			setFormResponse(result);
 			form.reset();
 		} catch {

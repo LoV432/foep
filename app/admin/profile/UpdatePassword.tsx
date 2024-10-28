@@ -11,7 +11,7 @@ import {
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form';
-import { updatePasswordAction } from './update-profile-actions';
+import { updatePasswordAction } from './update_profile_actions';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';

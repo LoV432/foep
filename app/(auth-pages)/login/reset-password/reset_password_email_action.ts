@@ -14,7 +14,7 @@ if (!process.env.RESEND_API_KEY || !process.env.EMAIL_DOMAIN) {
 }
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendResetPasswordEmail(email: string) {
+export async function sendResetPasswordEmailAction(email: string) {
 	try {
 		const { email: parsedEmail } = ResetPasswordEmailSchema.parse({ email });
 		const user = await db

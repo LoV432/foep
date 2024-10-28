@@ -28,10 +28,10 @@ export async function updatePasswordAction(
 			.set({ password: hashedPassword })
 			.where(eq(Users.user_id, parsedValues.userId));
 
-		return { success: true };
+		return { success: true as const };
 	} catch (error) {
 		console.error(error);
-		return { success: false, error: 'Failed to update password' };
+		return { success: false as const, message: 'Failed to update password' };
 	}
 }
 
@@ -51,10 +51,13 @@ export async function updateProfilePicAction(
 			.set({ avatar_url: parsedValues.avatarUrl })
 			.where(eq(Users.user_id, parsedValues.userId));
 
-		return { success: true };
+		return { success: true as const };
 	} catch (error) {
 		console.error(error);
-		return { success: false, error: 'Failed to update profile picture' };
+		return {
+			success: false as const,
+			message: 'Failed to update profile picture'
+		};
 	}
 }
 
@@ -71,9 +74,12 @@ export async function updateProfileNameAction(userId: number, name: string) {
 			.set({ name: parsedValues.name })
 			.where(eq(Users.user_id, parsedValues.userId));
 
-		return { success: true };
+		return { success: true as const };
 	} catch (error) {
 		console.error(error);
-		return { success: false, error: 'Failed to update profile name' };
+		return {
+			success: false as const,
+			message: 'Failed to update profile name'
+		};
 	}
 }

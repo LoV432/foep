@@ -28,9 +28,9 @@ export async function editUserAction(
 			.where(eq(Users.user_id, userId));
 
 		revalidatePath('/admin/users');
-		return { success: true };
+		return { success: true as const };
 	} catch (error) {
 		console.error(error);
-		return { success: false, error: 'Failed to update user' };
+		return { success: false as const, message: 'Failed to update user' };
 	}
 }

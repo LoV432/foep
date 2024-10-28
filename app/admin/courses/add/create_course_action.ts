@@ -1,13 +1,16 @@
 'use server';
 
-import { editCourseSchema } from './EditCourse.z';
+import { addCourseSchema } from './AddCourse.z';
 import { z } from 'zod';
 import { db } from '@/db/db';
 import { Courses } from '@/db/schema';
 import { getSession } from '@/lib/auth';
-import { eq, and } from 'drizzle-orm';
+import { kebabCase } from '@/lib/kebab-case';
+import { randomUUID } from 'crypto';
 
-export async function editCourse(data: z.infer<typeof editCourseSchema>) {
+export async function createCourseAction(
+	data: z.infer<typeof addCourseSchema>
+) {
 	try {
 		const session = await getSession();
 		if (
@@ -16,37 +19,31 @@ export async function editCourse(data: z.infer<typeof editCourseSchema>) {
 		) {
 			throw new Error('Unauthorized');
 		}
-		const parsedData = editCourseSchema.parse(data);
+		const parsedData = addCourseSchema.parse(data);
 
 		const course = await db
-			.update(Courses)
-			.set({
+			.insert(Courses)
+			.values({
 				category_id: parseInt(parsedData.category),
 				name: parsedData.name,
 				price: parseFloat(parsedData.price),
 				short_description: parsedData.shortDescription,
 				long_description: parsedData.largeDescription,
 				image_url: parsedData.imageUrl,
-				is_draft: parsedData.isDraft
+				is_draft: parsedData.isDraft,
+				author_id: session.data.id,
+				slug: kebabCase(parsedData.name) + '-' + randomUUID()
 			})
-			.where(
-				and(
-					eq(Courses.course_id, parsedData.courseId),
-					session.data.role === 'admin'
-						? undefined
-						: eq(Courses.author_id, session.data.id)
-				)
-			)
 			.returning();
 
 		return {
-			success: true,
+			success: true as const,
 			course
 		};
 	} catch (error) {
 		console.error(error);
 		return {
-			success: false,
+			success: false as const,
 			message: 'Failed to create course'
 		};
 	}
