@@ -157,7 +157,7 @@ export function UserEditForm({ user }: { user: typeof Users.$inferSelect }) {
 					</Button>
 					<Button type="button" variant="outline" className="p-0" asChild>
 						<Link
-							className="flex h-full w-full items-center justify-center p-4"
+							className="flex items-center justify-center p-4"
 							href="/admin/users"
 						>
 							Cancel
