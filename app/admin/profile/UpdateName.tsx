@@ -44,7 +44,7 @@ export default function UpdateProfileForm({
 				title: 'Profile updated successfully',
 				description: 'Your profile has been updated successfully'
 			});
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Error',
 				description: 'Failed to update profile',

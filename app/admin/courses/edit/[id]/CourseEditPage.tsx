@@ -78,7 +78,7 @@ export default function CourseEditPage({
 				title: 'Success',
 				description: 'Course updated successfully'
 			});
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Error',
 				description: 'Failed to update course',

@@ -47,7 +47,7 @@ export default function UpdatePasswordForm({ userId }: { userId: number }) {
 				title: 'Password updated successfully',
 				description: 'Your password has been updated successfully'
 			});
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Error',
 				description: 'Failed to update password',

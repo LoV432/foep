@@ -17,7 +17,7 @@ export default function UpdateProfilePic({ userId }: { userId: number }) {
 				title: 'Profile picture updated successfully',
 				description: 'Your profile picture has been updated successfully'
 			});
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Error',
 				description: 'Failed to update profile picture',

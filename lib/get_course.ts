@@ -1,5 +1,5 @@
 import { db } from '@/db/db';
-import { Courses, CoursesCategories, Media, Users } from '@/db/schema';
+import { Courses, CoursesCategories, Users } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
 
 export type GetCourseResponse = Awaited<ReturnType<typeof getCourse>>;

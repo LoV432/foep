@@ -1,5 +1,5 @@
 import { db } from '@/db/db';
-import { Courses, CoursesCategories, Media, Users } from '@/db/schema';
+import { Courses, CoursesCategories, Users } from '@/db/schema';
 import { and, eq, gte, inArray, ilike, lte, sql, asc, desc } from 'drizzle-orm';
 import { filtersSchema } from '@/app/all-courses/Filters.z';
 import { z } from 'zod';

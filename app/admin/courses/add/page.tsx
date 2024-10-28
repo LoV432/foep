@@ -72,7 +72,7 @@ export default function CourseCreationPage() {
 				title: 'Success',
 				description: 'Course created successfully'
 			});
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Error',
 				description: 'Failed to create course',

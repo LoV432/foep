@@ -159,7 +159,7 @@ export async function getAllMedia() {
 			.from(Media)
 			.where(eq(Media.user_id, session.data.id));
 		return { success: true as const, message: media };
-	} catch (error) {
+	} catch {
 		return {
 			success: false as const,
 			message: 'Something went wrong while getting all media'
