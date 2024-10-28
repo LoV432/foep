@@ -43,7 +43,7 @@ export default async function Component({
 			email_verified: Users.email_verified
 		})
 		.from(Users)
-		.orderBy(desc(Users.created_at))
+		.orderBy(desc(Users.created_at), desc(Users.user_id))
 		.limit(pageSize)
 		.offset(offset);
 
