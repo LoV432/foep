@@ -10,6 +10,7 @@ import { eq } from 'drizzle-orm';
 import { decrypt, encrypt } from './auth.serverless';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
+import { SESSION_TIMEOUT } from './auth.serverless';
 
 export type SessionData = {
 	name: string;
@@ -23,7 +24,6 @@ const key = new TextEncoder().encode(process.env.JWT_SECRET || '');
 if (new TextDecoder().decode(key).length < 32) {
 	throw new Error('JWT_SECRET must be atleast 32 characters long');
 }
-const SESSION_TIMEOUT = '1h';
 
 export async function login({
 	values,

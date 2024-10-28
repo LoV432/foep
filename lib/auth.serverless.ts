@@ -13,7 +13,7 @@ const key = new TextEncoder().encode(process.env.JWT_SECRET || '');
 if (new TextDecoder().decode(key).length < 32) {
 	throw new Error('JWT_SECRET must be atleast 32 characters long');
 }
-const SESSION_TIMEOUT = '1h';
+export const SESSION_TIMEOUT = '12h';
 
 export async function encrypt(payload: SessionData) {
 	return await new SignJWT(payload)
