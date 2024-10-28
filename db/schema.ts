@@ -17,6 +17,7 @@ export const Users = pgTable('Users', {
 	email: varchar('email').notNull().unique(),
 	password: varchar('password').notNull(),
 	email_verified: boolean('email_verified').notNull().default(false),
+	avatar_url: varchar('avatar_url'),
 	role: varchar('role', { enum: ['user', 'admin', 'instructor'] })
 		.notNull()
 		.default('user'),

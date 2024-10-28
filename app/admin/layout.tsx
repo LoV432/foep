@@ -1,5 +1,6 @@
 import AdminSidebar from '@/components/AdminSidebar';
 import Header from '@/components/Header';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function InstructorCourseLayout({
 	children
@@ -13,6 +14,7 @@ export default function InstructorCourseLayout({
 				<AdminSidebar />
 				{children}
 			</div>
+			<Toaster />
 		</div>
 	);
 }
