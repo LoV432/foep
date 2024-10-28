@@ -7,13 +7,14 @@ import {
 	navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Token } from '@/lib/auth';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ session }: { session: Token }) {
 	const currentPath = usePathname();
 	const [isOpen, setIsOpen] = useState(false);
 	const [autoFocus, setAutoFocus] = useState(true);
@@ -41,6 +42,13 @@ export default function AdminSidebar() {
 					currentPath={currentPath}
 					name="Profile"
 				/>
+				{session.role === 'admin' && (
+					<NavMenuItem
+						link="/admin/users"
+						currentPath={currentPath}
+						name="Users"
+					/>
+				)}
 			</NavigationMenu>
 
 			<NavigationMenu className="w-full max-w-full justify-start gap-3 py-2 pl-4 min-[1126px]:hidden">
@@ -127,6 +135,14 @@ export default function AdminSidebar() {
 								name="Profile"
 								onClick={() => setIsOpen(false)}
 							/>
+							{session.role === 'admin' && (
+								<NavMenuItem
+									link="/admin/users"
+									currentPath={currentPath}
+									name="Users"
+									onClick={() => setIsOpen(false)}
+								/>
+							)}
 						</NavigationMenuList>
 					</SheetContent>
 				</Sheet>
