@@ -42,7 +42,7 @@ export default function FiltersSidebar({
 	}
 
 	return (
-		<aside className="h-fit w-full space-y-6 rounded-lg border border-border p-6 md:w-1/4">
+		<aside className="h-fit w-full space-y-6 rounded-lg border border-border p-6 lg:w-1/4">
 			<div>
 				<Label className="mb-2 text-lg font-semibold" htmlFor="search">
 					Search Courses
@@ -124,7 +124,7 @@ export default function FiltersSidebar({
 						: 'Price: High to Low'}
 				</Button>
 			</div>
-			<div className="flex gap-2">
+			<div className="flex flex-wrap gap-2">
 				<Button onClick={applyFilter}>Apply Filters</Button>
 				<Button variant="destructive" onClick={clearFilters}>
 					Clear Filters

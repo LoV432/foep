@@ -50,7 +50,7 @@ export default function Courses({
 	const pagination = coursesData?.pagination;
 
 	return (
-		<main className="w-full md:w-3/4">
+		<main className="w-full lg:w-3/4">
 			{isLoading ||
 				(isPlaceholderData && (
 					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -94,7 +94,7 @@ export default function Courses({
 								</p>
 							</div>
 							<div className="mt-4">
-								<div className="flex items-center justify-between">
+								<div className="flex flex-wrap items-center justify-between gap-2">
 									<span className="text-lg font-bold">
 										${data.course.price?.toFixed(2)}
 									</span>
