@@ -1,9 +1,10 @@
 import { db } from '@/db/db';
-import { Courses } from '@/db/schema';
+import { Courses, CourseChapters } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import CourseEditSection from './CourseEditSection';
+import CourseEditSection from './CourseMetaInfo/CourseEditSection';
+import CourseChaptersSection from './CourseChapters/CourseChaptersSection';
 
 export default async function CoursePage({
 	params
@@ -39,12 +40,25 @@ export default async function CoursePage({
 		return redirect('/instructor/course');
 	}
 
+	const chapters = await db
+		.select()
+		.from(CourseChapters)
+		.where(eq(CourseChapters.course_id, course.course_id))
+		.orderBy(CourseChapters.order);
+
 	return (
 		<div className="min-h-screen bg-gray-100">
-			<div className="container mx-auto flex items-center p-4">
+			<div className="container mx-auto p-4">
 				<h1 className="text-2xl font-bold">Edit Course</h1>
+				<div className="grid grid-cols-1 gap-8 py-5 lg:grid-cols-[2fr_1fr]">
+					<CourseEditSection course={course} />
+
+					<CourseChaptersSection
+						courseId={course.course_id}
+						initialChapters={chapters}
+					/>
+				</div>
 			</div>
-			<CourseEditSection course={course} />
 		</div>
 	);
 }
