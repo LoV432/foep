@@ -160,6 +160,7 @@ export const Article = pgTable('Article', {
 	author_id: integer('author_id')
 		.references(() => Users.user_id)
 		.notNull(),
+	image_url: varchar('image_url'),
 	content: varchar('content').notNull(),
 	created_at: timestamp('created_at', { withTimezone: true })
 		.notNull()
