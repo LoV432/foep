@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { db } from '@/db/db';
 import { eq, and, lt, gt, asc, desc } from 'drizzle-orm';
-import { CourseChapters, Article, Users } from '@/db/schema';
+import { CourseChapters, Article, Users, Courses } from '@/db/schema';
 import { redirect } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
@@ -30,7 +30,13 @@ export default async function Page({
 				eq(CourseChapters.course_chapter_id, Article.course_chapter_id)
 			)
 			.leftJoin(Users, eq(Article.author_id, Users.user_id))
-			.where(eq(CourseChapters.course_chapter_id, parseInt(params.id)))
+			.leftJoin(Courses, eq(CourseChapters.course_id, Courses.course_id))
+			.where(
+				and(
+					eq(CourseChapters.course_chapter_id, parseInt(params.id)),
+					eq(Courses.slug, params.slug)
+				)
+			)
 	)[0];
 
 	if (!data || !data.articleData || !data.authorData) {
