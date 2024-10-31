@@ -38,7 +38,7 @@ export async function saveArticleAction(data: EditArticleFormData) {
 		if (course.length === 0) {
 			throw new Error('Course not found or you are not authorized to edit it');
 		}
-
+		console.log(data);
 		const existingArticle = await db
 			.select()
 			.from(Article)
@@ -55,7 +55,7 @@ export async function saveArticleAction(data: EditArticleFormData) {
 					.where(eq(CourseChapters.course_chapter_id, data.chapterId));
 				await tx
 					.update(Article)
-					.set({ content: data.content })
+					.set({ content: data.content, image_url: data.imageUrl })
 					.where(
 						eq(Article.course_chapter_id, existingArticle[0].course_chapter_id)
 					);
@@ -72,7 +72,8 @@ export async function saveArticleAction(data: EditArticleFormData) {
 				await tx.insert(Article).values({
 					content: data.content,
 					course_chapter_id: chapter[0].course_chapter_id,
-					author_id: session.data.id
+					author_id: session.data.id,
+					image_url: data.imageUrl
 				});
 			});
 		}
