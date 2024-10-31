@@ -73,3 +73,68 @@ export async function addChapterAction(data: ChapterFormData) {
 		};
 	}
 }
+
+export async function deleteChapterAction(chapterId: number) {
+	try {
+		const session = await getSession();
+		if (!session.success) {
+			throw new Error('Unauthorized');
+		}
+		if (session.data.role !== 'admin' && session.data.role !== 'instructor') {
+			throw new Error('Unauthorized');
+		}
+
+		const chapter = (
+			await db
+				.select()
+				.from(CourseChapters)
+				.where(
+					and(
+						eq(CourseChapters.course_chapter_id, chapterId),
+						session.data.role === 'admin'
+							? undefined
+							: eq(CourseChapters.author_id, session.data.id)
+					)
+				)
+		)[0];
+		if (!chapter) {
+			throw new Error(
+				'Chapter not found or you are not authorized to delete this chapter'
+			);
+		}
+
+		const course = (
+			await db
+				.select()
+				.from(Courses)
+				.where(
+					and(
+						eq(Courses.course_id, chapter.course_id),
+						session.data.role === 'admin'
+							? undefined
+							: eq(Courses.author_id, session.data.id)
+					)
+				)
+		)[0];
+		if (!course) {
+			throw new Error(
+				'Course not found or you are not authorized to delete this chapter'
+			);
+		}
+
+		await db
+			.delete(CourseChapters)
+			.where(eq(CourseChapters.course_chapter_id, chapterId));
+
+		return {
+			success: true as const,
+			message: 'Chapter deleted successfully'
+		};
+	} catch (error) {
+		return {
+			success: false as const,
+			message:
+				error instanceof Error ? error.message : 'Failed to delete chapter'
+		};
+	}
+}

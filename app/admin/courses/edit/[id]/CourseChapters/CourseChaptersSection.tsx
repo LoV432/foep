@@ -26,8 +26,9 @@ import { useToast } from '@/hooks/use-toast';
 import { CourseChapters } from '@/db/schema';
 import { chapterSchema } from './ChapterSchema.z';
 import { ChapterFormData } from './ChapterSchema.z';
-import { addChapterAction } from './add_chapter_action';
+import { addChapterAction } from './chapter_actions';
 import Link from 'next/link';
+import { DeleteChapterButton } from './DeleteChapterButton';
 
 export default function CourseChaptersSection({
 	courseId,
@@ -71,6 +72,12 @@ export default function CourseChaptersSection({
 		}
 	}
 
+	const handleChapterDeleted = (deletedChapterId: number) => {
+		setChapters(
+			chapters.filter((c) => c.course_chapter_id !== deletedChapterId)
+		);
+	};
+
 	return (
 		<Card>
 			<CardHeader className="p-6">
@@ -92,14 +99,20 @@ export default function CourseChaptersSection({
 										{chapter.estimated_time} minutes
 									</p>
 								</div>
-								<Button variant="outline" size="sm" className="p-0">
-									<Link
-										className="h-fit w-fit p-4"
-										href={`/admin/courses/chapter/${chapter.course_chapter_id}/${chapter.type}`}
-									>
-										Edit
-									</Link>
-								</Button>
+								<div className="flex gap-2">
+									<Button variant="outline" size="sm" className="p-0">
+										<Link
+											className="h-fit w-fit p-4"
+											href={`/admin/courses/chapter/${chapter.course_chapter_id}/${chapter.type}`}
+										>
+											Edit
+										</Link>
+									</Button>
+									<DeleteChapterButton
+										chapterId={chapter.course_chapter_id}
+										onChapterDeleted={handleChapterDeleted}
+									/>
+								</div>
 							</div>
 						))}
 					</div>
