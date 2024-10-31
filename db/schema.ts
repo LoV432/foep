@@ -167,39 +167,27 @@ export const Article = pgTable('Article', {
 		.defaultNow()
 });
 
-export const Quiz = pgTable('Quiz', {
-	quiz_id: serial('quiz_id').primaryKey(),
+export type QuizOption = {
+	id: number;
+	text: string;
+};
+
+export const QuizQuestions = pgTable('QuizQuestions', {
+	quiz_question_id: serial('quiz_question_id').primaryKey(),
 	course_chapter_id: integer('course_chapter_id')
 		.references(() => CourseChapters.course_chapter_id, { onDelete: 'cascade' })
 		.notNull(),
 	author_id: integer('author_id')
 		.references(() => Users.user_id)
 		.notNull(),
-	created_at: timestamp('created_at', { withTimezone: true })
-		.notNull()
-		.defaultNow()
-});
-
-type QuizOption = {
-	id: string;
-	text: string;
-};
-
-export const QuizQuestions = pgTable('QuizQuestions', {
-	quiz_question_id: serial('quiz_question_id').primaryKey(),
-	quiz_id: integer('quiz_id')
-		.references(() => Quiz.quiz_id, { onDelete: 'cascade' })
-		.notNull(),
-	author_id: integer('author_id')
-		.references(() => Users.user_id)
-		.notNull(),
+	order: integer('order').notNull(),
 	question: varchar('question').notNull(),
 	// I dont really like the idea of using jsonb for this
 	// It should be a table on its own but that comes with a lot of other problems
 	// Right now i am not sure if this will even work but we will see, I guess
 	options: jsonb('options').$type<QuizOption[]>().notNull(),
 	// I cant even guarantee that this id even exists in the options array
-	correct_option_id: varchar('correct_option_id').notNull(),
+	correct_option_id: integer('correct_option_id').notNull(),
 	created_at: timestamp('created_at', { withTimezone: true })
 		.notNull()
 		.defaultNow()
