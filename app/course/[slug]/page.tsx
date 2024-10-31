@@ -1,4 +1,4 @@
-import { Star, Users as UsersIcon } from 'lucide-react';
+import { Star, Clock, FileText, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
@@ -6,7 +6,7 @@ import { getCourse } from '@/lib/get_course';
 import Header from '@/components/Header';
 import Image from 'next/image';
 import rehypeRaw from 'rehype-raw';
-
+import { redirect } from 'next/navigation';
 export default async function CoursePage({
 	params
 }: {
@@ -15,7 +15,7 @@ export default async function CoursePage({
 	const { data, success } = await getCourse(params.slug);
 
 	if (!success) {
-		return <div>Course not found</div>;
+		redirect('/');
 	}
 	return (
 		<div className="min-h-screen bg-gray-100">
@@ -44,24 +44,25 @@ export default async function CoursePage({
 							</div>
 							<div className="flex space-x-4 text-sm text-gray-500">
 								<div className="flex items-center">
-									<UsersIcon className="mr-2 h-5 w-5" />
-									{/* <span>{course.chapters} chapters</span> */}
+									<FileText className="mr-2 h-5 w-5" />
+									<span>
+										{
+											data.chapters.filter(
+												(chapter) => chapter.type === 'article'
+											).length
+										}{' '}
+										chapters
+									</span>
 								</div>
 								<div className="flex items-center">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="mr-2 h-5 w-5"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-										<path
-											fillRule="evenodd"
-											d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-											clipRule="evenodd"
-										/>
-									</svg>
-									{/* <span>{course.quizzes} quizzes</span> */}
+									<HelpCircle className="mr-2 h-5 w-5" />
+									<span>
+										{
+											data.chapters.filter((chapter) => chapter.type === 'quiz')
+												.length
+										}{' '}
+										quizzes
+									</span>
 								</div>
 							</div>
 						</div>
@@ -99,6 +100,37 @@ export default async function CoursePage({
 										<span className="text-sm text-gray-500">
 											({data.totalReviews} ratings)
 										</span>
+									</div>
+
+									<div className="border-t pt-4">
+										<h3 className="mb-3 font-semibold text-gray-900">
+											Course Content
+										</h3>
+										<div className="space-y-3">
+											{data.chapters.map((chapter, index: number) => (
+												<div key={index} className="flex items-start space-x-3">
+													{chapter.type === 'quiz' ? (
+														<HelpCircle className="mt-1 h-5 w-5 flex-shrink-0 text-gray-400" />
+													) : (
+														<FileText className="mt-1 h-5 w-5 flex-shrink-0 text-gray-400" />
+													)}
+													<div className="flex w-full justify-between pt-0.5">
+														<p className="text-sm font-medium text-gray-900">
+															{chapter.title}
+														</p>
+														<div className="flex items-center space-x-2">
+															<Clock className="h-4 w-4 text-gray-400" />
+															<span className="text-xs text-gray-500">
+																{chapter.estimated_time} min
+															</span>
+															<span className="text-xs capitalize text-gray-500">
+																• {chapter.type}
+															</span>
+														</div>
+													</div>
+												</div>
+											))}
+										</div>
 									</div>
 								</CardContent>
 							</Card>

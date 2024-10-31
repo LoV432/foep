@@ -1,6 +1,6 @@
 import { db } from '@/db/db';
-import { Courses, CoursesCategories, Users } from '@/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { Courses, CoursesCategories, Users, CourseChapters } from '@/db/schema';
+import { and, eq, sql } from 'drizzle-orm';
 
 export type GetCourseResponse = Awaited<ReturnType<typeof getCourse>>;
 
@@ -32,10 +32,22 @@ export async function getCourse(slug: string) {
 				eq(Courses.category_id, CoursesCategories.category_id)
 			)
 			.leftJoin(Users, eq(Courses.author_id, Users.user_id))
-			.where(eq(Courses.slug, slug));
+			.where(and(eq(Courses.slug, slug), eq(Courses.is_draft, false)));
+
+		const chapters = await db
+			.select({
+				title: CourseChapters.title,
+				type: CourseChapters.type,
+				estimated_time: CourseChapters.estimated_time
+			})
+			.from(CourseChapters)
+			.where(eq(CourseChapters.course_id, courses[0].course.course_id));
 		return {
 			success: true as const,
-			data: courses[0]
+			data: {
+				...courses[0],
+				chapters
+			}
 		};
 	} catch (error) {
 		console.error(error);

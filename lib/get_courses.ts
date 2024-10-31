@@ -25,7 +25,8 @@ export async function getCourses(filters: z.infer<typeof filtersSchema>) {
 			gte(Courses.price, filters.priceRange[0]),
 			lte(Courses.price, filters.priceRange[1]),
 			filters.search ? ilike(Courses.name, `%${filters.search}%`) : undefined,
-			gte(averageRating, filters.minRating)
+			gte(averageRating, filters.minRating),
+			eq(Courses.is_draft, false)
 		);
 
 		const totalCountQuery = await db
