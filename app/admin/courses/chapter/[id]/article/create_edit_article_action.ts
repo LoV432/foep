@@ -38,12 +38,11 @@ export async function saveArticleAction(data: EditArticleFormData) {
 		if (course.length === 0) {
 			throw new Error('Course not found or you are not authorized to edit it');
 		}
-		console.log(data);
+
 		const existingArticle = await db
 			.select()
 			.from(Article)
 			.where(eq(Article.course_chapter_id, data.chapterId));
-
 		if (existingArticle.length > 0) {
 			await db.transaction(async (tx) => {
 				await tx
