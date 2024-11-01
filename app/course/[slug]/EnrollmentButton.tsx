@@ -10,10 +10,10 @@ import {
 	DialogTitle
 } from '@/components/ui/dialog';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { enrollAction } from './enroll-action';
 import { useToast } from '@/hooks/use-toast';
-import { CourseEnrollments } from '@/db/schema';
+import type { Enrollment } from './enroll-action';
 
 export function EnrollmentButton({
 	courseId,
@@ -24,15 +24,13 @@ export function EnrollmentButton({
 	courseId: number;
 	slug: string;
 	isLoggedIn: boolean;
-	enrollment:
-		| (typeof CourseEnrollments.$inferSelect & { chapterType: string })
-		| undefined;
+	enrollment: Enrollment;
 }) {
 	const [showDialog, setShowDialog] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
 	const { toast } = useToast();
-
+	const awaitedEnrollment = use(enrollment).data;
 	async function handleEnroll() {
 		try {
 			setLoading(true);
@@ -77,16 +75,20 @@ export function EnrollmentButton({
 							variant: 'destructive'
 						});
 						router.push('/login');
-					} else if (enrollment) {
+					} else if (awaitedEnrollment) {
 						router.push(
-							`/course/${slug}/chapter/${enrollment.current_chapter_id}/${enrollment.chapterType}`
+							`/course/${slug}/chapter/${awaitedEnrollment.current_chapter_id}/${awaitedEnrollment.chapterType}`
 						);
 					} else {
 						setShowDialog(true);
 					}
 				}}
 			>
-				{enrollment ? 'Continue Course' : 'Enroll Now'}
+				{awaitedEnrollment
+					? awaitedEnrollment.completed
+						? 'Completed'
+						: 'Continue Course'
+					: 'Enroll Now'}
 			</Button>
 
 			<Dialog open={showDialog} onOpenChange={setShowDialog}>

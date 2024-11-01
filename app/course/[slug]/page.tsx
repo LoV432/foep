@@ -12,6 +12,7 @@ import { getEnrollment } from './enroll-action';
 import { getReviews } from './get-reviews';
 import Reviews from './Reviews';
 import { Suspense } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default async function CoursePage({
 	params
@@ -22,11 +23,11 @@ export default async function CoursePage({
 	if (!success) {
 		redirect('/');
 	}
-	// TODO: Add suspense
-	// This can be under suspense so it doesn't block the page load
-	const enrollment = await getEnrollment(data.course.course_id);
-	const session = await getSession();
+	const enrollment = getEnrollment(data.course.course_id);
 	const reviews = getReviews(data.course.course_id);
+
+	// TODO: Technically this can also be under suspense so it doesn't block the page load
+	const session = await getSession();
 	return (
 		<div className="min-h-screen bg-gray-100">
 			<Header />
@@ -100,12 +101,20 @@ export default async function CoursePage({
 										<p className="text-4xl font-bold text-gray-900">
 											${data.course.price}
 										</p>
-										<EnrollmentButton
-											courseId={data.course.course_id}
-											slug={params.slug}
-											isLoggedIn={session.success}
-											enrollment={enrollment.data}
-										/>
+										<Suspense
+											fallback={
+												<Button className="mt-4 w-full" size="lg">
+													<Loader2 className="mr-2 h-5 w-5 animate-spin" />
+												</Button>
+											}
+										>
+											<EnrollmentButton
+												courseId={data.course.course_id}
+												slug={params.slug}
+												isLoggedIn={session.success}
+												enrollment={enrollment}
+											/>
+										</Suspense>
 									</div>
 									<div className="flex items-center justify-center space-x-2">
 										<div className="flex">

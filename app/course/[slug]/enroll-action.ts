@@ -58,6 +58,7 @@ export async function enrollAction(courseId: number) {
 	}
 }
 
+export type Enrollment = ReturnType<typeof getEnrollment>;
 export async function getEnrollment(courseId: number) {
 	try {
 		const session = await getSession();
