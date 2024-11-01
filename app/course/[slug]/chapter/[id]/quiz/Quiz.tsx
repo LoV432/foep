@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import Link from 'next/link';
+import NextChapterButton from '../../NextChapterButton';
 
 export default function Quiz({
 	data,
@@ -210,14 +211,12 @@ export default function Quiz({
 						</Button>
 					)}
 					{navigation.next && (
-						<Button asChild className="ml-auto">
-							<Link
-								href={`/course/${navigation.slug}/chapter/${navigation.next.course_chapter_id}/${navigation.next.type}`}
-							>
-								{navigation.next.title} ({navigation.next.estimated_time} min,
-								{navigation.next.type}) →
-							</Link>
-						</Button>
+						<NextChapterButton
+							courseId={data.chapterInfo.course_id}
+							redirectUrl={`/course/${navigation.slug}/chapter/${navigation.next.course_chapter_id}/${navigation.next.type}`}
+							buttonText={`${navigation.next.title} (${navigation.next.estimated_time} min, ${navigation.next.type}) →`}
+							currentChapterOrder={data.chapterInfo.order}
+						/>
 					)}
 				</div>
 			)}

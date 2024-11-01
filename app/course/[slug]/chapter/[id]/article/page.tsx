@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import Header from '@/components/Header';
+import NextChapterButton from '../../NextChapterButton';
 
 export default async function Page({
 	params
@@ -121,13 +122,12 @@ export default async function Page({
 						</Button>
 					)}
 					{next[0] && (
-						<Button asChild className="ml-auto">
-							<Link
-								href={`/course/${params.slug}/chapter/${next[0].course_chapter_id}/${next[0].type}`}
-							>
-								{next[0].title} ({next[0].estimated_time} min, {next[0].type}) →
-							</Link>
-						</Button>
+						<NextChapterButton
+							courseId={data.courseData.course_id}
+							redirectUrl={`/course/${params.slug}/chapter/${next[0].course_chapter_id}/${next[0].type}`}
+							buttonText={`${next[0].title} (${next[0].estimated_time} min, ${next[0].type}) →`}
+							currentChapterOrder={data.courseData.order}
+						/>
 					)}
 				</div>
 			</div>
