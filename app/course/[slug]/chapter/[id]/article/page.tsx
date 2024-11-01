@@ -10,6 +10,7 @@ import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import Header from '@/components/Header';
 import NextChapterButton from '../../NextChapterButton';
+import CompleteChapterButton from '../../CompleteChapterButton';
 
 export default async function Page({
 	params
@@ -121,12 +122,18 @@ export default async function Page({
 							</Link>
 						</Button>
 					)}
-					{next[0] && (
+					{next[0] ? (
 						<NextChapterButton
 							courseId={data.courseData.course_id}
 							redirectUrl={`/course/${params.slug}/chapter/${next[0].course_chapter_id}/${next[0].type}`}
 							buttonText={`${next[0].title} (${next[0].estimated_time} min, ${next[0].type}) →`}
 							currentChapterOrder={data.courseData.order}
+						/>
+					) : (
+						<CompleteChapterButton
+							courseId={data.courseData.course_id}
+							buttonText="Finish Course 🎉🎉"
+							redirectUrl={`/course/${params.slug}`}
 						/>
 					)}
 				</div>

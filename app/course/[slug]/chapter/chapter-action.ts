@@ -81,3 +81,47 @@ export async function moveToNextChapter(
 		};
 	}
 }
+
+export async function markCourseComplete(courseId: number) {
+	try {
+		const session = await getSession();
+		if (!session.success) {
+			throw new Error('Unauthorized');
+		}
+		const [checkEnrollment] = await db
+			.select()
+			.from(CourseEnrollments)
+			.where(
+				and(
+					eq(CourseEnrollments.course_id, courseId),
+					eq(CourseEnrollments.user_id, session.data.id)
+				)
+			);
+		// TODO: Maybe i should also check if the user truly is on the last chapter?
+		// But i feel like that's a bit of a hassle for no real reason
+		if (!checkEnrollment) {
+			throw new Error('Not enrolled');
+		}
+
+		await db
+			.update(CourseEnrollments)
+			.set({
+				completed: true
+			})
+			.where(
+				and(
+					eq(CourseEnrollments.enrollment_id, checkEnrollment.enrollment_id),
+					eq(CourseEnrollments.course_id, checkEnrollment.course_id),
+					eq(CourseEnrollments.user_id, session.data.id)
+				)
+			);
+
+		return { success: true as const };
+	} catch (error) {
+		return {
+			success: false as const,
+			error:
+				error instanceof Error ? error.message : 'Error marking course complete'
+		};
+	}
+}

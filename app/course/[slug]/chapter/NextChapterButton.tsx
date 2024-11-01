@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { moveToNextChapter } from './nextchapter-action';
+import { moveToNextChapter } from './chapter-action';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 

@@ -16,6 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import NextChapterButton from '../../NextChapterButton';
+import CompleteChapterButton from '../../CompleteChapterButton';
 
 export default function Quiz({
 	data,
@@ -210,12 +211,18 @@ export default function Quiz({
 							</Link>
 						</Button>
 					)}
-					{navigation.next && (
+					{navigation.next ? (
 						<NextChapterButton
 							courseId={data.chapterInfo.course_id}
 							redirectUrl={`/course/${navigation.slug}/chapter/${navigation.next.course_chapter_id}/${navigation.next.type}`}
 							buttonText={`${navigation.next.title} (${navigation.next.estimated_time} min, ${navigation.next.type}) →`}
 							currentChapterOrder={data.chapterInfo.order}
+						/>
+					) : (
+						<CompleteChapterButton
+							courseId={data.chapterInfo.course_id}
+							buttonText="Finish Course 🎉🎉"
+							redirectUrl={`/course/${navigation.slug}`}
 						/>
 					)}
 				</div>
