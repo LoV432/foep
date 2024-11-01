@@ -57,7 +57,7 @@ export default async function QuizPage({
 			)
 	)[0];
 	if (!course || !course.chapterInfo || course.questions.length === 0) {
-		redirect('/');
+		redirect(`/course/${params.slug}`);
 	}
 	const [previous, next] = await Promise.all([
 		db

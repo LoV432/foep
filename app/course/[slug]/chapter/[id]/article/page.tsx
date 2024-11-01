@@ -41,7 +41,7 @@ export default async function Page({
 	)[0];
 
 	if (!data || !data.articleData || !data.authorData) {
-		redirect('/');
+		redirect(`/course/${params.slug}`);
 	}
 
 	const [previous, next] = await Promise.all([
