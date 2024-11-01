@@ -1,5 +1,4 @@
 import { Star, Clock, FileText, HelpCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import { getCourse } from '@/lib/get_course';
@@ -7,16 +6,23 @@ import Header from '@/components/Header';
 import Image from 'next/image';
 import rehypeRaw from 'rehype-raw';
 import { redirect } from 'next/navigation';
+import { EnrollmentButton } from './EnrollmentButton';
+import { getSession } from '@/lib/auth';
+import { getEnrollment } from './enroll-action';
+
 export default async function CoursePage({
 	params
 }: {
 	params: { slug: string };
 }) {
 	const { data, success } = await getCourse(params.slug);
-
 	if (!success) {
 		redirect('/');
 	}
+	// TODO: Add suspense
+	// This can be under suspense so it doesn't block the page load
+	const enrollment = await getEnrollment(data.course.course_id);
+	const session = await getSession();
 	return (
 		<div className="min-h-screen bg-gray-100">
 			<Header />
@@ -76,9 +82,12 @@ export default async function CoursePage({
 										<p className="text-4xl font-bold text-gray-900">
 											${data.course.price}
 										</p>
-										<Button className="mt-4 w-full" size="lg">
-											Enroll Now
-										</Button>
+										<EnrollmentButton
+											courseId={data.course.course_id}
+											slug={params.slug}
+											isLoggedIn={session.success}
+											enrollment={enrollment.data}
+										/>
 									</div>
 									<div className="flex items-center justify-center space-x-2">
 										<div className="flex">

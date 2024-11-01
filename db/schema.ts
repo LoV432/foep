@@ -192,3 +192,20 @@ export const QuizQuestions = pgTable('QuizQuestions', {
 		.notNull()
 		.defaultNow()
 });
+
+export const CourseEnrollments = pgTable('CourseEnrollments', {
+	enrollment_id: serial('enrollment_id').primaryKey(),
+	user_id: integer('user_id')
+		.references(() => Users.user_id, { onDelete: 'cascade' })
+		.notNull(),
+	course_id: integer('course_id')
+		.references(() => Courses.course_id, { onDelete: 'cascade' })
+		.notNull(),
+	current_chapter_id: integer('current_chapter_id')
+		.references(() => CourseChapters.course_chapter_id)
+		.notNull(),
+	completed: boolean('completed').notNull().default(false),
+	enrolled_at: timestamp('enrolled_at', { withTimezone: true })
+		.notNull()
+		.defaultNow()
+});

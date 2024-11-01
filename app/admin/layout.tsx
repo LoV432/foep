@@ -1,6 +1,5 @@
 import AdminSidebar from '@/components/AdminSidebar';
 import Header from '@/components/Header';
-import { Toaster } from '@/components/ui/toaster';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
@@ -23,7 +22,6 @@ export default async function InstructorCourseLayout({
 				<AdminSidebar session={session.data} />
 				{children}
 			</div>
-			<Toaster />
 		</div>
 	);
 }
