@@ -1,4 +1,4 @@
-import { Star, Clock, FileText, HelpCircle } from 'lucide-react';
+import { Star, Clock, FileText, HelpCircle, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
 import { getCourse } from '@/lib/get_course';
@@ -9,6 +9,9 @@ import { redirect } from 'next/navigation';
 import { EnrollmentButton } from './EnrollmentButton';
 import { getSession } from '@/lib/auth';
 import { getEnrollment } from './enroll-action';
+import { getReviews } from './get-reviews';
+import Reviews from './Reviews';
+import { Suspense } from 'react';
 
 export default async function CoursePage({
 	params
@@ -23,6 +26,7 @@ export default async function CoursePage({
 	// This can be under suspense so it doesn't block the page load
 	const enrollment = await getEnrollment(data.course.course_id);
 	const session = await getSession();
+	const reviews = getReviews(data.course.course_id);
 	return (
 		<div className="min-h-screen bg-gray-100">
 			<Header />
@@ -72,6 +76,20 @@ export default async function CoursePage({
 								</div>
 							</div>
 						</div>
+						<Suspense
+							fallback={
+								<div className="mt-12 w-full">
+									<h2 className="mb-8 text-center text-3xl font-bold">
+										Customer Reviews
+									</h2>
+									<div className="flex w-full flex-col items-center justify-center gap-4">
+										<Loader2 className="h-12 w-12 animate-spin" />
+									</div>
+								</div>
+							}
+						>
+							<Reviews reviews={reviews} />
+						</Suspense>
 					</div>
 
 					<div className="lg:w-[30%]">
