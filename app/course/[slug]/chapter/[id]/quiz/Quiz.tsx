@@ -222,7 +222,7 @@ export default function Quiz({
 						<CompleteChapterButton
 							courseId={data.chapterInfo.course_id}
 							buttonText="Finish Course 🎉🎉"
-							redirectUrl={`/course/${navigation.slug}`}
+							redirectUrl={`/course/${navigation.slug}/finished`}
 						/>
 					)}
 				</div>

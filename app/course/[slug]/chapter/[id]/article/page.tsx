@@ -133,7 +133,7 @@ export default async function Page({
 						<CompleteChapterButton
 							courseId={data.courseData.course_id}
 							buttonText="Finish Course 🎉🎉"
-							redirectUrl={`/course/${params.slug}`}
+							redirectUrl={`/course/${params.slug}/finished`}
 						/>
 					)}
 				</div>
