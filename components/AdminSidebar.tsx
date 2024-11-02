@@ -26,7 +26,11 @@ export default function AdminSidebar({ session }: { session: Token }) {
 	return (
 		<aside className="sticky top-0 z-20 h-fit bg-white">
 			<NavigationMenu className="hidden w-full max-w-full list-none flex-col pt-2 min-[1126px]:flex">
-				<NavMenuItem link="/admin" currentPath={currentPath} name="Dashboard" />
+				<NavMenuItem
+					link="/admin/dashboard"
+					currentPath={currentPath}
+					name="Dashboard"
+				/>
 				<NavMenuItem
 					link="/admin/courses"
 					currentPath={currentPath}
@@ -112,7 +116,7 @@ export default function AdminSidebar({ session }: { session: Token }) {
 						</DialogTitle>
 						<NavigationMenuList className="float-left flex-col gap-5 space-x-0">
 							<NavMenuItem
-								link="/admin"
+								link="/admin/dashboard"
 								currentPath={currentPath}
 								name="Dashboard"
 								onClick={() => setIsOpen(false)}
