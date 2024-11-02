@@ -47,6 +47,7 @@ export function DeleteChapterButton({
 			className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
 			onClick={handleDelete}
 			disabled={isDeleting}
+			aria-label="Delete Chapter"
 		>
 			{isDeleting ? (
 				<Loader2 className="h-4 w-4 animate-spin" />

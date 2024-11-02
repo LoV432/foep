@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/form';
 
 export default function ResendVerification() {
-	const [isLoading, setIsLoading] = useState(false);
 	const [formResponse, setFormResponse] = useState<{
 		success: boolean;
 		message: string;
@@ -38,7 +37,6 @@ export default function ResendVerification() {
 			// Its obviously not a perfect solution, but it will do for now
 			return;
 		}
-		setIsLoading(true);
 		try {
 			const result = await sendResetPasswordEmailAction(values.email);
 			setFormResponse(result);
@@ -48,8 +46,6 @@ export default function ResendVerification() {
 				success: false,
 				message: 'An error occurred while sending the reset password email'
 			});
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
@@ -74,6 +70,7 @@ export default function ResendVerification() {
 							method="POST"
 							onSubmit={form.handleSubmit(onSubmit)}
 							className="space-y-5"
+							aria-label="Reset Password Form"
 						>
 							<FormField
 								control={form.control}
@@ -91,9 +88,15 @@ export default function ResendVerification() {
 							<Button
 								type="submit"
 								className="w-full"
-								disabled={isLoading || formResponse?.success}
+								disabled={form.formState.isSubmitting || formResponse?.success}
 							>
-								{isLoading ? 'Sending...' : 'Send Reset Password Email'}
+								{form.formState.isSubmitting ? (
+									<>
+										Sending <Mail className="mr-2 h-4 w-4 animate-spin" />
+									</>
+								) : (
+									'Send Reset Password Email'
+								)}
 							</Button>
 						</form>
 					</Form>

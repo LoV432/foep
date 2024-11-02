@@ -94,7 +94,7 @@ export default function CourseCreationPage() {
 			</div>
 
 			<Form {...form}>
-				<form className="space-y-8">
+				<form aria-label="Create Course Form" className="space-y-8">
 					<main className="container mx-auto flex flex-col gap-8 p-4 lg:flex-row">
 						<div className="lg:w-2/3">
 							<Card>

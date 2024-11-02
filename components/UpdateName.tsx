@@ -16,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { updateProfileNameSchema } from '@/app/admin/profile/UpdateSchemas.z';
 import { z } from 'zod';
+import { Loader2 } from 'lucide-react';
 
 export default function UpdateProfileForm({
 	initialName
@@ -52,7 +53,11 @@ export default function UpdateProfileForm({
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+			<form
+				aria-label="Update Name Form"
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="space-y-2"
+			>
 				<FormField
 					control={form.control}
 					name="name"
@@ -67,7 +72,13 @@ export default function UpdateProfileForm({
 									<FormMessage />
 								</div>
 								<Button type="submit" disabled={form.formState.isSubmitting}>
-									Update Name
+									{form.formState.isSubmitting ? (
+										<>
+											Updating <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+										</>
+									) : (
+										'Update Name'
+									)}
 								</Button>
 							</div>
 						</FormItem>

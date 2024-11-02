@@ -17,13 +17,13 @@ import {
 import { loginFormSchema } from './FormSchema.z';
 import { useState } from 'react';
 import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
 
 export default function LoginForm() {
 	const [formResponse, setFormResponse] = useState<{
 		success: boolean;
 		message: string;
 	} | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
 	const form = useForm<z.infer<typeof loginFormSchema>>({
 		resolver: zodResolver(loginFormSchema),
 		defaultValues: {
@@ -35,7 +35,6 @@ export default function LoginForm() {
 	async function onSubmit(values: z.infer<typeof loginFormSchema>) {
 		try {
 			setFormResponse(null);
-			setIsLoading(true);
 			const result = await login({ values, redirectTo: '/dashboard' });
 			if (result && !result.success) {
 				setFormResponse(result);
@@ -45,8 +44,6 @@ export default function LoginForm() {
 				success: false,
 				message: 'Something went wrong. Please try again'
 			});
-		} finally {
-			setIsLoading(false);
 		}
 	}
 	return (
@@ -55,6 +52,7 @@ export default function LoginForm() {
 				method="POST"
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="space-y-5"
+				aria-lable="Login form"
 			>
 				<FormField
 					control={form.control}
@@ -82,8 +80,18 @@ export default function LoginForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" disabled={isLoading} className="w-full">
-					{isLoading ? 'Logging in...' : 'Login'}
+				<Button
+					type="submit"
+					disabled={form.formState.isSubmitting}
+					className="w-full"
+				>
+					{form.formState.isSubmitting ? (
+						<>
+							Logging in <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+						</>
+					) : (
+						'Login'
+					)}
 				</Button>
 				{formResponse && (
 					<div

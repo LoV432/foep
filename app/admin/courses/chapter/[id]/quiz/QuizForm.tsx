@@ -129,7 +129,7 @@ export default function QuizForm({
 	return (
 		<div className="grid grid-rows-1 gap-8 lg:grid-cols-[2fr_1fr]">
 			<Form {...form}>
-				<form className="contents">
+				<form className="contents" aria-label="Edit Quiz Metadata Form">
 					<div className="space-y-4">
 						<Card className="h-full">
 							<CardContent className="space-y-6 p-6">
@@ -288,7 +288,12 @@ function AddQuestionButton({
 		}
 	}
 	return (
-		<Button type="button" onClick={createEmptyQuiz} disabled={isLoading}>
+		<Button
+			type="button"
+			onClick={createEmptyQuiz}
+			disabled={isLoading}
+			aria-label="Add Question"
+		>
 			{isLoading ? (
 				<>
 					Adding <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -363,6 +368,8 @@ function Question({
 					<div className="flex w-[calc(100%-2rem)] items-center gap-2">
 						<span className="group-hover:underline">Question {order + 1}</span>
 						<div
+							aria-label="Delete Question"
+							role="button"
 							className="active:bg-zinc-30 hidden h-6 w-6 place-items-center justify-center rounded hover:bg-zinc-200 active:scale-95 group-hover:inline-flex"
 							onClick={(e) => {
 								e.stopPropagation();

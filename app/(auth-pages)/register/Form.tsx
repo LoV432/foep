@@ -17,13 +17,13 @@ import {
 import { registerFormSchema } from './FormSchema.z';
 import { useState } from 'react';
 import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
 
 export default function RegistrationForm() {
 	const [formResponse, setFormResponse] = useState<{
 		success: boolean;
 		message: string;
 	} | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
 	const form = useForm<z.infer<typeof registerFormSchema>>({
 		resolver: zodResolver(registerFormSchema),
 		defaultValues: {
@@ -37,7 +37,6 @@ export default function RegistrationForm() {
 	async function onSubmit(values: z.infer<typeof registerFormSchema>) {
 		try {
 			setFormResponse(null);
-			setIsLoading(true);
 			const result = await registerAction({ fields: values });
 			setFormResponse(result);
 			if (result.success) {
@@ -48,8 +47,6 @@ export default function RegistrationForm() {
 				success: false,
 				message: 'Something went wrong. Please try again'
 			});
-		} finally {
-			setIsLoading(false);
 		}
 	}
 	return (
@@ -58,6 +55,7 @@ export default function RegistrationForm() {
 				method="POST"
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="space-y-5"
+				aria-label="Registration Form"
 			>
 				<FormField
 					control={form.control}
@@ -111,8 +109,18 @@ export default function RegistrationForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" disabled={isLoading} className="w-full">
-					{isLoading ? 'Registering...' : 'Register'}
+				<Button
+					type="submit"
+					disabled={form.formState.isSubmitting}
+					className="w-full"
+				>
+					{form.formState.isSubmitting ? (
+						<>
+							Registering <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+						</>
+					) : (
+						'Register'
+					)}
 				</Button>
 				{formResponse && (
 					<div

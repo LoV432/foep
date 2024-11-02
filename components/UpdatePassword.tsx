@@ -17,6 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { updatePasswordSchema } from '@/app/admin/profile/UpdateSchemas.z';
 import { z } from 'zod';
+import { Loader2 } from 'lucide-react';
 
 export default function UpdatePasswordForm() {
 	const [showPasswordField, setShowPasswordField] = useState(false);
@@ -66,7 +67,11 @@ export default function UpdatePasswordForm() {
 				</Button>
 			) : (
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+					<form
+						aria-label="Update Password form"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="space-y-4"
+					>
 						<FormField
 							control={form.control}
 							name="newPassword"
@@ -97,7 +102,13 @@ export default function UpdatePasswordForm() {
 
 						<div className="flex space-x-2">
 							<Button type="submit" disabled={form.formState.isSubmitting}>
-								Update Password
+								{form.formState.isSubmitting ? (
+									<>
+										Updating <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+									</>
+								) : (
+									'Update Password'
+								)}
 							</Button>
 							<Button
 								type="button"

@@ -34,7 +34,12 @@ export default function DeleteButton({ courseId }: { courseId: number }) {
 		}
 	}
 	return (
-		<Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+		<Button
+			variant="destructive"
+			onClick={handleDelete}
+			disabled={isDeleting}
+			aria-label="Delete Course"
+		>
 			{isDeleting ? (
 				<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 			) : (

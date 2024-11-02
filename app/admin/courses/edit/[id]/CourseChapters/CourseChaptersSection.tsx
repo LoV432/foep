@@ -121,6 +121,7 @@ export default function CourseChaptersSection({
 						<form
 							onSubmit={form.handleSubmit(onSubmit)}
 							className="space-y-4 rounded-lg border p-4"
+							aria-label="Add New Chapter Form"
 						>
 							<h3 className="font-medium">Add New Chapter</h3>
 							<div className="grid gap-4 md:grid-cols-2">
