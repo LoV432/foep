@@ -28,6 +28,11 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { TotalsSuspense } from './TotalsSuspense';
 
+export type Totals = ReturnType<typeof getTotals>;
+export type EnrollmentData = ReturnType<typeof getEnrollmentData>;
+export type TopCategoriesData = ReturnType<typeof getTopCategoriesData>;
+export type TopCoursesData = ReturnType<typeof getTopCoursesData>;
+
 async function getEnrollmentData(authorRole: string, authorId: number) {
 	const result = await db
 		.select({
@@ -235,48 +240,31 @@ export default async function DashboardPage() {
 			</div>
 			<div className="container mx-auto">
 				<Card>
-					<CardHeader>
-						<CardTitle>Course Enrollments</CardTitle>
-					</CardHeader>
-					<CardContent className="overflow-scroll pl-2">
-						<Suspense fallback={<Loading />}>
-							<DashboardLineChart enrollmentData={enrollmentData} />
-						</Suspense>
-					</CardContent>
+					<Suspense fallback={<Loading />}>
+						<DashboardLineChart enrollmentData={enrollmentData} />
+					</Suspense>
 				</Card>
 			</div>
 			<div className="container mx-auto grid grid-cols-1 gap-4 md:grid-cols-2">
 				<Card>
-					<CardHeader>
-						<CardTitle>Top Course Categories</CardTitle>
-						<CardDescription>
-							Number of courses in each category
-						</CardDescription>
-					</CardHeader>
-					<CardContent className="overflow-scroll pl-2">
-						<Suspense fallback={<Loading />}>
-							<DashboardBarChart
-								data={topCategoriesData}
-								dataKeys={{ y: 'courses', x: 'category' }}
-							/>
-						</Suspense>
-					</CardContent>
+					<Suspense fallback={<Loading />}>
+						<DashboardBarChart
+							title="Top Course Categories"
+							description="Number of courses in each category"
+							data={topCategoriesData}
+							dataKeys={{ y: 'courses', x: 'category' }}
+						/>
+					</Suspense>
 				</Card>
 				<Card>
-					<CardHeader>
-						<CardTitle>Top Courses</CardTitle>
-						<CardDescription>
-							Number of enrollments in each course
-						</CardDescription>
-					</CardHeader>
-					<CardContent className="overflow-scroll pl-2">
-						<Suspense fallback={<Loading />}>
-							<DashboardBarChart
-								data={topCoursesData}
-								dataKeys={{ y: 'enrollments', x: 'course' }}
-							/>
-						</Suspense>
-					</CardContent>
+					<Suspense fallback={<Loading />}>
+						<DashboardBarChart
+							title="Top Courses"
+							description="Number of enrollments in each course"
+							data={topCoursesData}
+							dataKeys={{ y: 'enrollments', x: 'course' }}
+						/>
+					</Suspense>
 				</Card>
 			</div>
 		</div>
