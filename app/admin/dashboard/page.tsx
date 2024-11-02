@@ -190,9 +190,6 @@ export default async function DashboardPage() {
 		<div className="space-y-4 overflow-hidden bg-gray-200 p-8 pt-6">
 			<div className="container mx-auto flex items-center justify-between space-y-2">
 				<h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-				<div className="flex items-center space-x-2">
-					<Button>Download Report</Button>
-				</div>
 			</div>
 			<div className="container mx-auto grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 				<Card>
