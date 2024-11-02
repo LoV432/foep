@@ -56,6 +56,12 @@ export function EnrollmentButton({
 					variant: 'destructive'
 				});
 				router.push('/login');
+			} else {
+				toast({
+					title: 'An error occurred',
+					description: 'Something went wrong while enrolling',
+					variant: 'destructive'
+				});
 			}
 		} finally {
 			setLoading(false);
