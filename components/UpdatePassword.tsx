@@ -11,21 +11,20 @@ import {
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form';
-import { updatePasswordAction } from './update_profile_actions';
+import { updatePasswordAction } from '@/lib/update_profile_actions';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { updatePasswordSchema } from './UpdateSchemas.z';
+import { updatePasswordSchema } from '@/app/admin/profile/UpdateSchemas.z';
 import { z } from 'zod';
 
-export default function UpdatePasswordForm({ userId }: { userId: number }) {
+export default function UpdatePasswordForm() {
 	const [showPasswordField, setShowPasswordField] = useState(false);
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof updatePasswordSchema>>({
 		resolver: zodResolver(updatePasswordSchema),
 		defaultValues: {
-			userId,
 			newPassword: '',
 			confirmPassword: ''
 		}
@@ -34,7 +33,6 @@ export default function UpdatePasswordForm({ userId }: { userId: number }) {
 	async function onSubmit(values: z.infer<typeof updatePasswordSchema>) {
 		try {
 			const response = await updatePasswordAction(
-				userId,
 				values.newPassword,
 				values.confirmPassword
 			);

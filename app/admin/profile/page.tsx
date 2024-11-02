@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { getSession } from '@/lib/auth';
@@ -6,9 +5,8 @@ import { redirect } from 'next/navigation';
 import { db } from '@/db/db';
 import { Users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import UpdatePasswordForm from './UpdatePassword';
-import UpdateProfilePic from './UpdateProfilePic';
-import UpdateProfileForm from './UpdateName';
+import UpdatePasswordForm from '@/components/UpdatePassword';
+import UpdateProfileForm from '@/components/UpdateName';
 
 export default async function Component() {
 	const session = await getSession();
@@ -27,18 +25,8 @@ export default async function Component() {
 			</div>
 			<div className="container mx-auto rounded-lg bg-white p-6">
 				<div className="mb-8 flex items-start space-x-6">
-					<div className="relative">
-						<Image
-							src={user.avatar_url || ''}
-							alt="Profile picture"
-							width={100}
-							height={100}
-							className="mx-auto h-24 w-24 rounded-full border-2 border-border object-cover"
-						/>
-						<UpdateProfilePic userId={user.user_id} />
-					</div>
 					<div className="flex-1 space-y-6">
-						<UpdateProfileForm userId={user.user_id} initialName={user.name} />
+						<UpdateProfileForm initialName={user.name} />
 
 						<div className="space-y-2">
 							<Label htmlFor="email">Email</Label>
@@ -51,7 +39,7 @@ export default async function Component() {
 							/>
 						</div>
 
-						<UpdatePasswordForm userId={user.user_id} />
+						<UpdatePasswordForm />
 					</div>
 				</div>
 			</div>

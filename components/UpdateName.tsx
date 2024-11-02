@@ -11,17 +11,15 @@ import {
 	FormMessage
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { updateProfileNameAction } from './update_profile_actions';
+import { updateProfileNameAction } from '@/lib/update_profile_actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { updateProfileNameSchema } from './UpdateSchemas.z';
+import { updateProfileNameSchema } from '@/app/admin/profile/UpdateSchemas.z';
 import { z } from 'zod';
 
 export default function UpdateProfileForm({
-	userId,
 	initialName
 }: {
-	userId: number;
 	initialName: string;
 }) {
 	const { toast } = useToast();
@@ -29,14 +27,13 @@ export default function UpdateProfileForm({
 	const form = useForm<z.infer<typeof updateProfileNameSchema>>({
 		resolver: zodResolver(updateProfileNameSchema),
 		defaultValues: {
-			userId,
 			name: initialName
 		}
 	});
 
 	async function onSubmit(values: z.infer<typeof updateProfileNameSchema>) {
 		try {
-			const response = await updateProfileNameAction(userId, values.name);
+			const response = await updateProfileNameAction(values.name);
 
 			if (!response.success) throw new Error('Failed to update profile');
 
