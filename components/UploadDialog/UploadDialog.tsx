@@ -1,7 +1,13 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogTitle,
+	DialogTrigger
+} from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Media } from '@/db/schema';
 import { useState } from 'react';
@@ -55,6 +61,11 @@ export default function UploadDialog({
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="max-w-screen-xl">
+				<DialogTitle hidden>Upload Manager</DialogTitle>
+				<DialogDescription hidden>
+					A list of all your uploaded media with options to delete or upload
+					them.
+				</DialogDescription>
 				<Tabs
 					defaultValue={defaultTab ?? 'media'}
 					className="relative h-[90dvh] overflow-y-auto"
