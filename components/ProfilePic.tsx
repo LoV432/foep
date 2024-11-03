@@ -48,14 +48,16 @@ export default function UserProfileMenu({
 						<span>Enrolled Courses</span>
 					</Link>
 				</DropdownMenuItem>
-				<DropdownMenuSeparator />
 				{isPrivileged && (
-					<DropdownMenuItem asChild>
-						<Link href="/admin/dashboard">
-							<Users className="mr-2 h-4 w-4" />
-							<span>Admin Dashboard</span>
-						</Link>
-					</DropdownMenuItem>
+					<>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem asChild>
+							<Link href="/admin/dashboard">
+								<Users className="mr-2 h-4 w-4" />
+								<span>Admin Dashboard</span>
+							</Link>
+						</DropdownMenuItem>
+					</>
 				)}
 				<DropdownMenuSeparator />
 				<DropdownMenuItem asChild>
