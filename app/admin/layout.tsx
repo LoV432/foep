@@ -18,7 +18,7 @@ export default async function InstructorCourseLayout({
 	return (
 		<div className="grid min-h-screen grid-rows-[auto_1fr]">
 			<Header />
-			<div className="grid min-[1126px]:grid-cols-[200px_1fr]">
+			<div className="grid grid-rows-[40px_1fr] min-[1126px]:grid-cols-[200px_1fr]">
 				<AdminSidebar session={session.data} />
 				{children}
 			</div>
