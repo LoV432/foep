@@ -10,7 +10,10 @@ export default async function Header() {
 		<header className="flex items-center bg-primary p-4">
 			<Logo />
 			{session.success ? (
-				<div className="ml-auto">
+				<div className="ml-auto flex items-center space-x-4">
+					<Button asChild variant="secondary">
+						<Link href="/all-courses">Find a Course</Link>
+					</Button>
 					<ProfilePic
 						userName={session.data.name}
 						isPrivileged={
