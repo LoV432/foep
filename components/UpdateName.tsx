@@ -53,11 +53,7 @@ export default function UpdateProfileForm({
 
 	return (
 		<Form {...form}>
-			<form
-				aria-label="Update Name Form"
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="space-y-2"
-			>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
 				<FormField
 					control={form.control}
 					name="name"

@@ -129,7 +129,7 @@ export default function QuizForm({
 	return (
 		<div className="grid grid-rows-1 gap-8 lg:grid-cols-[2fr_1fr]">
 			<Form {...form}>
-				<form className="contents" aria-label="Edit Quiz Metadata Form">
+				<form className="contents">
 					<div className="space-y-4">
 						<Card className="h-full">
 							<CardContent className="space-y-6 p-6">
@@ -288,12 +288,7 @@ function AddQuestionButton({
 		}
 	}
 	return (
-		<Button
-			type="button"
-			onClick={createEmptyQuiz}
-			disabled={isLoading}
-			aria-label="Add Question"
-		>
+		<Button type="button" onClick={createEmptyQuiz} disabled={isLoading}>
 			{isLoading ? (
 				<>
 					Adding <Loader2 className="mr-2 h-4 w-4 animate-spin" />

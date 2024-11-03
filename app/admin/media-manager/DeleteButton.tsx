@@ -47,7 +47,6 @@ export default function DeleteButton({
 			variant="destructive"
 			size="icon"
 			className="h-12 w-12 p-0"
-			aria-label="Delete Media"
 		>
 			<Trash2 className="h-4 w-4" />
 			<span className="sr-only">Delete {friendlyName}</span>

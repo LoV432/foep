@@ -70,7 +70,7 @@ export function UserEditForm({ user }: { user: typeof Users.$inferSelect }) {
 
 	return (
 		<Form {...form}>
-			<form className="space-y-8" aria-label="Update User Details Form">
+			<form className="space-y-8">
 				<FormField
 					control={form.control}
 					name="name"

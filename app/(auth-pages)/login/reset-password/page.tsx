@@ -70,7 +70,6 @@ export default function ResendVerification() {
 							method="POST"
 							onSubmit={form.handleSubmit(onSubmit)}
 							className="space-y-5"
-							aria-label="Reset Password Form"
 						>
 							<FormField
 								control={form.control}

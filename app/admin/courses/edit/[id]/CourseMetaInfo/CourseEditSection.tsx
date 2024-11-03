@@ -95,7 +95,7 @@ export default function CourseEditSection({
 
 	return (
 		<Form {...form}>
-			<form aria-label="Edit Course Meta Info Form" className="contents">
+			<form className="contents">
 				<div>
 					<FormField
 						control={form.control}

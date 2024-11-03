@@ -55,7 +55,6 @@ export default function RegistrationForm() {
 				method="POST"
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="space-y-5"
-				aria-label="Registration Form"
 			>
 				<FormField
 					control={form.control}
