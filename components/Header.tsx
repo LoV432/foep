@@ -11,7 +11,13 @@ export default async function Header() {
 			<Logo />
 			{session.success ? (
 				<div className="ml-auto">
-					<ProfilePic userName={session.data.name} />
+					<ProfilePic
+						userName={session.data.name}
+						isPrivileged={
+							session.data.role === 'admin' ||
+							session.data.role === 'instructor'
+						}
+					/>
 				</div>
 			) : (
 				<Button

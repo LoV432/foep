@@ -6,13 +6,19 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { User, BookOpen, LogOut } from 'lucide-react';
+import { User, BookOpen, Users } from 'lucide-react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import Link from 'next/link';
 import LogoutButton from './LogoutButton';
 
-export default function UserProfileMenu({ userName }: { userName: string }) {
+export default function UserProfileMenu({
+	userName,
+	isPrivileged
+}: {
+	userName: string;
+	isPrivileged: boolean;
+}) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -42,6 +48,15 @@ export default function UserProfileMenu({ userName }: { userName: string }) {
 						<span>Enrolled Courses</span>
 					</Link>
 				</DropdownMenuItem>
+				<DropdownMenuSeparator />
+				{isPrivileged && (
+					<DropdownMenuItem asChild>
+						<Link href="/admin/dashboard">
+							<Users className="mr-2 h-4 w-4" />
+							<span>Admin Dashboard</span>
+						</Link>
+					</DropdownMenuItem>
+				)}
 				<DropdownMenuSeparator />
 				<DropdownMenuItem asChild>
 					<div>
