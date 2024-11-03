@@ -13,6 +13,8 @@ import { getReviews } from './get-reviews';
 import Reviews from './Reviews';
 import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default async function CoursePage({
 	params
@@ -49,7 +51,26 @@ export default async function CoursePage({
 								height={500}
 							/>
 							<div className="prose max-w-none">
-								<ReactMarkdown rehypePlugins={[rehypeRaw]}>
+								<ReactMarkdown
+									rehypePlugins={[rehypeRaw]}
+									components={{
+										code({ node, className, children, ...props }) {
+											const match = /language-(\w+)/.exec(className || '');
+											return match ? (
+												<SyntaxHighlighter
+													children={String(children).replace(/\n$/, '')}
+													style={atomDark}
+													language={match[1]}
+													PreTag="div"
+												/>
+											) : (
+												<code className={className} {...props}>
+													{children}
+												</code>
+											);
+										}
+									}}
+								>
 									{data.course.long_description.replaceAll('\\n', '\n')}
 								</ReactMarkdown>
 							</div>

@@ -11,6 +11,8 @@ import rehypeRaw from 'rehype-raw';
 import Header from '@/components/Header';
 import NextChapterButton from '../../NextChapterButton';
 import CompleteChapterButton from '../../CompleteChapterButton';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default async function Page({
 	params
@@ -105,7 +107,27 @@ export default async function Page({
 				)}
 				<Card className="mb-6 p-6">
 					<div className="prose max-w-screen-lg dark:prose-invert">
-						<ReactMarkdown rehypePlugins={[rehypeRaw]}>
+						<ReactMarkdown
+							rehypePlugins={[rehypeRaw]}
+							components={{
+								// https://stackoverflow.com/questions/69848211/using-syntax-highlighter-with-tsx-react-markdown
+								code({ node, className, children, ...props }) {
+									const match = /language-(\w+)/.exec(className || '');
+									return match ? (
+										<SyntaxHighlighter
+											children={String(children).replace(/\n$/, '')}
+											style={atomDark}
+											language={match[1]}
+											PreTag="div"
+										/>
+									) : (
+										<code className={className} {...props}>
+											{children}
+										</code>
+									);
+								}
+							}}
+						>
 							{data.articleData.content}
 						</ReactMarkdown>
 					</div>
