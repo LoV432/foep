@@ -60,8 +60,8 @@ export default function UpdateProfileForm({
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Name</FormLabel>
-							<div className="flex max-w-md space-x-2">
-								<div className="flex flex-col space-y-2">
+							<div className="flex w-full space-x-2">
+								<div className="flex w-full flex-col space-y-2">
 									<FormControl>
 										<Input {...field} className="flex-1" />
 									</FormControl>
