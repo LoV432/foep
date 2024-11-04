@@ -71,12 +71,12 @@ COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.ts ./drizzle.confi
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chown nextjs:nodejs /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
-USER nextjs
+#USER nextjs
 
 EXPOSE 3000
 
 ENV PORT 3000
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 CMD HOSTNAME="0.0.0.0" node server.js
