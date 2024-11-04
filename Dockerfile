@@ -64,8 +64,9 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
-COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.ts ./drizzle.config.ts
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle /migrations/drizzle
+RUN mv /migrations/drizzle/package.json /migrations/package.json
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.ts /migrations/
 
 # Copy entrypoint script and set permissions
 COPY entrypoint.sh /app/entrypoint.sh
