@@ -67,6 +67,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Copy entrypoint script and set permissions
 COPY entrypoint.sh /entrypoint.sh
+RUN chown nextjs:nodejs entrypoint.sh
 RUN chmod +x /entrypoint.sh
 USER nextjs
 
