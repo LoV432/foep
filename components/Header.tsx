@@ -23,13 +23,14 @@ export default async function Header() {
 					/>
 				</div>
 			) : (
-				<Button
-					asChild
-					variant="secondary"
-					className="ml-auto bg-white text-primary"
-				>
-					<Link href="/login">Login</Link>
-				</Button>
+				<div className="ml-auto flex items-center space-x-4">
+					<Button asChild variant="secondary">
+						<Link href="/all-courses">Find a Course</Link>
+					</Button>
+					<Button asChild variant="secondary" className="ml-auto bg-white">
+						<Link href="/login">Login</Link>
+					</Button>
+				</div>
 			)}
 		</header>
 	);
