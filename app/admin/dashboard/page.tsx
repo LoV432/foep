@@ -217,23 +217,22 @@ export default async function DashboardPage() {
 					</CardHeader>
 					<CardContent>
 						<div className="text-2xl font-bold">
-							$
 							<Suspense fallback={<Loading />}>
-								<TotalsSuspense totals={totalRevenue} />
+								$<TotalsSuspense totals={totalRevenue} />
 							</Suspense>
 						</div>
 					</CardContent>
 				</Card>
 			</div>
 			<div className="container mx-auto">
-				<Card>
+				<Card className="flex min-h-[300px] flex-col">
 					<Suspense fallback={<Loading />}>
 						<DashboardLineChart enrollmentData={enrollmentData} />
 					</Suspense>
 				</Card>
 			</div>
 			<div className="container mx-auto grid grid-cols-1 gap-4 md:grid-cols-2">
-				<Card>
+				<Card className="flex min-h-[300px] flex-col">
 					<Suspense fallback={<Loading />}>
 						<DashboardBarChart
 							title="Top Course Categories"
@@ -243,7 +242,7 @@ export default async function DashboardPage() {
 						/>
 					</Suspense>
 				</Card>
-				<Card>
+				<Card className="flex min-h-[300px] flex-col">
 					<Suspense fallback={<Loading />}>
 						<DashboardBarChart
 							title="Top Courses"
@@ -260,7 +259,7 @@ export default async function DashboardPage() {
 
 function Loading() {
 	return (
-		<div className="flex justify-center">
+		<div className="flex flex-1 items-center justify-center">
 			<Loader2 className="h-6 w-6 animate-spin" />
 		</div>
 	);
