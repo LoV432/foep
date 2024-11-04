@@ -27,6 +27,14 @@ RUN mv next.config.prod.mjs next.config.mjs
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV JWT_SECRET "THIS-IS-NOT-REAL-THIS-IS-NOT-REAL-THIS-IS-NOT-REAL-THIS-IS-NOT-REAL"
+ENV DB_LINK "PG:THIS-IS-NOT-REAL"
+ENV B2_APPLICATION_KEY "THIS-IS-NOT-REAL"
+ENV B2_APPLICATION_KEY_ID "THIS-IS-NOT-REAL"
+ENV B2_BUCKET_NAME "THIS-IS-NOT-REAL"
+ENV B2_REGION "THIS-IS-NOT-REAL"
+ENV B2_ENDPOINT "THIS-IS-NOT-REAL"
+
 
 RUN \
     if [ -f yarn.lock ]; then yarn run build; \
@@ -57,15 +65,14 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Copy entrypoint script and set permissions
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 USER nextjs
 
 EXPOSE 3000
 
 ENV PORT 3000
-
-# Copy entrypoint script and set permissions
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
