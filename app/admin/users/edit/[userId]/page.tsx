@@ -32,7 +32,7 @@ export default async function EditUserPage({
 
 	return (
 		<div className="w-full bg-gray-200 p-4">
-			<div className="container mx-auto">
+			<div className="container mx-auto max-w-2xl">
 				<div className="mb-7">
 					<h1 className="text-2xl font-bold">Edit User</h1>
 					<p className="text-gray-600">Edit user details for {user.name}</p>

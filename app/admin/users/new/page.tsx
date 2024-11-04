@@ -14,11 +14,11 @@ export default async function Page() {
 
 	return (
 		<div className="w-full bg-gray-200 p-4">
-			<div className="container mx-auto mb-7 flex items-center justify-between">
+			<div className="container mx-auto mb-7 flex max-w-2xl items-center justify-between">
 				<h1 className="text-2xl font-bold">New User</h1>
 			</div>
-			<div className="container mx-auto max-w-xl">
-				<Card className="w-full max-w-md">
+			<div className="container mx-auto max-w-2xl">
+				<Card className="w-full">
 					<CardContent className="p-6">
 						<CreateUserForm />
 					</CardContent>

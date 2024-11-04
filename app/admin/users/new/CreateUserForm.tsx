@@ -122,7 +122,7 @@ export default function CreateUserForm() {
 								<FormLabel>Role</FormLabel>
 								<FormControl>
 									<Select {...field}>
-										<SelectTrigger className="w-[180px]">
+										<SelectTrigger className="w-full">
 											<SelectValue placeholder="Select a role" />
 										</SelectTrigger>
 										<SelectContent>
