@@ -2,6 +2,12 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import LoginForm from './Form';
 import Logo from '@/components/Logo';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Login | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default function LoginPage() {
 	return (

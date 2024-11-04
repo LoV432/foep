@@ -5,6 +5,12 @@ import Main from './Main';
 import { z } from 'zod';
 import { filtersSchema } from './Filters.z';
 export const dynamic = 'force-dynamic';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'All Courses | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default async function CourseListingPage({
 	searchParams

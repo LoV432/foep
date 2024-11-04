@@ -9,6 +9,12 @@ import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Dashboard | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default async function Page() {
 	const session = await getSession();

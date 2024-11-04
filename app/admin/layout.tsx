@@ -2,6 +2,12 @@ import AdminSidebar from '@/components/AdminSidebar';
 import Header from '@/components/Header';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Admin Dashboard | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default async function InstructorCourseLayout({
 	children

@@ -4,6 +4,12 @@ import { CourseChapters, Courses, QuizQuestions } from '@/db/schema';
 import { and, eq, lt, gt, sql, desc, asc } from 'drizzle-orm';
 import Header from '@/components/Header';
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Course Quiz | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default async function QuizPage({
 	params

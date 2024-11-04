@@ -13,6 +13,12 @@ import { db } from '@/db/db';
 import { Users, VerificationCodes } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import ms from 'ms';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Verify Email | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default async function Page({ params }: { params: { code: string } }) {
 	const code = params.code;

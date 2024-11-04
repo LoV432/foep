@@ -3,6 +3,12 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/Header';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Home | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default async function HomePage() {
 	return (

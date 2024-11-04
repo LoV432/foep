@@ -15,6 +15,18 @@ import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Metadata } from 'next';
+
+export function generateMetadata({
+	params
+}: {
+	params: { slug: string };
+}): Metadata {
+	return {
+		title: `${params.slug.split('-').slice(0, -5).join(' ').toUpperCase()} | FOEP`,
+		description: 'FOEP - Fictional Online Education Platform'
+	};
+}
 
 export default async function CoursePage({
 	params

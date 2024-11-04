@@ -8,6 +8,12 @@ import { eq } from 'drizzle-orm';
 import UpdatePasswordForm from '@/components/UpdatePassword';
 import UpdateProfileForm from '@/components/UpdateName';
 import Header from '@/components/Header';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Profile | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default async function Component() {
 	const session = await getSession();

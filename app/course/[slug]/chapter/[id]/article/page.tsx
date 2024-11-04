@@ -13,6 +13,12 @@ import NextChapterButton from '../../NextChapterButton';
 import CompleteChapterButton from '../../CompleteChapterButton';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Course Chapter | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default async function Page({
 	params

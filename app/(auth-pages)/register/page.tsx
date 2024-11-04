@@ -2,6 +2,12 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import RegistrationForm from './Form';
 import Logo from '@/components/Logo';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Register | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default function RegistrationPage() {
 	return (

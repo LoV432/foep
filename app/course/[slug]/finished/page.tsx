@@ -12,6 +12,12 @@ import { and, eq } from 'drizzle-orm';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { ReviewForm } from './ReviewForm';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Reviews | FOEP',
+	description: 'FOEP - Fictional Online Education Platform'
+};
 
 export default async function Page({ params }: { params: { slug: string } }) {
 	const session = await getSession();
