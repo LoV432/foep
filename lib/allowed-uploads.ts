@@ -15,5 +15,11 @@ export const ALLOWED_FILE_TYPES = [
 	'audio/ogg',
 	'audio/webm',
 	// Document extensions
-	'application/pdf'
+	'application/pdf',
+
+	// Archive extensions
+	'application/zip',
+	'application/x-zip-compressed',
+	'application/x-rar-compressed',
+	'application/x-7z-compressed'
 ];
