@@ -36,6 +36,13 @@ export default function AdminSidebar({ session }: { session: Token }) {
 					currentPath={currentPath}
 					name="Courses"
 				/>
+				{session.role === 'admin' && (
+					<NavMenuItem
+						link="/admin/categories"
+						currentPath={currentPath}
+						name="Categories"
+					/>
+				)}
 				<NavMenuItem
 					link="/admin/media-manager"
 					currentPath={currentPath}
@@ -127,6 +134,14 @@ export default function AdminSidebar({ session }: { session: Token }) {
 								name="Course"
 								onClick={() => setIsOpen(false)}
 							/>
+							{session.role === 'admin' && (
+								<NavMenuItem
+									link="/admin/categories"
+									currentPath={currentPath}
+									name="Categories"
+									onClick={() => setIsOpen(false)}
+								/>
+							)}
 							<NavMenuItem
 								link="/admin/media-manager"
 								currentPath={currentPath}
