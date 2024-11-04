@@ -44,7 +44,7 @@ export function ReviewForm({
 				variant: 'default'
 			});
 			router.push(`/course/${slug}`);
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Error',
 				description: 'Error submitting review',

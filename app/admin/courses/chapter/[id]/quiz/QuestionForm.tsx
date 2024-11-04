@@ -60,7 +60,7 @@ export default function QuestionForm({
 				description: 'Your changes have been saved.'
 			});
 			form.reset(data);
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Failed to save quiz question',
 				description: 'Please try again.',
@@ -84,7 +84,6 @@ export default function QuestionForm({
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="space-y-4"
 				method="POST"
-				aria-lable="Edit Quiz Questions Form"
 			>
 				<FormField
 					control={form.control}

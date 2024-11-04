@@ -58,7 +58,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 					</div>
 					<CardTitle className="text-3xl font-bold">Congratulations!</CardTitle>
 					<CardDescription className="mt-2 text-xl">
-						You've completed the course:
+						You&apos;ve completed the course:
 					</CardDescription>
 					<h2 className="mt-2 text-2xl font-semibold text-primary">
 						{enrollment.courseName}

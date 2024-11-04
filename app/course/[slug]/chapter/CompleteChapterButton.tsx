@@ -28,7 +28,7 @@ export default function CompleteChapterButton({
 				variant: 'default'
 			});
 			router.push(redirectUrl);
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Error',
 				description: 'Error marking course complete',

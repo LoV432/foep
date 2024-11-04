@@ -52,7 +52,6 @@ export default function LoginForm() {
 				method="POST"
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="space-y-5"
-				aria-lable="Login form"
 			>
 				<FormField
 					control={form.control}

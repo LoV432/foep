@@ -128,7 +128,7 @@ export default async function Page() {
 				</ul>
 				{enrolledCourses.length === 0 && (
 					<div className="space-y-4 py-10 text-center text-xl text-muted-foreground">
-						<p>You haven't enrolled in any courses yet.</p>
+						<p>You haven&apos;t enrolled in any courses yet.</p>
 						<Button asChild>
 							<Link href="/all-courses">Find a Course</Link>
 						</Button>

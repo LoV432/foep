@@ -35,7 +35,7 @@ export default function NextChapterButton({
 				});
 			}
 			router.push(redirectUrl);
-		} catch (error) {
+		} catch {
 			toast({
 				title: 'Error',
 				description: 'Error moving to next chapter',

@@ -54,15 +54,16 @@ export default async function CoursePage({
 								<ReactMarkdown
 									rehypePlugins={[rehypeRaw]}
 									components={{
-										code({ node, className, children, ...props }) {
+										code({ className, children, ...props }) {
 											const match = /language-(\w+)/.exec(className || '');
 											return match ? (
 												<SyntaxHighlighter
-													children={String(children).replace(/\n$/, '')}
 													style={atomDark}
 													language={match[1]}
 													PreTag="div"
-												/>
+												>
+													{String(children).replace(/\n$/, '')}
+												</SyntaxHighlighter>
 											) : (
 												<code className={className} {...props}>
 													{children}

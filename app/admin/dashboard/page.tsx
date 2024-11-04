@@ -5,14 +5,7 @@ import {
 	Users as UsersIcon
 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DashboardBarChart, DashboardLineChart } from './Charts';
 
 import { and, count, eq, sql, desc, sum } from 'drizzle-orm';
@@ -57,10 +50,7 @@ async function getEnrollmentData(authorRole: string, authorId: number) {
 	return result;
 }
 
-export async function getTopCategoriesData(
-	authorRole: string,
-	authorId: number
-) {
+async function getTopCategoriesData(authorRole: string, authorId: number) {
 	const result = await db
 		.select({
 			category: CoursesCategories.name,
@@ -81,7 +71,7 @@ export async function getTopCategoriesData(
 	return result;
 }
 
-export async function getTopCoursesData(authorRole: string, authorId: number) {
+async function getTopCoursesData(authorRole: string, authorId: number) {
 	const result = await db
 		.select({
 			course: Courses.name,
@@ -102,7 +92,7 @@ export async function getTopCoursesData(authorRole: string, authorId: number) {
 	return result;
 }
 
-export function getTotals(authorRole: string, authorId: number) {
+function getTotals(authorRole: string, authorId: number) {
 	async function getTotalUsers() {
 		return (
 			await db

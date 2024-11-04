@@ -86,7 +86,6 @@ export default function UploadForm({
 					onSubmit(new FormData(e.currentTarget));
 				}}
 				className="w-full max-w-lg space-y-4"
-				aria-lable="Upload new media form"
 			>
 				<>
 					<Label htmlFor="file-upload" className="cursor-pointer">

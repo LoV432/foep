@@ -82,8 +82,9 @@ export function DashboardBarChart({
 	title: string;
 	description: string;
 }) {
-	//@ts-ignore
-	const csvData = use(data).map((row) => Object.values(row));
+	const csvData = use(data as TopCategoriesData).map((row) =>
+		Object.values(row)
+	);
 	return (
 		<>
 			<CardHeader>
@@ -110,7 +111,7 @@ export function DashboardBarChart({
 					className="h-[300px]"
 				>
 					<ResponsiveContainer width="100%" height="100%">
-						<BarChart data={use(data as any)}>
+						<BarChart data={use(data as TopCategoriesData)}>
 							<XAxis dataKey={dataKeys.x} />
 							<YAxis />
 							<ChartTooltip content={<ChartTooltipContent />} />

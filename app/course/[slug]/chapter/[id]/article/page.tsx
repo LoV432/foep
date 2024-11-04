@@ -111,15 +111,16 @@ export default async function Page({
 									rehypePlugins={[rehypeRaw]}
 									components={{
 										// https://stackoverflow.com/questions/69848211/using-syntax-highlighter-with-tsx-react-markdown
-										code({ node, className, children, ...props }) {
+										code({ className, children, ...props }) {
 											const match = /language-(\w+)/.exec(className || '');
 											return match ? (
 												<SyntaxHighlighter
-													children={String(children).replace(/\n$/, '')}
 													style={atomDark}
 													language={match[1]}
 													PreTag="div"
-												/>
+												>
+													{String(children).replace(/\n$/, '')}
+												</SyntaxHighlighter>
 											) : (
 												<code className={className} {...props}>
 													{children}
