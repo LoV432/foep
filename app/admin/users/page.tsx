@@ -60,6 +60,9 @@ export default async function Component({
 		<div className="w-full bg-gray-200 p-4">
 			<div className="container mx-auto mb-7 flex items-center justify-between">
 				<h1 className="text-2xl font-bold">User List</h1>
+				<Button asChild>
+					<Link href="/admin/users/new">Create New User</Link>
+				</Button>
 			</div>
 			<div className="container mx-auto overflow-x-auto rounded-lg bg-white">
 				<Table>
