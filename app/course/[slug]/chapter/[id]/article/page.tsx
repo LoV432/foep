@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { db } from '@/db/db';
 import { eq, and, lt, gt, asc, desc } from 'drizzle-orm';
 import { CourseChapters, Article, Users, Courses } from '@/db/schema';
@@ -26,7 +26,8 @@ export default async function Page({
 				articleData: Article,
 				authorData: {
 					name: Users.name
-				}
+				},
+				resources: Courses.resources_url
 			})
 			.from(CourseChapters)
 			.leftJoin(
@@ -85,79 +86,100 @@ export default async function Page({
 	return (
 		<div className="min-h-screen bg-gray-100">
 			<Header />
-			<div className="mx-auto max-w-4xl p-6">
+			<div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
 				<h1 className="mb-4 text-3xl font-bold">{data.courseData.title}</h1>
 
 				<div className="mb-6 flex items-center justify-between">
 					<p className="text-sm text-muted-foreground">
 						Reading time: {data.courseData.estimated_time} minutes
 					</p>
-					<p className="text-sm text-muted-foreground">
-						Author: {data.authorData.name}
-					</p>
 				</div>
-				{data.articleData.image_url && (
-					<Image
-						src={data.articleData.image_url}
-						alt="Chapter illustration"
-						width={800}
-						height={400}
-						className="mb-6 w-full rounded-lg border-2 border-border"
-					/>
-				)}
-				<Card className="mb-6 p-6">
-					<div className="prose max-w-screen-lg dark:prose-invert">
-						<ReactMarkdown
-							rehypePlugins={[rehypeRaw]}
-							components={{
-								// https://stackoverflow.com/questions/69848211/using-syntax-highlighter-with-tsx-react-markdown
-								code({ node, className, children, ...props }) {
-									const match = /language-(\w+)/.exec(className || '');
-									return match ? (
-										<SyntaxHighlighter
-											children={String(children).replace(/\n$/, '')}
-											style={atomDark}
-											language={match[1]}
-											PreTag="div"
-										/>
-									) : (
-										<code className={className} {...props}>
-											{children}
-										</code>
-									);
-								}
-							}}
-						>
-							{data.articleData.content}
-						</ReactMarkdown>
-					</div>
-				</Card>
+				<div className="flex flex-col-reverse gap-8 lg:flex-row lg:gap-0">
+					<div className="pr-0 lg:mb-0 lg:w-[70%] lg:pr-8">
+						{data.articleData.image_url && (
+							<Image
+								src={data.articleData.image_url}
+								alt="Chapter illustration"
+								width={800}
+								height={400}
+								className="mb-6 w-full rounded-lg border-2 border-border"
+							/>
+						)}
+						<Card className="mb-6 p-6">
+							<div className="prose max-w-screen-lg dark:prose-invert">
+								<ReactMarkdown
+									rehypePlugins={[rehypeRaw]}
+									components={{
+										// https://stackoverflow.com/questions/69848211/using-syntax-highlighter-with-tsx-react-markdown
+										code({ node, className, children, ...props }) {
+											const match = /language-(\w+)/.exec(className || '');
+											return match ? (
+												<SyntaxHighlighter
+													children={String(children).replace(/\n$/, '')}
+													style={atomDark}
+													language={match[1]}
+													PreTag="div"
+												/>
+											) : (
+												<code className={className} {...props}>
+													{children}
+												</code>
+											);
+										}
+									}}
+								>
+									{data.articleData.content}
+								</ReactMarkdown>
+							</div>
+						</Card>
 
-				<div className="flex">
-					{previous[0] && (
-						<Button asChild variant="outline">
-							<Link
-								href={`/course/${params.slug}/chapter/${previous[0].course_chapter_id}/${previous[0].type}`}
-							>
-								← {previous[0].title} ({previous[0].estimated_time} min,{' '}
-								{previous[0].type})
-							</Link>
-						</Button>
-					)}
-					{next[0] ? (
-						<NextChapterButton
-							courseId={data.courseData.course_id}
-							redirectUrl={`/course/${params.slug}/chapter/${next[0].course_chapter_id}/${next[0].type}`}
-							buttonText={`${next[0].title} (${next[0].estimated_time} min, ${next[0].type}) →`}
-							currentChapterOrder={data.courseData.order}
-						/>
-					) : (
-						<CompleteChapterButton
-							courseId={data.courseData.course_id}
-							buttonText="Finish Course 🎉🎉"
-							redirectUrl={`/course/${params.slug}/finished`}
-						/>
-					)}
+						<div className="flex">
+							{previous[0] && (
+								<Button asChild variant="outline">
+									<Link
+										href={`/course/${params.slug}/chapter/${previous[0].course_chapter_id}/${previous[0].type}`}
+									>
+										← {previous[0].title} ({previous[0].estimated_time} min,{' '}
+										{previous[0].type})
+									</Link>
+								</Button>
+							)}
+							{next[0] ? (
+								<NextChapterButton
+									courseId={data.courseData.course_id}
+									redirectUrl={`/course/${params.slug}/chapter/${next[0].course_chapter_id}/${next[0].type}`}
+									buttonText={`${next[0].title} (${next[0].estimated_time} min, ${next[0].type}) →`}
+									currentChapterOrder={data.courseData.order}
+								/>
+							) : (
+								<CompleteChapterButton
+									courseId={data.courseData.course_id}
+									buttonText="Finish Course 🎉🎉"
+									redirectUrl={`/course/${params.slug}/finished`}
+								/>
+							)}
+						</div>
+					</div>
+					<div className="lg:w-[30%]">
+						<Card className="sticky top-12 shadow-lg">
+							<CardContent className="space-y-6 p-6">
+								{data.resources && (
+									<div className="flex items-center justify-center space-x-2">
+										<div className="flex w-full flex-col justify-between pt-0.5">
+											<p className="text-center text-lg font-bold text-gray-900">
+												Course Resources
+											</p>
+											<Button className="mt-4 w-full" size="lg" asChild>
+												<Link href={data.resources} target="_blank">
+													Download Resources
+												</Link>
+											</Button>
+										</div>
+									</div>
+								)}
+							</CardContent>
+						</Card>
+					</div>
 				</div>
 			</div>
 		</div>
