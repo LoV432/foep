@@ -64,11 +64,13 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle-kit.config.ts ./drizzle-kit.config.ts
 
 # Copy entrypoint script and set permissions
-COPY entrypoint.sh /entrypoint.sh
-RUN chown nextjs:nodejs /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chown nextjs:nodejs /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 USER nextjs
 
 EXPOSE 3000
