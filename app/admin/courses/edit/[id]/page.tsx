@@ -1,5 +1,5 @@
 import { db } from '@/db/db';
-import { Courses, CourseChapters } from '@/db/schema';
+import { Courses, CourseChapters, Media } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
@@ -22,10 +22,14 @@ export default async function CoursePage({
 		return redirect('/admin/courses');
 	}
 
-	const course = (
+	const { course, resourcesName } = (
 		await db
-			.select()
+			.select({
+				course: Courses,
+				resourcesName: Media.friendly_name
+			})
 			.from(Courses)
+			.leftJoin(Media, eq(Media.url, Courses.resources_url))
 			.where(
 				and(
 					session.data.role === 'admin'
@@ -37,7 +41,7 @@ export default async function CoursePage({
 	)[0];
 
 	if (!course) {
-		return redirect('/instructor/course');
+		return redirect('/admin/courses');
 	}
 
 	const chapters = await db
@@ -51,7 +55,7 @@ export default async function CoursePage({
 			<div className="container mx-auto p-4">
 				<h1 className="text-2xl font-bold">Edit Course</h1>
 				<div className="grid grid-cols-1 gap-8 py-5 lg:grid-cols-[2fr_1fr]">
-					<CourseEditSection course={course} />
+					<CourseEditSection course={course} resourcesName={resourcesName} />
 
 					<CourseChaptersSection
 						courseId={course.course_id}

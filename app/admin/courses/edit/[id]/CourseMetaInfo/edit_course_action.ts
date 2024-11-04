@@ -27,6 +27,7 @@ export async function editCourseAction(data: z.infer<typeof editCourseSchema>) {
 				short_description: parsedData.shortDescription,
 				long_description: parsedData.largeDescription,
 				image_url: parsedData.imageUrl,
+				resources_url: parsedData.resourcesUrl,
 				is_draft: parsedData.isDraft
 			})
 			.where(

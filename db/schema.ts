@@ -125,6 +125,7 @@ export const Courses = pgTable('Courses', {
 	short_description: varchar('short_description').notNull(),
 	long_description: varchar('long_description').notNull(),
 	image_url: varchar('image_url').notNull(),
+	resources_url: varchar('resources_url'),
 	price: real('price').notNull().default(0),
 	is_draft: boolean('is_draft').notNull().default(false),
 	created_at: timestamp('created_at', { withTimezone: true })

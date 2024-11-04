@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Save } from 'lucide-react';
+import { Download, FileIcon, Loader2, Save } from 'lucide-react';
 import UploadDialog from '@/components/UploadDialog/UploadDialog';
 import Image from 'next/image';
 import { getCategories } from '../../../get_categories';
@@ -39,13 +39,19 @@ import DeleteButton from './DeleteButton';
 import { useToast } from '@/hooks/use-toast';
 
 export default function CourseEditSection({
-	course
+	course,
+	resourcesName
 }: {
 	course: typeof Courses.$inferSelect;
+	resourcesName: string | null;
 }) {
 	const [categories, setCategories] = useState<
 		(typeof CoursesCategories.$inferSelect)[]
 	>([]);
+	const [resources, setResources] = useState<string | undefined>(
+		resourcesName || undefined
+	);
+
 	const router = useRouter();
 	const { toast } = useToast();
 	const form = useForm<z.infer<typeof editCourseSchema>>({
@@ -57,6 +63,7 @@ export default function CourseEditSection({
 			shortDescription: course.short_description,
 			category: course.category_id.toString(),
 			imageUrl: course.image_url,
+			resourcesUrl: course.resources_url || undefined,
 			largeDescription: course.long_description,
 			isDraft: course.is_draft
 		}
@@ -221,7 +228,7 @@ export default function CourseEditSection({
 								control={form.control}
 								name="imageUrl"
 								render={({ field }) => (
-									<FormItem>
+									<FormItem className="rounded-lg border border-border p-4">
 										<FormLabel>Course Image</FormLabel>
 										<FormControl>
 											<div className="space-y-2">
@@ -248,6 +255,52 @@ export default function CourseEditSection({
 														className="h-28 w-28 rounded-md"
 														height={100}
 													/>
+												)}
+											</div>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="resourcesUrl"
+								render={({ field }) => (
+									<FormItem className="rounded-lg border border-border p-4">
+										<FormLabel>Course Resources</FormLabel>
+										<FormControl>
+											<div className="space-y-2">
+												<UploadDialog
+													className="border border-border bg-transparent text-black hover:bg-transparent"
+													placeholder="Upload Resources ZIP"
+													selectedMediaCallback={(media) => {
+														field.onChange(media.url);
+														setResources(media.friendly_name);
+													}}
+												/>
+												<Input
+													{...field}
+													type="text"
+													placeholder="Upload resources zip"
+													hidden
+													readOnly
+													className="hidden"
+												/>
+												{field.value && (
+													<Link
+														href={field.value}
+														target="_blank"
+														className="block h-full w-full rounded-lg border border-border p-4"
+													>
+														<div className="flex flex-row items-center">
+															<FileIcon className="mr-2 h-6 w-6" />
+															<div className="max-w-[70%] overflow-clip text-ellipsis text-sm">
+																{resources || field.value}
+															</div>
+															<Download className="ml-auto h-4 w-4" />
+														</div>
+													</Link>
 												)}
 											</div>
 										</FormControl>

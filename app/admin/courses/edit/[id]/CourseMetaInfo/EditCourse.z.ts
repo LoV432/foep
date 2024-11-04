@@ -10,6 +10,7 @@ export const editCourseSchema = z.object({
 	shortDescription: z.string().min(1, 'Short description is required'),
 	category: z.string().min(1, 'Category is required'),
 	imageUrl: z.string().url('Invalid image URL'),
+	resourcesUrl: z.string().url('Invalid resources URL').optional(),
 	largeDescription: z.string().min(1, 'Detailed description is required'),
 	isDraft: z.boolean()
 });
