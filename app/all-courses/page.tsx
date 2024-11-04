@@ -4,6 +4,7 @@ import { CoursesCategories } from '@/db/schema';
 import Main from './Main';
 import { z } from 'zod';
 import { filtersSchema } from './Filters.z';
+import dynamic from 'next/dynamic';
 
 export default async function CourseListingPage({
 	searchParams
