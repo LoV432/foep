@@ -65,7 +65,7 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
-COPY --from=builder --chown=nextjs:nodejs /app/drizzle-kit.config.ts ./drizzle-kit.config.ts
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.ts ./drizzle.config.ts
 
 # Copy entrypoint script and set permissions
 COPY entrypoint.sh /app/entrypoint.sh
