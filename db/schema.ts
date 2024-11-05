@@ -115,7 +115,7 @@ export const Media = pgTable('Media', {
 export const Courses = pgTable('Courses', {
 	course_id: serial('course_id').primaryKey(),
 	author_id: integer('author_id')
-		.references(() => Users.user_id)
+		.references(() => Users.user_id, { onDelete: 'cascade' })
 		.notNull(),
 	name: varchar('name').notNull(),
 	slug: varchar('slug').notNull().unique(),
