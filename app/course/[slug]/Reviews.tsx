@@ -6,7 +6,9 @@ import type { Reviews } from './get-reviews';
 export default function ReviewCards({ reviews }: { reviews: Reviews }) {
 	return (
 		<div className="mt-12">
-			<h2 className="mb-8 text-center text-3xl font-bold">Customer Reviews</h2>
+			<h2 className="mb-8 text-center text-3xl font-bold">
+				Customer Reviews ({use(reviews).data?.length})
+			</h2>
 			<div className="flex w-full flex-col justify-center gap-4 shadow sm:rounded-lg">
 				{use(reviews).data?.map((review, index) => (
 					<ReviewCard key={index} review={review} />
