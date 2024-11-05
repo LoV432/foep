@@ -15,6 +15,7 @@ import { db } from '@/db/db';
 import { Users } from '@/db/schema';
 import { desc, count } from 'drizzle-orm';
 import Link from 'next/link';
+import { DeleteUserButton } from './DeleteUserButton';
 
 export default async function Component({
 	searchParams
@@ -101,15 +102,22 @@ export default async function Component({
 									{new Date(user.created_at).toLocaleDateString()}
 								</TableCell>
 								<TableCell>
-									<Button variant="ghost" size="icon" className="h-12 w-12 p-0">
-										<Link
-											href={`/admin/users/edit/${user.user_id}`}
-											className="flex h-full w-full items-center justify-center gap-2"
+									<div className="flex items-center gap-2">
+										<Button
+											variant="ghost"
+											size="icon"
+											className="h-12 w-12 p-0"
 										>
-											<Pencil className="h-4 w-4" />
-											<span className="sr-only">Edit {user.name}</span>
-										</Link>
-									</Button>
+											<Link
+												href={`/admin/users/edit/${user.user_id}`}
+												className="flex h-full w-full items-center justify-center gap-2"
+											>
+												<Pencil className="h-4 w-4" />
+												<span className="sr-only">Edit {user.name}</span>
+											</Link>
+										</Button>
+										<DeleteUserButton userId={user.user_id} />
+									</div>
 								</TableCell>
 							</TableRow>
 						))}
