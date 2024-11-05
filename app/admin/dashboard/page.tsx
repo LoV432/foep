@@ -218,7 +218,7 @@ export default async function DashboardPage() {
 					<CardContent>
 						<div className="text-2xl font-bold">
 							<Suspense fallback={<Loading />}>
-								$<TotalsSuspense totals={totalRevenue} />
+								$<TotalsSuspense totals={totalRevenue} isRevenue={true} />
 							</Suspense>
 						</div>
 					</CardContent>
