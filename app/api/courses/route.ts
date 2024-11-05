@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCourses } from '@/lib/get_courses';
 import { filtersSchema } from '@/app/all-courses/Filters.z';
+import { unstable_cache } from 'next/cache';
 
 export async function GET(request: NextRequest) {
 	const searchParams = request.nextUrl.searchParams;
@@ -13,6 +14,12 @@ export async function GET(request: NextRequest) {
 		parsedFilters = filtersSchema.parse({});
 	}
 
-	const courses = await getCourses(parsedFilters);
+	const courses = await unstable_cache(
+		() => getCourses(parsedFilters),
+		['all-courses', JSON.stringify(parsedFilters)],
+		{
+			revalidate: false
+		}
+	)();
 	return NextResponse.json(courses);
 }

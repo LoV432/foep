@@ -6,6 +6,7 @@ import { db } from '@/db/db';
 import { Courses } from '@/db/schema';
 import { getSession } from '@/lib/auth';
 import { eq, and } from 'drizzle-orm';
+import { revalidateTag } from 'next/cache';
 
 export async function editCourseAction(data: z.infer<typeof editCourseSchema>) {
 	try {
@@ -39,7 +40,7 @@ export async function editCourseAction(data: z.infer<typeof editCourseSchema>) {
 				)
 			)
 			.returning();
-
+		revalidateTag('all-courses');
 		return {
 			success: true as const,
 			course

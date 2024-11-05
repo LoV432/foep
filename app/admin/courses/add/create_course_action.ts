@@ -7,6 +7,7 @@ import { Courses } from '@/db/schema';
 import { getSession } from '@/lib/auth';
 import { kebabCase } from '@/lib/kebab-case';
 import { randomUUID } from 'crypto';
+import { revalidateTag } from 'next/cache';
 
 export async function createCourseAction(
 	data: z.infer<typeof addCourseSchema>
@@ -35,7 +36,7 @@ export async function createCourseAction(
 				slug: kebabCase(parsedData.name) + '-' + randomUUID()
 			})
 			.returning();
-
+		revalidateTag('all-courses');
 		return {
 			success: true as const,
 			course
