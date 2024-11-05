@@ -36,12 +36,10 @@ ARG B2_REGION "THIS-IS-NOT-REAL"
 ARG B2_ENDPOINT "THIS-IS-NOT-REAL"
 
 
-RUN \
-    if [ -f yarn.lock ]; then yarn run build; \
-    elif [ -f package-lock.json ]; then npm run build; \
-    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
+RUN JWT_SECRET=$JWT_SECRET DB_LINK=$DB_LINK \
+    B2_APPLICATION_KEY=$B2_APPLICATION_KEY B2_APPLICATION_KEY_ID=$B2_APPLICATION_KEY_ID \
+    B2_BUCKET_NAME=$B2_BUCKET_NAME B2_REGION=$B2_REGION B2_ENDPOINT=$B2_ENDPOINT \
+    npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
