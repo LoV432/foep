@@ -121,7 +121,10 @@ export default function CreateUserForm() {
 							<FormItem>
 								<FormLabel>Role</FormLabel>
 								<FormControl>
-									<Select {...field}>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+									>
 										<SelectTrigger className="w-full">
 											<SelectValue placeholder="Select a role" />
 										</SelectTrigger>
