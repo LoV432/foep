@@ -32,8 +32,12 @@ export async function getCourse(slug: string) {
 				eq(Courses.category_id, CoursesCategories.category_id)
 			)
 			.leftJoin(Users, eq(Courses.author_id, Users.user_id))
-			.where(and(eq(Courses.slug, slug), eq(Courses.is_draft, false)));
-
+			.where(
+				and(
+					eq(Courses.slug, decodeURIComponent(slug)),
+					eq(Courses.is_draft, false)
+				)
+			);
 		const chapters = await db
 			.select({
 				title: CourseChapters.title,
