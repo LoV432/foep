@@ -23,7 +23,7 @@ export function generateMetadata({
 	params: { slug: string };
 }): Metadata {
 	return {
-		title: `${params.slug.split('-').slice(0, -5).join(' ').toUpperCase()} | FOEP`,
+		title: `${decodeURIComponent(params.slug).split('-').slice(0, -5).join(' ').toUpperCase()} | FOEP`,
 		description: 'FOEP - Fictional Online Education Platform'
 	};
 }
