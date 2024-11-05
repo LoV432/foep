@@ -4,6 +4,7 @@ import { db } from '@/db/db';
 import { Courses } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { getSession } from '@/lib/auth';
+import { revalidateTag } from 'next/cache';
 
 export async function deleteCourseAction(courseId: number) {
 	try {
@@ -25,6 +26,7 @@ export async function deleteCourseAction(courseId: number) {
 						: eq(Courses.author_id, session.data.id)
 				)
 			);
+		revalidateTag('all-courses');
 		return { success: true as const, message: 'Course deleted successfully' };
 	} catch (error) {
 		console.error(error);
