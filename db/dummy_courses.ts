@@ -3,7 +3,6 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import * as schema from './schema';
 import { faker } from '@faker-js/faker';
-import bcrypt from 'bcrypt';
 loadEnvConfig(process.cwd());
 
 const pool = new Pool({
@@ -14,42 +13,27 @@ const pool = new Pool({
 const db = drizzle(pool, { schema });
 
 async function createCategories() {
-	await db
-		.insert(schema.CoursesCategories)
-		.values([
-			{ name: 'Web Development' },
-			{ name: 'Programming' },
-			{ name: 'Data Science' },
-			{ name: 'Design' },
-			{ name: 'Business' }
-		]);
-}
-
-async function createInstructors() {
-	await db.insert(schema.Users).values({
-		user_id: 1,
-		name: 'Admin',
-		email: 'admin@example.com',
-		password: bcrypt.hashSync('password', 10),
-		email_verified: true,
-		role: 'admin'
-	});
-
-	const instructors = Array.from({ length: 10 }, () => ({
-		name: faker.person.fullName(),
-		email: faker.internet.email(),
-		password: bcrypt.hashSync(faker.internet.password(), 10),
-		email_verified: true,
-		role: 'instructor' as const
-	}));
-
-	await db.insert(schema.Users).values(instructors);
+	try {
+		await db
+			.insert(schema.CoursesCategories)
+			.values([
+				{ name: 'Web Development' },
+				{ name: 'Programming' },
+				{ name: 'Data Science' },
+				{ name: 'Design' },
+				{ name: 'Business' }
+			]);
+	} catch (error) {
+		console.log('Error creating categories. Categories already exist.');
+	}
 }
 
 async function createCourses() {
 	const categories = await db.select().from(schema.CoursesCategories);
 	const instructors = await db.select().from(schema.Users);
-
+	if (categories.length === 0 || instructors.length === 0) {
+		throw new Error('No categories or instructors found.');
+	}
 	const courses = Array.from({ length: 50 }, () => {
 		const category = faker.helpers.arrayElement(categories);
 		const instructor = faker.helpers.arrayElement(instructors);
@@ -75,7 +59,9 @@ async function createCourses() {
 async function createReviews() {
 	const courses = await db.select().from(schema.Courses);
 	const users = await db.select().from(schema.Users);
-
+	if (courses.length === 0 || users.length === 0) {
+		throw new Error('No courses or users found.');
+	}
 	const reviews = courses.flatMap((course) =>
 		Array.from({ length: faker.number.int({ min: 5, max: 20 }) }, () => {
 			const user = faker.helpers.arrayElement(users);
@@ -93,13 +79,7 @@ async function createReviews() {
 }
 
 async function main() {
-	await db.delete(schema.Courses).execute();
-	await db.delete(schema.CoursesReviews).execute();
-	await db.delete(schema.CoursesCategories).execute();
-	await db.delete(schema.Users).execute();
-
 	await createCategories();
-	await createInstructors();
 	await createCourses();
 	await createReviews();
 
