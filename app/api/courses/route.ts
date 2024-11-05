@@ -18,7 +18,8 @@ export async function GET(request: NextRequest) {
 		() => getCourses(parsedFilters),
 		['all-courses', JSON.stringify(parsedFilters)],
 		{
-			revalidate: false
+			revalidate: false,
+			tags: ['all-courses']
 		}
 	)();
 	return NextResponse.json(courses);
