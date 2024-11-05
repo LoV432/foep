@@ -44,6 +44,12 @@ export default function Editor({
 									handle.textApi?.replaceSelection(
 										`<video src="${media.url}" controls></video>`
 									);
+								} else if (media.type.startsWith('application/pdf')) {
+									handle.textApi?.replaceSelection(
+										`<object data="${media.url}" type="${media.type}" width="100%" height="600px">
+											<p>This browser does not support PDFs. Please download the PDF to view it: <a href="${media.url}">Download PDF</a>.</p>
+										</object>`
+									);
 								} else {
 									handle.textApi?.replaceSelection(
 										`[${media.friendly_name}](${media.url})`
