@@ -7,6 +7,7 @@ import { createUserSchema } from './CreateUserSchema.z';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import bcrypt from 'bcrypt';
 
 export async function createUserAction(data: z.infer<typeof createUserSchema>) {
 	try {
@@ -28,7 +29,7 @@ export async function createUserAction(data: z.infer<typeof createUserSchema>) {
 			.values({
 				name: parsedData.name,
 				email: parsedData.email,
-				password: parsedData.password,
+				password: bcrypt.hashSync(parsedData.password, 10),
 				role: parsedData.role,
 				email_verified: true
 			})
