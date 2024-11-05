@@ -185,10 +185,10 @@ export default async function CoursePage({
 														<FileText className="mt-1 h-5 w-5 flex-shrink-0 text-gray-400" />
 													)}
 													<div className="flex w-full justify-between pt-0.5">
-														<p className="text-sm font-medium text-gray-900">
+														<div className="w-2/4 pr-2 text-sm font-medium text-gray-900">
 															{chapter.title}
-														</p>
-														<div className="flex items-center space-x-2">
+														</div>
+														<div className="flex w-2/4 items-center space-x-2">
 															<Clock className="h-4 w-4 text-gray-400" />
 															<span className="text-xs text-gray-500">
 																{chapter.estimated_time} min
