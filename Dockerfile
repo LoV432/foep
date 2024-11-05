@@ -27,21 +27,20 @@ RUN mv next.config.prod.mjs next.config.mjs
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
-ARG JWT_SECRET "THIS-IS-NOT-REAL-THIS-IS-NOT-REAL-THIS-IS-NOT-REAL-THIS-IS-NOT-REAL"
-ARG DB_LINK "PG:THIS-IS-NOT-REAL"
-ARG B2_APPLICATION_KEY "THIS-IS-NOT-REAL"
-ARG B2_APPLICATION_KEY_ID "THIS-IS-NOT-REAL"
-ARG B2_BUCKET_NAME "THIS-IS-NOT-REAL"
-ARG B2_REGION "THIS-IS-NOT-REAL"
-ARG B2_ENDPOINT "THIS-IS-NOT-REAL"
+ARG JWT_SECRET="THIS-IS-NOT-REAL-THIS-IS-NOT-REAL-THIS-IS-NOT-REAL-THIS-IS-NOT-REAL"
+ARG DB_LINK="PG:THIS-IS-NOT-REAL"
+ARG B2_APPLICATION_KEY="THIS-IS-NOT-REAL"
+ARG B2_APPLICATION_KEY_ID="THIS-IS-NOT-REAL"
+ARG B2_BUCKET_NAME="THIS-IS-NOT-REAL"
+ARG B2_REGION="THIS-IS-NOT-REAL"
+ARG B2_ENDPOINT="THIS-IS-NOT-REAL"
 
 
-RUN \
-    if [ -f yarn.lock ]; then yarn run build; \
-    elif [ -f package-lock.json ]; then npm run build; \
-    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
+RUN env B2_BUCKET_NAME=$B2_BUCKET_NAME B2_ENDPOINT=$B2_ENDPOINT \
+    DB_LINK=$DB_LINK B2_APPLICATION_KEY=$B2_APPLICATION_KEY \
+    B2_APPLICATION_KEY_ID=$B2_APPLICATION_KEY_ID \
+    JWT_SECRET=$JWT_SECRET B2_REGION=$B2_REGION  \
+    npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

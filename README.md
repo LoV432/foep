@@ -25,7 +25,7 @@ FOEP is a modern, fictional online education platform built with [Next.js 14](ht
 
 2. **Build the Docker image**:
     ```bash
-    docker build -t foep:latest .
+    docker build -t foep:latest --build-arg B2_BUCKET_NAME=change_me --build-arg B2_ENDPOINT=change_me . 
     ```
 
 3. **Run FOEP using Docker Compose**: The following Docker Compose configuration is a sample setup; you’ll need to save it in a file (e.g., `docker-compose.yml`) if you don’t already have one.
