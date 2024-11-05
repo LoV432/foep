@@ -52,6 +52,11 @@ export default function FiltersSidebar({
 					placeholder="Search..."
 					value={filtersState.search}
 					onChange={(e) => dispatchFilters({ search: e.target.value })}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							applyFilter();
+						}
+					}}
 				/>
 			</div>
 			<div>
