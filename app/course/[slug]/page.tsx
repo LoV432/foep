@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Metadata } from 'next';
+import { withCache } from '@/lib/with-cache';
 
 export function generateMetadata({
 	params
@@ -33,7 +34,10 @@ export default async function CoursePage({
 }: {
 	params: { slug: string };
 }) {
-	const { data, success } = await getCourse(params.slug);
+	const { data, success } = await withCache(
+		() => getCourse(params.slug),
+		[`course:${params.slug}`, `course-overview:${params.slug}`]
+	);
 	if (!success) {
 		redirect('/');
 	}
