@@ -6,8 +6,9 @@ export async function withCache<T>(
 	ttl = 7 * 24 * 60 * 60
 ) {
 	function functionToCacheWithLog() {
-		process.env.NODE_ENV === 'development' &&
+		if (process.env.NODE_ENV === 'development')
 			console.log('Cache Missed:', keys);
+
 		return functionToCache();
 	}
 	return (await unstable_cache(functionToCacheWithLog, ['all-cache', ...keys], {
