@@ -175,26 +175,28 @@ export default async function Page({
 							)}
 						</div>
 					</div>
-					<div className="lg:w-[30%]">
-						<Card className="sticky top-12 shadow-lg">
-							<CardContent className="space-y-6 p-6">
-								{data.resources && (
-									<div className="flex items-center justify-center space-x-2">
-										<div className="flex w-full flex-col justify-between pt-0.5">
-											<p className="text-center text-lg font-bold text-gray-900">
-												Course Resources
-											</p>
-											<Button className="mt-4 w-full" size="lg" asChild>
-												<Link href={data.resources} target="_blank">
-													Download Resources
-												</Link>
-											</Button>
+					{data.resources && (
+						<div className="lg:w-[30%]">
+							<Card className="sticky top-12 shadow-lg">
+								<CardContent className="space-y-6 p-6">
+									{data.resources && (
+										<div className="flex items-center justify-center space-x-2">
+											<div className="flex w-full flex-col justify-between pt-0.5">
+												<p className="text-center text-lg font-bold text-gray-900">
+													Course Resources
+												</p>
+												<Button className="mt-4 w-full" size="lg" asChild>
+													<Link href={data.resources} target="_blank">
+														Download Resources
+													</Link>
+												</Button>
+											</div>
 										</div>
-									</div>
-								)}
-							</CardContent>
-						</Card>
-					</div>
+									)}
+								</CardContent>
+							</Card>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
