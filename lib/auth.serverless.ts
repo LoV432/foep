@@ -46,6 +46,7 @@ export async function refershSession(request: NextRequest) {
 		name: 'jwt-token',
 		value: await encrypt(parsed),
 		httpOnly: true,
+		secure: process.env.NODE_ENV === 'production',
 		expires: parsed.exp
 	});
 	return res;

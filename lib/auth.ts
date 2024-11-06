@@ -57,7 +57,8 @@ export async function login({
 		const expires = new Date(Date.now() + ms(SESSION_TIMEOUT)).getTime();
 		cookies().set('jwt-token', token, {
 			expires,
-			httpOnly: true
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production'
 		});
 	} catch (e) {
 		if (e instanceof Error) {
