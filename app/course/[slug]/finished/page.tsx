@@ -21,8 +21,9 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: { slug: string } }) {
 	const session = await getSession();
+	const decodedSlug = decodeURIComponent(params.slug);
 	if (!session.success) {
-		redirect(`/course/${params.slug}`);
+		redirect(`/course/${decodedSlug}`);
 	}
 	const [enrollment] = await db
 		.select({
@@ -30,7 +31,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 			courseId: Courses.course_id
 		})
 		.from(CourseEnrollments)
-		.leftJoin(Courses, eq(Courses.slug, params.slug))
+		.leftJoin(Courses, eq(Courses.slug, decodedSlug))
 		.where(
 			and(
 				eq(CourseEnrollments.course_id, Courses.course_id),
@@ -39,7 +40,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 			)
 		);
 	if (!enrollment || !enrollment.courseName || !enrollment.courseId) {
-		redirect(`/course/${params.slug}`);
+		redirect(`/course/${decodedSlug}`);
 	}
 
 	const [checkReview] = await db
@@ -73,7 +74,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 				<CardContent>
 					<ReviewForm
 						courseId={enrollment.courseId}
-						slug={params.slug}
+						slug={decodedSlug}
 						previousReview={checkReview}
 					/>
 				</CardContent>

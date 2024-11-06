@@ -66,12 +66,13 @@ export default async function QuizPage({
 }: {
 	params: { id: number; slug: string };
 }) {
+	const decodedSlug = decodeURIComponent(params.slug);
 	const data = await withCache(
-		() => getQuizData(params.id, params.slug),
-		['all-chapters', `course:${params.slug}`, `chapter:${params.id}`]
+		() => getQuizData(params.id, decodedSlug),
+		['all-chapters', `course:${decodedSlug}`, `chapter:${params.id}`]
 	);
 	if (!data || !data.chapterInfo || data.questions.length === 0) {
-		redirect(`/course/${params.slug}`);
+		redirect(`/course/${decodedSlug}`);
 	}
 	const [previous, next] = await Promise.all([
 		db
@@ -117,7 +118,7 @@ export default async function QuizPage({
 						questions: data.questions
 					}}
 					navigation={{
-						slug: params.slug,
+						slug: decodedSlug,
 						previous: previous[0],
 						next: next[0]
 					}}

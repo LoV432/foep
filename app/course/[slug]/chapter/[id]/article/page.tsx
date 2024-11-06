@@ -53,13 +53,14 @@ export default async function Page({
 }: {
 	params: { slug: string; id: string };
 }) {
+	const decodedSlug = decodeURIComponent(params.slug);
 	const data = await withCache(
-		() => getCourseChapter(params.id, params.slug),
-		['all-chapters', `course:${params.slug}`, `chapter:${params.id}`]
+		() => getCourseChapter(params.id, decodedSlug),
+		['all-chapters', `course:${decodedSlug}`, `chapter:${params.id}`]
 	);
 
 	if (!data || !data.articleData || !data.authorData) {
-		redirect(`/course/${params.slug}`);
+		redirect(`/course/${decodedSlug}`);
 	}
 
 	const [previous, next] = await Promise.all([
@@ -152,7 +153,7 @@ export default async function Page({
 							{previous[0] && (
 								<Button asChild variant="outline">
 									<Link
-										href={`/course/${params.slug}/chapter/${previous[0].course_chapter_id}/${previous[0].type}`}
+										href={`/course/${decodedSlug}/chapter/${previous[0].course_chapter_id}/${previous[0].type}`}
 									>
 										← {previous[0].title} ({previous[0].estimated_time} min,{' '}
 										{previous[0].type})
@@ -162,7 +163,7 @@ export default async function Page({
 							{next[0] ? (
 								<NextChapterButton
 									courseId={data.courseData.course_id}
-									redirectUrl={`/course/${params.slug}/chapter/${next[0].course_chapter_id}/${next[0].type}`}
+									redirectUrl={`/course/${decodedSlug}/chapter/${next[0].course_chapter_id}/${next[0].type}`}
 									buttonText={`${next[0].title} (${next[0].estimated_time} min, ${next[0].type}) →`}
 									currentChapterOrder={data.courseData.order}
 								/>
@@ -170,7 +171,7 @@ export default async function Page({
 								<CompleteChapterButton
 									courseId={data.courseData.course_id}
 									buttonText="Finish Course 🎉🎉"
-									redirectUrl={`/course/${params.slug}/finished`}
+									redirectUrl={`/course/${decodedSlug}/finished`}
 								/>
 							)}
 						</div>

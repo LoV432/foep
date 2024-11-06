@@ -34,9 +34,10 @@ export default async function CoursePage({
 }: {
 	params: { slug: string };
 }) {
+	const decodedSlug = decodeURIComponent(params.slug);
 	const { data, success } = await withCache(
-		() => getCourse(params.slug),
-		[`course:${params.slug}`, `course-overview:${params.slug}`]
+		() => getCourse(decodedSlug),
+		[`course:${decodedSlug}`, `course-overview:${decodedSlug}`]
 	);
 	if (!success) {
 		redirect('/');
@@ -148,7 +149,7 @@ export default async function CoursePage({
 										>
 											<EnrollmentButton
 												courseId={data.course.course_id}
-												slug={params.slug}
+												slug={decodedSlug}
 												isLoggedIn={session.success}
 												enrollment={enrollment}
 											/>

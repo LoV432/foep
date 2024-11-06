@@ -12,8 +12,9 @@ export default async function ChapterLayout({
 	params: { slug: string; id: string };
 }) {
 	const session = await getSession();
+	const decodedSlug = decodeURIComponent(params.slug);
 	if (!session.success) {
-		redirect(`/course/${params.slug}`);
+		redirect(`/course/${decodedSlug}`);
 	}
 	const [checkEnrollment] = await db
 		.select()
@@ -22,11 +23,11 @@ export default async function ChapterLayout({
 		.where(
 			and(
 				eq(CourseEnrollments.user_id, session.data.id),
-				eq(Courses.slug, params.slug)
+				eq(Courses.slug, decodedSlug)
 			)
 		);
 	if (!checkEnrollment) {
-		redirect(`/course/${params.slug}`);
+		redirect(`/course/${decodedSlug}`);
 	}
 	return <>{children}</>;
 }
