@@ -199,7 +199,7 @@ export default function Quiz({
 				</CardFooter>
 			</Card>
 			{quizSubmitted && (
-				<div className="mx-auto mt-4 flex w-full max-w-2xl justify-between">
+				<div className="mx-auto mt-4 flex w-full max-w-2xl flex-wrap justify-between gap-4">
 					{navigation.previous && (
 						<Button asChild variant="outline">
 							<Link

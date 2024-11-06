@@ -149,7 +149,7 @@ export default async function Page({
 							</div>
 						</Card>
 
-						<div className="flex">
+						<div className="flex flex-wrap gap-4">
 							{previous[0] && (
 								<Button asChild variant="outline">
 									<Link
