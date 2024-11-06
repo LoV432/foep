@@ -40,7 +40,7 @@ export async function editCourseAction(data: z.infer<typeof editCourseSchema>) {
 				)
 			)
 			.returning();
-		revalidateTag('all-courses');
+		revalidateTag('all-courses-page');
 		return {
 			success: true as const,
 			course

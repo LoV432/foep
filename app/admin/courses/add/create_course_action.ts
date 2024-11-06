@@ -36,7 +36,7 @@ export async function createCourseAction(
 				slug: kebabCase(parsedData.name) + '-' + randomUUID()
 			})
 			.returning();
-		revalidateTag('all-courses');
+		revalidateTag('all-courses-page');
 		return {
 			success: true as const,
 			course

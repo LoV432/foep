@@ -27,7 +27,7 @@ export async function deleteCourseAction(courseId: number) {
 				)
 			)
 			.returning();
-		revalidateTag('all-courses');
+		revalidateTag('all-courses-page');
 		revalidateTag(`course:${deletedCourse.slug}`);
 		return { success: true as const, message: 'Course deleted successfully' };
 	} catch (error) {

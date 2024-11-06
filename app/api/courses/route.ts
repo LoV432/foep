@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
 	const courses = await withCache(
 		() => getCourses(parsedFilters),
-		['all-courses', JSON.stringify(parsedFilters)],
+		['all-courses-page', JSON.stringify(parsedFilters)],
 		60 * 60 * 24 * 7
 	);
 	return NextResponse.json(courses);
