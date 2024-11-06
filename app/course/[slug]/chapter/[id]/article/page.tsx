@@ -14,18 +14,15 @@ import CompleteChapterButton from '../../CompleteChapterButton';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Metadata } from 'next';
+import { withCache } from '@/lib/with-cache';
 
 export const metadata: Metadata = {
 	title: 'Course Chapter | FOEP',
 	description: 'FOEP - Fictional Online Education Platform'
 };
 
-export default async function Page({
-	params
-}: {
-	params: { slug: string; id: string };
-}) {
-	const data = (
+async function getCourseChapter(id: string, slug: string) {
+	return (
 		await db
 			.select({
 				courseData: CourseChapters,
@@ -44,11 +41,22 @@ export default async function Page({
 			.leftJoin(Courses, eq(CourseChapters.course_id, Courses.course_id))
 			.where(
 				and(
-					eq(CourseChapters.course_chapter_id, parseInt(params.id)),
-					eq(Courses.slug, params.slug)
+					eq(CourseChapters.course_chapter_id, parseInt(id)),
+					eq(Courses.slug, slug)
 				)
 			)
 	)[0];
+}
+
+export default async function Page({
+	params
+}: {
+	params: { slug: string; id: string };
+}) {
+	const data = await withCache(
+		() => getCourseChapter(params.id, params.slug),
+		['all-chapters', `course:${params.slug}`, `chapter:${params.id}`]
+	);
 
 	if (!data || !data.articleData || !data.authorData) {
 		redirect(`/course/${params.slug}`);

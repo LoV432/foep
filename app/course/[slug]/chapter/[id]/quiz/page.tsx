@@ -5,18 +5,15 @@ import { and, eq, lt, gt, sql, desc, asc } from 'drizzle-orm';
 import Header from '@/components/Header';
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
+import { withCache } from '@/lib/with-cache';
 
 export const metadata: Metadata = {
 	title: 'Course Quiz | FOEP',
 	description: 'FOEP - Fictional Online Education Platform'
 };
 
-export default async function QuizPage({
-	params
-}: {
-	params: { id: number; slug: string };
-}) {
-	const course = (
+async function getQuizData(id: number, slug: string) {
+	return (
 		await db
 			.select({
 				chapterInfo: {
@@ -47,14 +44,14 @@ export default async function QuizPage({
 				CourseChapters,
 				and(
 					eq(Courses.course_id, CourseChapters.course_id),
-					eq(CourseChapters.course_chapter_id, params.id)
+					eq(CourseChapters.course_chapter_id, id)
 				)
 			)
 			.leftJoin(
 				QuizQuestions,
 				eq(CourseChapters.course_chapter_id, QuizQuestions.course_chapter_id)
 			)
-			.where(eq(Courses.slug, params.slug))
+			.where(eq(Courses.slug, slug))
 			.groupBy(
 				CourseChapters.title,
 				CourseChapters.estimated_time,
@@ -62,7 +59,18 @@ export default async function QuizPage({
 				CourseChapters.order
 			)
 	)[0];
-	if (!course || !course.chapterInfo || course.questions.length === 0) {
+}
+
+export default async function QuizPage({
+	params
+}: {
+	params: { id: number; slug: string };
+}) {
+	const data = await withCache(
+		() => getQuizData(params.id, params.slug),
+		['all-chapters', `course:${params.slug}`, `chapter:${params.id}`]
+	);
+	if (!data || !data.chapterInfo || data.questions.length === 0) {
 		redirect(`/course/${params.slug}`);
 	}
 	const [previous, next] = await Promise.all([
@@ -76,8 +84,8 @@ export default async function QuizPage({
 			.from(CourseChapters)
 			.where(
 				and(
-					eq(CourseChapters.course_id, course.chapterInfo.course_id),
-					lt(CourseChapters.order, course.chapterInfo.order)
+					eq(CourseChapters.course_id, data.chapterInfo.course_id),
+					lt(CourseChapters.order, data.chapterInfo.order)
 				)
 			)
 			.orderBy(desc(CourseChapters.order))
@@ -92,8 +100,8 @@ export default async function QuizPage({
 			.from(CourseChapters)
 			.where(
 				and(
-					eq(CourseChapters.course_id, course.chapterInfo.course_id),
-					gt(CourseChapters.order, course.chapterInfo.order)
+					eq(CourseChapters.course_id, data.chapterInfo.course_id),
+					gt(CourseChapters.order, data.chapterInfo.order)
 				)
 			)
 			.orderBy(asc(CourseChapters.order))
@@ -105,8 +113,8 @@ export default async function QuizPage({
 			<div className="mb-24 flex flex-1 flex-col items-center justify-center">
 				<Quiz
 					data={{
-						chapterInfo: course.chapterInfo,
-						questions: course.questions
+						chapterInfo: data.chapterInfo,
+						questions: data.questions
 					}}
 					navigation={{
 						slug: params.slug,

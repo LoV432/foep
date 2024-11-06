@@ -3,7 +3,7 @@ import { unstable_cache } from 'next/cache';
 export async function withCache<T>(
 	functionToCache: () => Promise<T>,
 	keys: string[],
-	ttl: number
+	ttl = 7 * 24 * 60 * 60
 ) {
 	function functionToCacheWithLog() {
 		process.env.NODE_ENV === 'development' &&

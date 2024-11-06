@@ -5,6 +5,7 @@ import { ChapterFormData } from './ChapterSchema.z';
 import { getSession } from '@/lib/auth';
 import { CourseChapters, Courses } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { revalidateTag } from 'next/cache';
 
 export async function addChapterAction(data: ChapterFormData) {
 	try {
@@ -125,7 +126,7 @@ export async function deleteChapterAction(chapterId: number) {
 		await db
 			.delete(CourseChapters)
 			.where(eq(CourseChapters.course_chapter_id, chapterId));
-
+		revalidateTag(`chapter:${chapter.course_chapter_id}`);
 		return {
 			success: true as const,
 			message: 'Chapter deleted successfully'

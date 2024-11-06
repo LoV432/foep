@@ -5,6 +5,7 @@ import { Article, CourseChapters, Courses, QuizQuestions } from '@/db/schema';
 import { eq, and, desc, asc } from 'drizzle-orm';
 import { getSession } from '@/lib/auth';
 import { EditQuizFormData, EditQuizMetadataFormData } from './EditQuiz.z';
+import { revalidateTag } from 'next/cache';
 
 export async function getQuizAction({ chapterId }: { chapterId: number }) {
 	try {
@@ -43,7 +44,7 @@ export async function getQuizAction({ chapterId }: { chapterId: number }) {
 			.from(QuizQuestions)
 			.where(eq(QuizQuestions.course_chapter_id, chapter[0].course_chapter_id))
 			.orderBy(asc(QuizQuestions.order));
-
+		revalidateTag(`chapter:${chapterId}`);
 		return { success: true as const, quizQuestions };
 	} catch (error) {
 		return {
@@ -107,7 +108,7 @@ export async function createEmptyQuizAction({
 			correct_option_id: 0,
 			options: []
 		});
-
+		revalidateTag(`chapter:${chapter[0].course_chapter_id}`);
 		return { success: true as const };
 	} catch (error) {
 		return {
@@ -168,7 +169,7 @@ export async function deleteQuizAction({
 		await db
 			.delete(QuizQuestions)
 			.where(eq(QuizQuestions.quiz_question_id, quizQuestionId));
-
+		revalidateTag(`chapter:${chapter[0].course_chapter_id}`);
 		return { success: true as const };
 	} catch (error) {
 		return {
@@ -232,7 +233,7 @@ export async function saveQuizAction(data: EditQuizFormData) {
 				correct_option_id: data.correct_option_id
 			})
 			.where(eq(QuizQuestions.quiz_question_id, data.quiz_question_id));
-
+		revalidateTag(`chapter:${chapter[0].course_chapter_id}`);
 		return { success: true as const };
 	} catch (error) {
 		return {
@@ -297,7 +298,7 @@ export async function saveQuizMetadataAction(data: EditQuizMetadataFormData) {
 				})
 				.where(eq(CourseChapters.course_chapter_id, data.chapterId));
 		}
-
+		revalidateTag(`chapter:${chapter[0].course_chapter_id}`);
 		return { success: true as const };
 	} catch (error) {
 		return {

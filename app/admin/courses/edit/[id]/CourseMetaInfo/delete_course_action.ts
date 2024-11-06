@@ -16,7 +16,7 @@ export async function deleteCourseAction(courseId: number) {
 			throw new Error('Unauthorized');
 		}
 
-		await db
+		const [deletedCourse] = await db
 			.delete(Courses)
 			.where(
 				and(
@@ -25,8 +25,10 @@ export async function deleteCourseAction(courseId: number) {
 						? undefined
 						: eq(Courses.author_id, session.data.id)
 				)
-			);
+			)
+			.returning();
 		revalidateTag('all-courses');
+		revalidateTag(`course:${deletedCourse.slug}`);
 		return { success: true as const, message: 'Course deleted successfully' };
 	} catch (error) {
 		console.error(error);

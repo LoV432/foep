@@ -5,6 +5,7 @@ import { Article, CourseChapters, Courses } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { getSession } from '@/lib/auth';
 import { EditArticleFormData } from './EditArticle.z';
+import { revalidateTag } from 'next/cache';
 
 export async function saveArticleAction(data: EditArticleFormData) {
 	try {
@@ -76,7 +77,7 @@ export async function saveArticleAction(data: EditArticleFormData) {
 				});
 			});
 		}
-
+		revalidateTag(`chapter:${data.chapterId}`);
 		return { success: true as const };
 	} catch (error) {
 		return {
