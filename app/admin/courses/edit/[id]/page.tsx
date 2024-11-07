@@ -22,7 +22,9 @@ export default async function CoursePage({
 		return redirect('/admin/courses');
 	}
 
-	const { course, resourcesName } = (
+	//TODO: Ideally, all the DB calls im making in SSR should be inside try catch block but for now
+	// I'm just gonna ignore the error
+	const data = (
 		await db
 			.select({
 				course: Courses,
@@ -40,9 +42,11 @@ export default async function CoursePage({
 			)
 	)[0];
 
-	if (!course) {
+	if (!data) {
 		return redirect('/admin/courses');
 	}
+
+	const { course, resourcesName } = data;
 
 	const chapters = await db
 		.select()
