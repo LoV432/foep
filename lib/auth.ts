@@ -40,13 +40,16 @@ export async function login({
 			throw new Error('User not found');
 		}
 
+		// TODO:
+		// No point of checking the password if the user is not verified
+		// But i haven't really thought this through yet.
+		if (!user[0].email_verified) {
+			throw new Error('Email not verified');
+		}
+
 		const isPasswordCorrect = await bcrypt.compare(password, user[0].password);
 		if (!isPasswordCorrect) {
 			throw new Error('Incorrect password');
-		}
-
-		if (!user[0].email_verified) {
-			throw new Error('Email not verified');
 		}
 
 		const token = await encrypt({
@@ -60,6 +63,24 @@ export async function login({
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production'
 		});
+
+		if (redirectTo) {
+			try {
+				// This throws on successful redirect?
+				redirect(redirectTo);
+			} catch {}
+
+			// This return is never reached its here just to tell typescript that its possible to return void
+			// This ensures i handle the void return whenever redirect is called
+			return;
+		}
+
+		return {
+			// Should i really be returning this here?
+			// Ideally i should just reload the page if there is no redirectTo
+			success: true as const,
+			message: 'Login successful'
+		};
 	} catch (e) {
 		if (e instanceof Error) {
 			if (e.message === 'Email not verified') {
@@ -68,25 +89,22 @@ export async function login({
 					message: e.message
 				};
 			}
+			if (
+				e.message === 'Incorrect password' ||
+				e.message === 'User not found'
+			) {
+				return {
+					success: false as const,
+					message: 'Incorrect password or user not found'
+				};
+			}
 		}
 		console.log(e);
 		return {
 			success: false as const,
-			message:
-				'Something went wrong. Please double check your credentials and try again.'
+			message: 'Something went wrong. Please try again or contact the admin'
 		};
 	}
-	if (redirectTo) {
-		redirect(redirectTo);
-
-		// This return is never reached its here just to tell typescript that its possible to return void
-		// This ensures i handle the void return whenever redirect is called
-		return;
-	}
-	return {
-		success: true as const,
-		message: 'Login successful'
-	};
 }
 
 export async function getSession() {

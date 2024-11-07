@@ -18,12 +18,14 @@ import { loginFormSchema } from './FormSchema.z';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function LoginForm() {
 	const [formResponse, setFormResponse] = useState<{
 		success: boolean;
 		message: string;
 	} | null>(null);
+	const { toast } = useToast();
 	const form = useForm<z.infer<typeof loginFormSchema>>({
 		resolver: zodResolver(loginFormSchema),
 		defaultValues: {
@@ -36,13 +38,34 @@ export default function LoginForm() {
 		try {
 			setFormResponse(null);
 			const result = await login({ values, redirectTo: '/dashboard' });
-			if (result && !result.success) {
-				setFormResponse(result);
+			if (!result) {
+				// This means the login was successful and user is being redirected
+				toast({
+					title: 'Success',
+					description: 'You are now logged in',
+					variant: 'default'
+				});
+				return;
 			}
-		} catch {
+			if (!result.success) {
+				throw new Error(result.message);
+			}
+			setFormResponse(result);
+		} catch (error) {
+			toast({
+				title: 'Error',
+				description:
+					error instanceof Error
+						? error.message
+						: 'Something went wrong. Please try again',
+				variant: 'destructive'
+			});
 			setFormResponse({
 				success: false,
-				message: 'Something went wrong. Please try again'
+				message:
+					error instanceof Error
+						? error.message
+						: 'Something went wrong. Please try again'
 			});
 		}
 	}

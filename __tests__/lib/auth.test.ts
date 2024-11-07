@@ -99,8 +99,7 @@ describe('auth.ts', () => {
 
 			expect(result).toEqual({
 				success: false,
-				message:
-					'Something went wrong. Please double check your credentials and try again.'
+				message: 'Incorrect password or user not found'
 			});
 		});
 
@@ -121,8 +120,7 @@ describe('auth.ts', () => {
 
 			expect(result).toEqual({
 				success: false,
-				message:
-					'Something went wrong. Please double check your credentials and try again.'
+				message: 'Incorrect password or user not found'
 			});
 		});
 
