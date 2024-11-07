@@ -21,14 +21,14 @@ export default function MediaPreview({
 		/>
 	) : media.type.split('/')[0] === 'video' ? (
 		<div className="flex w-full flex-col items-center">
-			<VideoIcon className="h-24 w-24" />
+			<VideoIcon className="h-12 w-12 sm:h-24 sm:w-24" />
 			<p className="mx-auto w-full overflow-hidden text-ellipsis whitespace-nowrap px-3 text-sm">
 				{media.friendly_name}
 			</p>
 		</div>
 	) : (
 		<div className="flex w-full flex-col items-center">
-			<FileIcon className="h-24 w-24" />
+			<FileIcon className="h-12 w-12 sm:h-24 sm:w-24" />
 			<p className="mx-auto w-full overflow-hidden text-ellipsis whitespace-nowrap px-3 text-sm">
 				{media.friendly_name}
 			</p>
