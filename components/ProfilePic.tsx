@@ -34,7 +34,7 @@ export default function UserProfileMenu({
 					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-56">
+			<DropdownMenuContent align="end" className="mt-2 w-56">
 				<DropdownMenuItem asChild>
 					<Link href="/profile">
 						<User className="mr-2 h-4 w-4" />
