@@ -140,7 +140,7 @@ export function UserEditForm({ user }: { user: typeof Users.$inferSelect }) {
 					)}
 				/>
 
-				<div className="flex gap-4">
+				<div className="flex flex-wrap gap-2">
 					<Button
 						type="button"
 						disabled={form.formState.isSubmitting}
