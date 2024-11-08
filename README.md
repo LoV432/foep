@@ -98,7 +98,7 @@ To ensure the platform functions correctly, set the following environment variab
 | `B2_APPLICATION_KEY_ID` | Backblaze or S3 application key ID for S3-compatible file storage integration.               |
 | `B2_BUCKET_NAME`    | Name of the Backblaze or S3 bucket for storing assets.                                            |
 | `B2_REGION`         | The region of the Backblaze or S3 bucket.                                                         |
-| `B2_ENDPOINT`       | S3-compatible endpoint for Backblaze or S3 (usually `https://s3.<region>.backblazeb2.com`).       |
+| `B2_ENDPOINT`       | S3-compatible endpoint for Backblaze or S3 (usually `s3.<region>.backblazeb2.com`).       |
 
 ### Obtaining Environment Variables
 
