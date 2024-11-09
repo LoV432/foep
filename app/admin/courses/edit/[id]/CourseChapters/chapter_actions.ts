@@ -55,7 +55,7 @@ export async function addChapterAction(data: ChapterFormData) {
 				order: data.order
 			})
 			.returning();
-
+		revalidateTag(`course-overview:${course.slug}`);
 		return {
 			success: true as const,
 			message: 'Chapter added successfully',
@@ -127,6 +127,7 @@ export async function deleteChapterAction(chapterId: number) {
 			.delete(CourseChapters)
 			.where(eq(CourseChapters.course_chapter_id, chapterId));
 		revalidateTag(`chapter:${chapter.course_chapter_id}`);
+		revalidateTag(`course-overview:${course.slug}`);
 		return {
 			success: true as const,
 			message: 'Chapter deleted successfully'
