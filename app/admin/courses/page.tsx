@@ -78,13 +78,13 @@ export default async function Component({
 
 	return (
 		<div className="w-full bg-gray-200 p-4">
-			<div className="container mx-auto mb-7 flex items-center justify-between">
+			<div className="container mx-auto mb-7 flex flex-wrap items-center justify-between gap-3">
 				<h1 className="text-2xl font-bold">Course List</h1>
-				<div className="flex gap-2">
+				<div className="flex w-full justify-between gap-2 sm:w-auto sm:justify-normal">
 					<Button>
 						<Link href="/admin/courses/add">Add Course</Link>
 					</Button>
-					<SearchCourse />
+					<SearchCourse initialSearch={searchParams.q} />
 				</div>
 			</div>
 			<div className="container mx-auto overflow-x-auto rounded-lg bg-white">
