@@ -14,13 +14,14 @@ import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { db } from '@/db/db';
 import { Courses } from '@/db/schema';
-import { desc, eq, count } from 'drizzle-orm';
+import { desc, eq, count, and, ilike } from 'drizzle-orm';
 import Link from 'next/link';
+import SearchCourse from './SearchCourse';
 
 export default async function Component({
 	searchParams
 }: {
-	searchParams: { page?: string };
+	searchParams: { page?: string; q?: string };
 }) {
 	const session = await getSession();
 	if (!session.success) {
@@ -45,9 +46,12 @@ export default async function Component({
 		})
 		.from(Courses)
 		.where(
-			session.data.role === 'admin'
-				? undefined
-				: eq(Courses.author_id, session.data.id)
+			and(
+				session.data.role === 'admin'
+					? undefined
+					: eq(Courses.author_id, session.data.id),
+				searchParams.q ? ilike(Courses.name, `%${searchParams.q}%`) : undefined
+			)
 		)
 		.orderBy(desc(Courses.course_id))
 		.limit(pageSize)
@@ -57,9 +61,12 @@ export default async function Component({
 		.select({ value: count() })
 		.from(Courses)
 		.where(
-			session.data.role === 'admin'
-				? undefined
-				: eq(Courses.author_id, session.data.id)
+			and(
+				session.data.role === 'admin'
+					? undefined
+					: eq(Courses.author_id, session.data.id),
+				searchParams.q ? ilike(Courses.name, `%${searchParams.q}%`) : undefined
+			)
 		);
 
 	const [courses, [{ value: totalCount }]] = await Promise.all([
@@ -73,9 +80,12 @@ export default async function Component({
 		<div className="w-full bg-gray-200 p-4">
 			<div className="container mx-auto mb-7 flex items-center justify-between">
 				<h1 className="text-2xl font-bold">Course List</h1>
-				<Button>
-					<Link href="/admin/courses/add">Add Course</Link>
-				</Button>
+				<div className="flex gap-2">
+					<Button>
+						<Link href="/admin/courses/add">Add Course</Link>
+					</Button>
+					<SearchCourse />
+				</div>
 			</div>
 			<div className="container mx-auto overflow-x-auto rounded-lg bg-white">
 				<Table>
@@ -140,7 +150,7 @@ export default async function Component({
 					<Button disabled={page === 1} className="w-20 p-0">
 						<Link
 							className="flex h-full w-full items-center justify-center"
-							href={`?page=${page - 1}`}
+							href={`?page=${page - 1}${searchParams.q ? `&q=${searchParams.q}` : ''}`}
 						>
 							Previous
 						</Link>
@@ -152,7 +162,7 @@ export default async function Component({
 					<Button disabled={page === totalPages} className="w-20 p-0">
 						<Link
 							className="flex h-full w-full items-center justify-center"
-							href={`?page=${page + 1}`}
+							href={`?page=${page + 1}${searchParams.q ? `&q=${searchParams.q}` : ''}`}
 						>
 							Next
 						</Link>
