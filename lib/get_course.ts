@@ -40,7 +40,8 @@ export async function getCourse(slug: string) {
 				estimated_time: CourseChapters.estimated_time
 			})
 			.from(CourseChapters)
-			.where(eq(CourseChapters.course_id, courses[0].course.course_id));
+			.where(eq(CourseChapters.course_id, courses[0].course.course_id))
+			.orderBy(CourseChapters.order);
 		return {
 			success: true as const,
 			data: {
