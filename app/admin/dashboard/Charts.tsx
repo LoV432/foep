@@ -39,7 +39,7 @@ export function DashboardLineChart({
 					</CSVLink>
 				</CardTitle>
 			</CardHeader>
-			<CardContent className="overflow-scroll pl-2">
+			<CardContent className="overflow-auto pl-2">
 				<ChartContainer
 					config={{
 						enrollments: {
@@ -100,7 +100,7 @@ export function DashboardBarChart({
 				</CardTitle>
 				<CardDescription>{description}</CardDescription>
 			</CardHeader>
-			<CardContent className="overflow-scroll pl-2">
+			<CardContent className="overflow-auto pl-2">
 				<ChartContainer
 					config={{
 						courses: {
