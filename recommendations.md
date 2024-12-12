@@ -41,7 +41,7 @@
 
 1. **CSS Practices (styles.css, lines 210-250): CSS is not modular and lacks a structured approach, leading to repetitive styles. Using a CSS preprocessor (like SASS) or following a BEM methodology would improve style organisation and reduce duplication**
 
-   - It seems the reviewer may have overlooked that TailwindCSS is used in this project, which eliminates the need for such practices. The file and lines referred to do not exist in the codebase, possibly because they are viewing the compiled CSS file somehow? Perhaps GPT was used to review the codebase?
+   - It seems the reviewer have overlooked the fact that TailwindCSS is used in this project, which eliminates the need for such practices. Additionally, the file and lines referred to do not exist in the codebase, the only logical explanation i can think of is that the reviewer is viewing the compiled CSS file somehow?
 
      - [https://tailwindcss.com/](https://tailwindcss.com/)
 
@@ -51,7 +51,7 @@
 
 1. **Lack of Input Sanitisation (courseController.js, lines 35-57): This file demonstrates unsafe handling of user input, leaving the application vulnerable to SQL injection attacks. Input validation and parameterised queries should be standard practice to protect against such vulnerabilities.**
 
-   - The specific file and line references do not seem to exist in the codebase. I have reviewed all my DB queries again and found none that are vulnerable to SQL injection attacks (I am not a security expert so I might be wrong). So I would appreciate if you could point out the vulnerability in the code.
+   - The specific file and line references do not seem to exist in the codebase, but i have reviewed all my DB queries again and found none that are vulnerable to SQL injection attacks (I am not a security expert so I might be wrong). So I would appreciate if you could point out the vulnerability in the code.
 
 1. **Database Queries (courseModel.js, lines 100-140): There is a lack of efficient query handling for course data retrieval. Implementing pagination, as specified in the project, would prevent performance bottlenecks when querying large datasets.**
 
@@ -59,7 +59,7 @@
 
 1. **Caching (dashboardController.js, lines 85-120): There is no caching mechanism for frequently accessed data like the user dashboard or course lists. A Redis cache could be implemented here to reduce server load and improve response times.**
 
-   - The specific file and line references do not seem to exist in the codebase, but I understand what this is referring to and it should probably have had a cache but the problem is that this recommdation makes it seem like there is no caching at all, which is not true. I have added cache in numerous places in the codebase. You can see some expamples in `app/api/courses/route.ts` and `app/course/[slug]/page.tsx, Lines 38-41`. You can also see the `withCache` function in `lib/with-cache.ts`. It uses NextJS built-in caching mechanisms.
+   - The specific file and line references do not seem to exist in the codebase, but I understand what this is referring to and it should probably have had a cache, but the problem is that this recommdation makes it seem like there is no caching at all, which is not true. I have added cache in numerous places in the codebase. You can see some expamples in `app/api/courses/route.ts` and `app/course/[slug]/page.tsx, Lines 38-41`. You can also see the `withCache` function in `lib/with-cache.ts`. It uses NextJS built-in caching mechanisms.
 
 1. **Authentication Module (auth.js): The authentication logic could be modularised further. Lines 42-67 show repeated code for handling permissions, which would benefit from a helper function to centralise role validation logic. This would improve code readability and reduce redundancy.**
 
